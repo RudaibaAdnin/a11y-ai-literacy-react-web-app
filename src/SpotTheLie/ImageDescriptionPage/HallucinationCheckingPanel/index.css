@@ -1,0 +1,70 @@
+/* .current-focused-panel {
+  outline: 2px solid #1d4289;
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+.panel-title {
+  font-size: 30px;
+  line-height: 1.4;
+  margin-top: 0;
+  font-weight: 550;
+  text-decoration: underline;
+}
+.page-button {
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 500;
+  color: #1d4289;
+  background-color: #fff;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.page-button:hover,
+.page-button:focus-visible {
+  color: #fff;
+  background: #1d4289;
+  outline: 2px solid #1d4289;
+  outline-offset: 3px;
+} */
+
+/*specific to hallucination checking panel of the page*/
+
+.hallucination-check-sidebar-panel {
+  position: fixed;
+  left: 850px;
+  top: 160px;
+  width: 320px;
+  padding: 25px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+  box-shadow: 0 2px 8px #1d4289;
+}
+
+.hallucination-checking-title {
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.selected-line-preview {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hallucination-checking-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.hallucination-feedback {
+  font-weight: 550;
+  margin-bottom: 0;
+}

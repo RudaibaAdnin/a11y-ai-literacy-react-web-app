@@ -1,0 +1,67 @@
+/* .current-focused-panel {
+  outline: 2px solid #1d4289;
+  outline-offset: 4px;
+}
+
+.panel-title {
+  font-size: 30px;
+  line-height: 1.4;
+  margin-top: 0;
+  font-weight: 550;
+  text-decoration: underline;
+} */
+
+/*specific to leader board panel of the page*/
+.leaderboard-panel {
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto; /*makes it scrolling*/
+  padding: 25px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+}
+
+.leaderboard-count-details {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.leaderboard-list {
+  margin: 0;
+  padding-left: 25px;
+}
+
+.leaderboard-item {
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.leaderboard-item-title {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.hallucinated-line-text {
+  background: #eef4ff;
+  padding: 2px 4px;
+  border: 0.5px solid #1d4289;
+  border-radius: 4px;
+}
+
+.leaderboard-item-text {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.leaderboard-empty {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
