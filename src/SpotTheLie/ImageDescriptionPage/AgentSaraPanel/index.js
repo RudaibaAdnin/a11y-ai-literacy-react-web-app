@@ -90,8 +90,10 @@ const AgentSaraPanel = () => {
       }
 
       setFollowUpQuestions(data.followUpQuestions || []);
+      setIsLoadingFollowUpQuestions(false);
     } catch (error) {
       console.error("Could not get follow-up questions:", error);
+      setIsLoadingFollowUpQuestions(false);
     }
   };
 
@@ -112,8 +114,10 @@ const AgentSaraPanel = () => {
       }
 
       setFollowUpQuestions(data.followUpQuestions || []);
+      setIsLoadingFollowUpQuestions(false);
     } catch (error) {
       console.error("Could not get follow-up questions:", error);
+      setIsLoadingFollowUpQuestions(false);
     }
   };
 
