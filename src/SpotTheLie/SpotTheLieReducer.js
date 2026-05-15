@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const saradescriptionpanelname = "saraImageDescriptionPanel";
+//const saradescriptionpanelname = "saraImageDescriptionPanel";
 const pageInstructionsSectionName = "pageInstructionsSection";
 
 const initialState = {
@@ -17,6 +17,8 @@ const initialState = {
     count: 0,
     imageHallucinationItems: [],
   },
+
+  followUpsHistorySara: [],
 };
 
 const SpotTheLieSlice = createSlice({
@@ -41,6 +43,8 @@ const SpotTheLieSlice = createSlice({
         count: 0,
         imageHallucinationItems: [],
       };
+
+      state.followUpsHistorySara = [];
     },
 
     setCurrentFocusedPanel: (state, action) => {
@@ -75,6 +79,23 @@ const SpotTheLieSlice = createSlice({
           state.detectedImageHallucination.imageHallucinationItems.length;
       }
     },
+    addFollowUpsHistorySara: (state, action) => {
+      if (state.followUpsHistorySara.length >= 5) {
+        return;
+      }
+
+      //this saves most recent 5 questions and replies
+      // if (state.followUpsHistorySara.length >= 5) {
+      //   state.followUpsHistorySara.shift();
+      // }
+      state.followUpsHistorySara.push({
+        followUpQuestion: action.payload.followUpQuestion,
+        followUpQuestionType: action.payload.followUpQuestionType,
+        followUpQuestionCategory: action.payload.followUpQuestionCategory,
+        followUpReply: action.payload.followUpReply,
+        followUpReplyType: action.payload.followUpReplyType,
+      });
+    },
   },
 });
 
@@ -84,5 +105,6 @@ export const {
   setCurrentFocusedPanel,
   setCurrentImageDescriptionLine,
   addDetectedImageHallucination,
+  addFollowUpsHistorySara,
 } = SpotTheLieSlice.actions;
 export default SpotTheLieSlice.reducer;

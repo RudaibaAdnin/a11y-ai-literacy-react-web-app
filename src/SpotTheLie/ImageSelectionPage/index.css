@@ -6,6 +6,8 @@ body {
 }
 
 .image-selection-page {
+  margin-left: 150px;
+  margin-right: 150px;
   min-height: 100vh;
   padding: 20px;
   display: flex;
@@ -21,7 +23,7 @@ body {
   justify-content: center;
   gap: 10px;
   margin-top: 70px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 .title-image {
   width: 100px;
@@ -39,10 +41,39 @@ body {
 
 .image-selection-title {
   color: #1d4289;
-  font-size: 30px;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: 550;
+  margin: 0;
+  margin-bottom: 10px;
+  text-align: center;
+  text-decoration: underline;
 }
 
+.instruction-title {
+  color: #1d4289;
+  font-size: 28px;
+  font-weight: 550;
+  margin: 0;
+  margin-bottom: 10px;
+  text-align: center;
+  text-decoration: underline;
+}
+.page-instructions {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: #1d4289;
+  align-items: left;
+}
+/* .image-selection-title {
+  color: #1d4289;
+  font-size: 30px;
+  font-weight: 500;
+} */
+
+.selection-part {
+  align-items: center;
+}
 .image-container {
   display: flex;
   align-items: center;

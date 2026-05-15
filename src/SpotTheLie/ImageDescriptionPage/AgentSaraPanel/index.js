@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
 import { imageDescriptions } from "../../util/imageDescriptions.js";
-import { setCurrentFocusedPanel } from "../../SpotTheLieReducer";
+import {
+  setCurrentFocusedPanel,
+  addFollowUpsHistorySara,
+} from "../../SpotTheLieReducer";
 import * as client from "./client.js";
 
 const AgentSaraPanel = () => {
@@ -89,7 +92,15 @@ const AgentSaraPanel = () => {
         nextFocusRef.current = "questions";
       }
 
-      setFollowUpQuestions(data.followUpQuestions || []);
+      const formattedFollowUpQuestions = (data.followUpQuestions || []).map(
+        (question, index) => ({
+          question,
+          category: data.followUpQuestionCategories?.[index] || "",
+          type: data.followUpQuestionType || "",
+        }),
+      );
+
+      setFollowUpQuestions(formattedFollowUpQuestions);
       setIsLoadingFollowUpQuestions(false);
     } catch (error) {
       console.error("Could not get follow-up questions:", error);
@@ -113,7 +124,15 @@ const AgentSaraPanel = () => {
         nextFocusRef.current = "questions";
       }
 
-      setFollowUpQuestions(data.followUpQuestions || []);
+      const formattedFollowUpQuestions = (data.followUpQuestions || []).map(
+        (question, index) => ({
+          question,
+          category: data.followUpQuestionCategories?.[index] || "",
+          type: data.followUpQuestionType || "",
+        }),
+      );
+
+      setFollowUpQuestions(formattedFollowUpQuestions);
       setIsLoadingFollowUpQuestions(false);
     } catch (error) {
       console.error("Could not get follow-up questions:", error);
@@ -146,8 +165,10 @@ const AgentSaraPanel = () => {
   };
 
   // Fetches Sara's reply for the selected follow-up question.
-  const handleGetFollowUpReply = async (selectedFollowUpQuestion) => {
-    selectedFollowUpQuestion = selectedFollowUpQuestion.trim();
+  const handleGetFollowUpReply = async (selectedFollowUpQuestionItem) => {
+    const selectedFollowUpQuestion =
+      selectedFollowUpQuestionItem.question.trim();
+
     if (!selectedFollowUpQuestion) return;
 
     setFollowUpQuestions([]);
@@ -175,10 +196,21 @@ const AgentSaraPanel = () => {
             ? {
                 ...item,
                 reply: data.followUpReply || "",
+                replyType: data.replyType || "",
                 isLoading: false,
               }
             : item,
         ),
+      );
+
+      dispatch(
+        addFollowUpsHistorySara({
+          followUpQuestion: selectedFollowUpQuestion,
+          followUpQuestionType: selectedFollowUpQuestionItem.type || "",
+          followUpQuestionCategory: selectedFollowUpQuestionItem.category || "",
+          followUpReply: data.followUpReply || "",
+          followUpReplyType: data.replyType || "",
+        }),
       );
 
       if (followUpQuestionModeRef.current === "currentLine") {
@@ -298,15 +330,15 @@ const AgentSaraPanel = () => {
         {followUpQuestions.length > 0 && (
           <>
             <ol className="sara-generated-question-list">
-              {followUpQuestions.map((question, index) => (
+              {followUpQuestions.map((item, index) => (
                 <li key={index} className="sara-generated-question">
                   <button
                     ref={index === 0 ? firstFollowUpQuestionButtonRef : null}
                     type="button"
                     className="followup-question-button"
-                    onClick={() => handleGetFollowUpReply(question)}
+                    onClick={() => handleGetFollowUpReply(item)}
                   >
-                    {question}
+                    {item.question}
                   </button>
                 </li>
               ))}
@@ -327,7 +359,11 @@ const AgentSaraPanel = () => {
                 type="button"
                 className="page-button"
                 onClick={() => {
-                  handleGetFollowUpReply(manualFollowUpQuestion);
+                  handleGetFollowUpReply({
+                    question: manualFollowUpQuestion,
+                    category: "User-written question",
+                    type: "manual",
+                  });
                   setManualFollowUpQuestion("");
                 }}
               >

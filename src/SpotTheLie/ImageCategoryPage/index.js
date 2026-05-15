@@ -35,19 +35,19 @@ const ImageCategoryPage = () => {
 
       <section>
         <h2 className="instruction-title" tabIndex={0}>
-          Page Instructions
+          Game Instructions:
         </h2>
         <p className="page-instructions">
           Welcome, Detective! In this game, you will hunt for AI lies. You will
           read image descriptions from an AI agent called Sara. But watch out!
           Each description has three sneaky lies hiding inside. Your mission is
-          to find them and solve the case.
+          to find them.
         </p>
       </section>
 
       <section>
         <h2 className="image-category-title">
-          Select an image category to start your detective mission.
+          Game Step: Select an image category to start your detective mission.
         </h2>
 
         <ul className="image-category-list" aria-label="Image categories">

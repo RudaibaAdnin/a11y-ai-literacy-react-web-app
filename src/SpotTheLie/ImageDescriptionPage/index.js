@@ -113,12 +113,12 @@ const ImageDescriptionPage = () => {
             ? "instruction-section-style current-focused-panel"
             : "instruction-section-style"
         }
-        aria-label="instructions"
+        aria-label="Game steps"
         onMouseEnter={focusPageInstructionsSectionSection}
         onFocusCapture={focusPageInstructionsSectionSection}
       >
         <h2 className="instruction-title" tabIndex={0}>
-          Page Instructions
+          Game Instructions
         </h2>
         <p className="page-instructions">
           Below, an AI agent named Sara has described the image for you. Your
