@@ -35,7 +35,7 @@ const ImageCategoryPage = () => {
 
       <section>
         <h2 className="instruction-title" tabIndex={0}>
-          Game Instructions:
+          Mission Guide
         </h2>
         <p className="page-instructions">
           Welcome, Detective! In this game, you will hunt for AI lies. You will

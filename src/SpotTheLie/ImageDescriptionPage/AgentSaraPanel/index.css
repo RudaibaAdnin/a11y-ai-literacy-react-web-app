@@ -115,6 +115,18 @@
   text-align: left;
 }
 
+.clue-text {
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 500;
+  color: #ffff;
+  background-color: #1d4289;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  margin-top: 15px;
+  text-align: left;
+}
+
 /* need checking from below */
 .followup-instructions {
   font-size: 20px;

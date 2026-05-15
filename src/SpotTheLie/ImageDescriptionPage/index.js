@@ -118,7 +118,7 @@ const ImageDescriptionPage = () => {
         onFocusCapture={focusPageInstructionsSectionSection}
       >
         <h2 className="instruction-title" tabIndex={0}>
-          Game Instructions
+          Mission Guide
         </h2>
         <p className="page-instructions">
           Below, an AI agent named Sara has described the image for you. Your
@@ -161,8 +161,8 @@ const ImageDescriptionPage = () => {
                   Press the left square bracket key
                   <span className="kbd">[</span> and the right square bracket
                   key <span className="kbd">]</span> to read the image
-                  description line by line. Spot something fishy? Press Enter to
-                  investigate that line as a lie.
+                  description line by line. Spot a sneaky lie? Press{" "}
+                  <span className="kbd">Enter</span> key to check your guess.
                 </p>
 
                 <ol

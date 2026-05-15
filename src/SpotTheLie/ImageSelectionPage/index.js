@@ -53,7 +53,8 @@ const ImageSelectionPage = () => {
 
       <section className="selection-part">
         <h2 className="image-selection-title " tabIndex={0}>
-          Game Step: Select an image from the {selectedImageCategory} category.
+          Game Step: Select an image from the {selectedImageCategory} category
+          to begin the game.
         </h2>
         {selectedImagePaths.length === 0 ? (
           <p>No images available for this category yet.</p>

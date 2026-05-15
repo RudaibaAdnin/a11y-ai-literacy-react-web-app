@@ -62,7 +62,17 @@ const HallucinationCheckingPanel = () => {
       );
 
     if (alreadyDetected) {
-      setFeedback("Already detected.");
+      const currentCount = detectedImageHallucination.count;
+      const leftCount = selectedImageHallucinations.length - currentCount;
+
+      setFeedback(
+        `Already detected. You have detected ${currentCount} ${
+          currentCount === 1 ? "lie" : "lies"
+        }. You need to detect ${leftCount} ${
+          leftCount === 1 ? "more lie" : "more lies"
+        }.`,
+      );
+
       return;
     }
 
@@ -77,9 +87,23 @@ const HallucinationCheckingPanel = () => {
 
     dispatch(addDetectedImageHallucination(matchedHallucinationLine));
     const nextCount = detectedImageHallucination.count + 1;
-    setFeedback(
-      `Correct guess! You have detected ${nextCount} ${nextCount === 1 ? "lie" : "lies"}.`,
-    );
+    const leftCount = selectedImageHallucinations.length - nextCount;
+
+    if (leftCount === 0) {
+      setFeedback(
+        `Correct guess! You have detected all ${nextCount} ${
+          nextCount === 1 ? "lie" : "lies"
+        }.`,
+      );
+    } else {
+      setFeedback(
+        `Correct guess! You have detected ${nextCount} ${
+          nextCount === 1 ? "lie" : "lies"
+        }. You need to detect ${leftCount} ${
+          leftCount === 1 ? "more lie" : "more lies"
+        }.`,
+      );
+    }
   };
 
   if (!selectedCheckingLine) {
