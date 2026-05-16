@@ -24,3 +24,50 @@
   line-height: 1.5;
   padding: 10px;
 }
+
+.adam-difference-list {
+  font-size: 21px;
+  line-height: 1.5;
+  padding-left: 30px;
+  margin-top: 20px;
+}
+
+.adam-difference-item {
+  margin-bottom: 12px;
+}
+
+.adam-difference-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  font-size: 21px;
+  line-height: 1.5;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.adam-difference-table caption {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.adam-difference-table th,
+.adam-difference-table td {
+  border-right: 1px solid #1d4289;
+  border-bottom: 1px solid #1d4289;
+  padding: 10px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.adam-difference-table th:last-child,
+.adam-difference-table td:last-child {
+  border-right: none;
+}
+
+.adam-difference-table tbody tr:last-child td {
+  border-bottom: none;
+}
