@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
@@ -11,6 +11,9 @@ import {
 const HallucinationCheckingPanel = () => {
   const dispatch = useDispatch();
   const [feedback, setFeedback] = useState("");
+
+  // Accessibility change: stores the panel so focus can move here when it opens.
+  const panelRef = useRef(null);
 
   const selectedCheckingLine = useSelector(
     (state) => state.SpotTheLieReducer.selectedCheckingLine,
@@ -28,7 +31,14 @@ const HallucinationCheckingPanel = () => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
-  /* this code closes the window when focus moves or when the use navigate to a new line */
+  // Accessibility change: when the panel opens, move keyboard focus to it.
+  useEffect(() => {
+    if (selectedCheckingLine) {
+      panelRef.current?.focus();
+    }
+  }, [selectedCheckingLine]);
+
+  /* this code closes the window when focus moves or when the user navigates to a new line */
   useEffect(() => {
     if (
       selectedCheckingLine &&
@@ -112,28 +122,42 @@ const HallucinationCheckingPanel = () => {
 
   return (
     <section
+      ref={panelRef}
+      tabIndex={-1}
       className={
         currentFocusedPanel === "hallucinationCheckingPanel"
           ? "hallucination-check-sidebar-panel current-focused-panel"
           : "hallucination-check-sidebar-panel"
       }
-      aria-label="Lie detection check"
-      aria-live="polite"
+      // Accessibility change: label the section using the visible heading.
+      aria-labelledby="lie-detection-title"
       onMouseEnter={focusHallucinationCheckingPanel}
       onFocusCapture={focusHallucinationCheckingPanel}
     >
-      <h2 className="hallucination-checking-title">
-        Do you want to confirm this line as lie? If yes, select from the buttons
-        below.
+      <h2 id="lie-detection-title" className="hallucination-checking-title">
+        Do you want to confirm this line as a lie?
       </h2>
 
-      <p className="selected-line-preview">{selectedCheckingLine}</p>
+      <p
+        className="selected-line-preview"
+        // Accessibility change: gives screen reader users context for the line.
+        aria-label={`Selected line to check: ${selectedCheckingLine}`}
+      >
+        {selectedCheckingLine}
+      </p>
 
-      <div className="hallucination-checking-buttons">
+      <div
+        className="hallucination-checking-buttons"
+        // Accessibility change: groups the Yes and Close buttons together.
+        role="group"
+        aria-label="Lie detection choices: Yes or Close"
+      >
         <button
           type="button"
           className="page-button"
           onClick={checkHallucinationDetection}
+          // Accessibility change: makes the Yes button action clearer.
+          aria-label="Yes, confirm this line as a lie"
         >
           Yes
         </button>
@@ -142,10 +166,12 @@ const HallucinationCheckingPanel = () => {
           type="button"
           className="page-button"
           onClick={closeHallucinationDetectionCheckSideBar}
+          aria-label="Close lie detection check"
         >
           Close
         </button>
       </div>
+
       <p className="hallucination-feedback" role="status" aria-live="polite">
         {feedback}
       </p>

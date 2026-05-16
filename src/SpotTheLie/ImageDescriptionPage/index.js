@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useNavigate } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
@@ -14,9 +14,11 @@ import {
 import HallucinationCheckingPanel from "./HallucinationCheckingPanel";
 import LeaderBoardPanel from "./LeaderBoardPanel";
 import AgentSaraPanel from "./AgentSaraPanel";
+import HelpGuidePanel from "./HelpGuidePanel";
 
 const ImageDescriptionPage = () => {
-  const { imagename } = useParams();
+  const { imagecategory, imagename } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const selectedImageDescription = imageDescriptions[imagename] || [];
@@ -35,7 +37,14 @@ const ImageDescriptionPage = () => {
 
   const imageDescriptionLineByLineArray = useRef([]);
 
+  const selectedImageName = useSelector(
+    (state) => state.SpotTheLieReducer.selectedImageName,
+  );
+
+  const [showHelpGuidePanel, setShowHelpGuidePanel] = useState(false);
+
   useEffect(() => {
+    if (selectedImageName === imagename) return;
     dispatch(
       setSelectedImage({
         imageName: imagename,
@@ -96,15 +105,59 @@ const ImageDescriptionPage = () => {
     dispatch(setCurrentFocusedPanel("saraImageDescriptionPanel"));
   };
 
+  const openHelpGuidePanel = () => {
+    setShowHelpGuidePanel(true);
+    dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+  };
+
+  const closeHelpGuidePanel = () => {
+    setShowHelpGuidePanel(false);
+  };
+
+  useEffect(() => {
+    const handleHelpGuideKey = (event) => {
+      if (event.key !== "?") return;
+
+      event.preventDefault();
+      setShowHelpGuidePanel(true);
+      dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+    };
+
+    window.addEventListener("keydown", handleHelpGuideKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleHelpGuideKey);
+    };
+  }, [dispatch]);
+
   return (
-    <main className="main-style" aria-label="Image Description Page">
+    <main
+      className="main-style"
+      // Accessibility: labels the main page using the visible h1.
+      aria-labelledby="image-description-page-title"
+    >
       <header className="header-style">
-        <img
-          src="/images/spot-the-lie-avatar.png"
-          className="title-image"
-          alt=""
-        />
-        <h1 className="page-title">Spot the Lie</h1>
+        <div className="header-spacer" aria-hidden="true" />
+
+        <div className="header-title-group">
+          <img
+            src="/images/spot-the-lie-avatar.png"
+            className="title-image"
+            alt=""
+          />
+
+          {/* Accessibility: added id so main can use this heading as its label. */}
+          <h1 id="image-description-page-title" className="page-title">
+            Spot the Lie
+          </h1>
+        </div>
+
+        {/* Accessibility: changed nav label from review page to game page navigation. */}
+        <nav className="page-nav" aria-label="Main menu page navigation">
+          <Link className="page-button" to="/spot-the-lie">
+            Back to Menu
+          </Link>
+        </nav>
       </header>
 
       <section
@@ -113,13 +166,15 @@ const ImageDescriptionPage = () => {
             ? "instruction-section-style current-focused-panel"
             : "instruction-section-style"
         }
-        aria-label="Game steps"
+        // Accessibility change: labels the section using the visible h2.
+        aria-labelledby="mission-guide-title"
         onMouseEnter={focusPageInstructionsSectionSection}
         onFocusCapture={focusPageInstructionsSectionSection}
       >
-        <h2 className="instruction-title" tabIndex={0}>
+        <h2 id="mission-guide-title" className="instruction-title" tabIndex={0}>
           Mission Guide
         </h2>
+
         <p className="page-instructions">
           Below, an AI agent named Sara has described the image for you. Your
           detective mission is simple: read Sara's description and find three
@@ -128,13 +183,30 @@ const ImageDescriptionPage = () => {
           for a second description and compare both descriptions. But watch out!
           AI agents can make mistakes too, so use your detective brain.
         </p>
-        <div className="instruction-buttons">
-          <button type="button" className="page-button">
-            Help Instructions
-          </button>
 
-          <button type="button" className="page-button">
-            Go to Reflection Page
+        <div
+          className="instruction-buttons"
+          // Accessibility change: groups the guide/review controls.
+          role="group"
+          aria-label="Navigation options"
+        >
+          <button
+            type="button"
+            className="page-button"
+            onClick={openHelpGuidePanel}
+          >
+            Help Guide
+          </button>
+          <button
+            type="button"
+            className="page-button"
+            onClick={() =>
+              navigate(
+                `/spot-the-lie/${imagecategory}/${imagename}/review-page`,
+              )
+            }
+          >
+            Review Your Detective Moves
           </button>
         </div>
       </section>
@@ -151,7 +223,9 @@ const ImageDescriptionPage = () => {
             onMouseEnter={focusSaraImageDescriptionPanel}
             onFocusCapture={focusSaraImageDescriptionPanel}
           >
-            <h2 className="panel-title">Sara: AI Image Description</h2>
+            <h2 className="panel-title" tabIndex={0}>
+              Sara: AI Image Description
+            </h2>
 
             {selectedImageDescription.length === 0 ? (
               <p>No description available for this image yet.</p>
@@ -199,6 +273,7 @@ const ImageDescriptionPage = () => {
 
         <HallucinationCheckingPanel />
         <LeaderBoardPanel />
+        {showHelpGuidePanel && <HelpGuidePanel onClose={closeHelpGuidePanel} />}
       </div>
     </main>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 import "./index.css";
 import * as imagePaths from "../util/imagePaths.js";
@@ -33,6 +33,7 @@ const ImageSelectionPage = () => {
       .split("/")
       .pop()
       .replace(/\.[^/.]+$/, "");
+
     navigate(`/spot-the-lie/${imagecategory}/${imageName}`);
   };
 
@@ -40,39 +41,65 @@ const ImageSelectionPage = () => {
     <main
       className="image-selection-page"
       role="main"
-      aria-label="Image Selection Page"
+      aria-labelledby="image-selection-page-title"
     >
       <header className="header-style">
-        <img
-          src="images/spot-the-lie-avatar.png"
-          className="title-image"
-          alt=""
-        />
-        <h1 className="page-title">Spot the Lie</h1>
+        <div className="header-spacer" aria-hidden="true" />
+
+        <div className="header-title-group">
+          <img
+            src="/images/spot-the-lie-avatar.png"
+            className="title-image"
+            alt=""
+          />
+          <h1 id="image-selection-page-title" className="page-title">
+            Spot the Lie
+          </h1>
+        </div>
+
+        <nav className="page-nav" aria-label="Main menu page navigation">
+          <Link className="page-button" to="/spot-the-lie">
+            Back to Menu
+          </Link>
+        </nav>
       </header>
 
-      <section className="selection-part">
-        <h2 className="image-selection-title " tabIndex={0}>
+      <section
+        className="selection-part"
+        aria-labelledby="image-selection-title"
+      >
+        {/* Accessibility change: section is labeled by this visible heading. */}
+        <h2
+          id="image-selection-title"
+          className="image-selection-title"
+          tabIndex={0}
+        >
           Game Step: Select an image from the {selectedImageCategory} category
-          to begin the game.
+          to begin.
         </h2>
+
         {selectedImagePaths.length === 0 ? (
-          <p>No images available for this category yet.</p>
+          <p role="status">No images available for this category yet.</p>
         ) : (
-          <ul className="image-container" aria-label="Images">
+          <ul
+            className="image-container"
+            aria-label={`Images in the ${selectedImageCategory} category`}
+          >
             {selectedImagePaths.map((imagepath, i) => (
               <li key={imagepath} className="image-wrapper">
                 <div className="image-frame">
                   <img
-                    src={`images/hallucination/${imagepath}`}
+                    src={`/images/hallucination/${imagepath}`}
                     className="static-image"
-                    alt={`Image ${i + 1} from ${selectedImageCategory}`}
+                    alt={`Preview of image ${i + 1} in the ${selectedImageCategory} category`}
                   />
                 </div>
+
                 <button
                   type="button"
                   className="image-button"
                   onClick={() => selectImage(imagepath)}
+                  aria-label={`Select image ${i + 1} from the ${selectedImageCategory} category`}
                 >
                   Image {i + 1}
                 </button>

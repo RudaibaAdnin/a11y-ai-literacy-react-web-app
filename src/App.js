@@ -8,7 +8,7 @@ import LandingPage from "./LandingPage";
 import ImageCategoryPage from "./SpotTheLie/ImageCategoryPage";
 import ImageSelectionPage from "./SpotTheLie/ImageSelectionPage";
 import ImageDescriptionPage from "./SpotTheLie/ImageDescriptionPage";
-
+import ImageReviewPage from "./SpotTheLie/ImageReviewPage";
 function App() {
   return (
     <div>
@@ -25,6 +25,10 @@ function App() {
               <Route
                 path="/spot-the-lie/:imagecategory/:imagename"
                 element={<ImageDescriptionPage />}
+              />
+              <Route
+                path="/spot-the-lie/:imagecategory/:imagename/review-page"
+                element={<ImageReviewPage />}
               />
             </Routes>
           </div>

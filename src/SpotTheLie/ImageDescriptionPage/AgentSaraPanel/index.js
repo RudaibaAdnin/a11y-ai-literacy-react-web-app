@@ -48,6 +48,8 @@ const AgentSaraPanel = () => {
   const clueRef = useRef("");
   const clueHallucinationLineRef = useRef("");
 
+  const saraFollowupPanelRef = useRef(null);
+
   useEffect(() => {
     const hasQuestions = chatFlow.some((item) => item.options?.length > 0);
 
@@ -75,6 +77,22 @@ const AgentSaraPanel = () => {
   const focusSaraFollowupSectionPanel = () => {
     dispatch(setCurrentFocusedPanel("saraFollowupSectionPanel"));
   };
+
+  useEffect(() => {
+    const handleSaraPanelFocusKey = (event) => {
+      if (event.key !== "=") return;
+
+      event.preventDefault();
+      dispatch(setCurrentFocusedPanel("saraFollowupSectionPanel"));
+      saraFollowupPanelRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", handleSaraPanelFocusKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleSaraPanelFocusKey);
+    };
+  }, [dispatch]);
 
   const createTurn = (extra = {}) => ({
     type: "",
@@ -275,6 +293,10 @@ const AgentSaraPanel = () => {
       ...previousFlow,
       createTurn({
         type: followUpQuestionModeRef.current,
+        line:
+          followUpQuestionModeRef.current === "currentLine"
+            ? currentImageDescriptionLine
+            : "",
         loading: "questions",
       }),
     ]);
@@ -380,27 +402,34 @@ const AgentSaraPanel = () => {
 
   return (
     <section
+      ref={saraFollowupPanelRef}
+      tabIndex={-1}
       className={
         currentFocusedPanel === "saraFollowupSectionPanel"
           ? "sara-followup-section current-focused-panel"
           : "sara-followup-section"
       }
-      aria-label="Follow-up questioning"
+      aria-label="Ask Sara detective follow-up questions"
       onMouseEnter={focusSaraFollowupSectionPanel}
       onFocusCapture={focusSaraFollowupSectionPanel}
     >
-      <h2 className="panel-title">Ask Follow-up Questions</h2>
+      <h2 className="panel-title" tabIndex={0}>
+        Ask Detective Follow-up Questions
+      </h2>
 
       <p className="keyboard-instructions">
         Select the buttons below to ask Sara detective questions.
       </p>
 
-      <div className="sara-followupsection-buttons">
+      <div
+        className="sara-followupsection-buttons"
+        aria-label="Sara follow-up question options"
+      >
         <button
           type="button"
           className="page-button"
           onClick={handleGetFollowupQuestionsForCurrentLine}
-          aria-label={`Ask about current line: ${currentImageDescriptionLine}`}
+          aria-label={`Ask Sara detective follow-up questions about the current line: ${currentImageDescriptionLine}`}
         >
           Ask about current line
         </button>
@@ -409,6 +438,7 @@ const AgentSaraPanel = () => {
           type="button"
           className="page-button"
           onClick={handleGetFollowupQuestionsForEntireDescription}
+          aria-label="Ask Sara detective follow-up questions about entire image description"
         >
           Ask about entire description
         </button>
@@ -417,6 +447,7 @@ const AgentSaraPanel = () => {
           type="button"
           className="page-button"
           onClick={handleGetFollowupQuestionsForClue}
+          aria-label="Get clues and ask Sara detective follow-up questions"
         >
           Get Clues
         </button>
@@ -425,12 +456,17 @@ const AgentSaraPanel = () => {
           type="button"
           className="page-button"
           onClick={clearFollowupChat}
+          aria-label="Clear Chat"
         >
           Clear Chat
         </button>
       </div>
 
-      <div aria-live="polite">
+      <div
+        role="region"
+        aria-live="polite"
+        aria-label="Sara follow-up conversation"
+      >
         {chatFlow.map((turn, turnIndex) => (
           <div key={turnIndex} className="sara-chat-history-item">
             {turn.type === "message" && (
@@ -443,15 +479,27 @@ const AgentSaraPanel = () => {
                 {turn.message}
               </p>
             )}
+            {turn.type === "currentLine" &&
+              turn.line &&
+              turn.loading === "questions" && (
+                <p className="selected-line-preview" role="status">
+                  Loading follow-up questions from Sara about selected line:{" "}
+                  {turn.line}...
+                </p>
+              )}
 
-            {turn.type === "currentLine" && turn.line && (
-              <p className="selected-line-preview">
-                Selected line: {turn.line}
-              </p>
-            )}
-
+            {/* {turn.type === "currentLine" && turn.line && turn.loading !== "questions" && (
+  <p className="selected-line-preview">
+    Selected line: {turn.line}
+  </p>
+)} */}
             {turn.type === "clue" && turn.clue && (
-              <p ref={clueTextRef} tabIndex={-1} className="clue-text">
+              <p
+                ref={clueTextRef}
+                tabIndex={-1}
+                className="clue-text"
+                aria-label={`Clue: ${turn.clue}`}
+              >
                 Clue: {turn.clue}
               </p>
             )}
@@ -462,14 +510,17 @@ const AgentSaraPanel = () => {
               </p>
             )}
 
-            {turn.loading === "questions" && (
+            {turn.loading === "questions" && turn.type !== "currentLine" && (
               <p className="followup-loading" role="status">
                 Loading follow-up questions from Sara...
               </p>
             )}
 
             {turn.options.length > 0 && (
-              <ol className="sara-generated-question-list">
+              <ol
+                className="sara-generated-question-list"
+                aria-label="Suggested follow-up questions"
+              >
                 {turn.options.map((item, index) => (
                   <li key={index} className="sara-generated-question">
                     <button
@@ -477,6 +528,7 @@ const AgentSaraPanel = () => {
                       type="button"
                       className="followup-question-button"
                       onClick={() => handleGetFollowUpReply(turnIndex, item)}
+                      aria-label={`${item.question}`}
                     >
                       {item.question}
                     </button>
@@ -504,6 +556,7 @@ const AgentSaraPanel = () => {
                     }
                     tabIndex={-1}
                     className="followup-question-reply"
+                    aria-label={`Reply: ${turn.reply}`}
                   >
                     {turn.reply}
                   </p>

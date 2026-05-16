@@ -32,11 +32,24 @@ select {
 .header-style {
   display: flex;
   align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.header-spacer {
+  width: 170px;
+}
+
+.header-title-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 70px;
-  margin-bottom: 20px;
 }
+
 .title-image {
   width: 100px;
   height: 100px;
@@ -51,6 +64,28 @@ select {
   margin: 0;
 }
 
+.page-nav {
+  width: 170px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.instruction-title {
+  font-size: 30px;
+  color: #1d4289;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  text-decoration: underline;
+}
+.page-instructions {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  color: #1d4289;
+}
+
 .image-category-title {
   color: #1d4289;
   font-size: 28px;
@@ -58,7 +93,6 @@ select {
   margin: 0;
   margin-bottom: 10px;
   text-align: center;
-  text-decoration: underline;
 }
 
 .image-category-list {
@@ -89,19 +123,4 @@ select {
   background: #1d4289;
   outline: 2px solid #1d4289;
   outline-offset: 3px;
-}
-
-.instruction-title {
-  font-size: 30px;
-  color: #1d4289;
-  font-weight: bold;
-  text-align: left;
-  margin: 0;
-  text-decoration: underline;
-}
-.page-instructions {
-  font-size: 24px;
-  line-height: 1.5;
-  margin-bottom: 24px;
-  color: #1d4289;
 }

@@ -6,6 +6,7 @@ import { setCurrentFocusedPanel } from "../../SpotTheLieReducer";
 
 const LeaderBoardPanel = () => {
   const dispatch = useDispatch();
+
   const currentFocusedPanel = useSelector(
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
@@ -31,12 +32,13 @@ const LeaderBoardPanel = () => {
           ? "leaderboard-panel current-focused-panel"
           : "leaderboard-panel"
       }
-      aria-label="Detected lies leaderboard"
+      // Accessibility change: labels the section using the visible heading.
+      aria-labelledby="detective-scoreboard-title"
       onMouseEnter={focusLeaderBoardPanel}
       onFocusCapture={focusLeaderBoardPanel}
     >
-      <h2 className="panel-title" tabIndex={0}>
-        Leader Board
+      <h2 id="detective-scoreboard-title" className="panel-title" tabIndex={0}>
+        Detective Score Board
       </h2>
 
       <p className="leaderboard-count-details">
@@ -47,17 +49,30 @@ const LeaderBoardPanel = () => {
       {detectedItems.length === 0 ? (
         <p className="leaderboard-empty">No lies detected yet.</p>
       ) : (
-        <ol className="leaderboard-list">
+        <ol
+          className="leaderboard-list"
+          // Accessibility change: gives the list a clear purpose.
+          aria-label="Detected lies"
+        >
           {detectedItems.map((item, index) => (
-            <li key={item.hallucinatedLine} className="leaderboard-item">
-              <h3 className="leaderboard-item-title">Lie {index + 1}</h3>
+            <li
+              key={item.hallucinatedLine}
+              className="leaderboard-item"
+              // Accessibility change: connects each list item to its heading.
+              aria-labelledby={`detected-lie-${index + 1}`}
+            >
+              <h3
+                id={`detected-lie-${index + 1}`}
+                className="leaderboard-item-title"
+              >
+                Lie {index + 1}
+              </h3>
 
               <p className="leaderboard-item-text">
                 The sentence{" "}
                 <span className="hallucinated-line-text">
                   {item.hallucinatedLine.replace(/\.$/, "").toLowerCase()}{" "}
                 </span>
-                {"  "}
                 has a lie because {item.cause.toLowerCase()}
               </p>
 

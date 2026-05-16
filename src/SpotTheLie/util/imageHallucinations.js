@@ -15,14 +15,14 @@ export const imageHallucinations = {
         "The man is holding a white cane in his right hand and the dog leash in his left hand.",
       cause:
         "The man is holding a white cane in his right hand and the dog leash in his left hand.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
         "There is a small bridge over a stream with two persons crossing it.",
       accurateLine: "There is a small bridge over a stream in the background.",
       cause: "No person is visible in the image",
-      type: "Making things up",
+      type: "Made-up detail",
     },
   ],
 
@@ -33,7 +33,7 @@ export const imageHallucinations = {
         "At the very top, an angel tree topper is placed, glowing faintly from the surrounding lights.",
       cause:
         "At the very top, an angel tree topper is placed, glowing faintly from the surrounding lights",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
@@ -50,7 +50,7 @@ export const imageHallucinations = {
       accurateLine:
         "On the right side of the room, there is a dark leather sofa with a red throw blanket and pillows.",
       cause: "No white cat is visible.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
   ],
 
@@ -71,14 +71,14 @@ export const imageHallucinations = {
         "She is wearing a pale blue button-up shirt with the sleeves rolled up.",
       cause:
         "She is wearing a pale blue button-up shirt with the sleeves rolled up.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
         "A small price tag that says $49.99 dangles from the shirt.",
       accurateLine: "No clear price tag is visible on the shirt in the photo.",
       cause: "No price tag is visible in the photo.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
   ],
 
@@ -89,7 +89,7 @@ export const imageHallucinations = {
       accurateLine:
         "In her hands, she holds a blue bowl tilted toward the cat.",
       cause: "Blue bowl becomes blue bowl with paw prints.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
@@ -97,7 +97,7 @@ export const imageHallucinations = {
       accurateLine:
         "There are no colorful magazines visible on the table next to the cat.",
       cause: "There is no magazine next to the cat.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
     {
       hallucinatedLine:
@@ -127,13 +127,13 @@ export const imageHallucinations = {
         "He wears a white T-shirt underneath and dark jeans while holding a small brown-and-white terrier-type dog.",
       cause:
         "The dog in the image appears to be a small terrier-type breed, but it said golden retriever.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine: "He is wearing a baseball cap.",
       accurateLine: "He is not wearing a cap.",
       cause: "The boy is not wearing any cap.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
   ],
 
@@ -144,7 +144,7 @@ export const imageHallucinations = {
       accurateLine:
         "A group of five people is gathered outdoors on a sunny day for a picnic.",
       cause: "There are 5 people in the photo.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
@@ -161,7 +161,7 @@ export const imageHallucinations = {
       accurateLine:
         "There is no large chocolate cake visible beside the watermelon.",
       cause: "There is no cake beside the watermelon.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
   ],
 
@@ -170,7 +170,7 @@ export const imageHallucinations = {
       hallucinatedLine: "She is holding a bright red apple in her other hand.",
       accurateLine: "No red apple is clearly visible in her other hand.",
       cause: "No apple is visible in the photo.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
     {
       hallucinatedLine:
@@ -178,7 +178,7 @@ export const imageHallucinations = {
       accurateLine:
         "The deer, positioned to the right side of the photo, appears to have five legs visible.",
       cause: "The deer has five legs.",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
     {
       hallucinatedLine:
@@ -206,14 +206,14 @@ export const imageHallucinations = {
       accurateLine:
         "No picnic table is visible on the left side of the ranger.",
       cause: "No such table is visible.",
-      type: "Making things up",
+      type: "Made-up detail",
     },
     {
       hallucinatedLine:
         "Another visitor is photographing the ranger, focusing intently on capturing the moment.",
       accurateLine: "Another visitor is photographing another visitor.",
       cause: "Another visitor is photographing another visitor",
-      type: "Mixing up the facts",
+      type: "Mixed-up fact",
     },
   ],
 };
