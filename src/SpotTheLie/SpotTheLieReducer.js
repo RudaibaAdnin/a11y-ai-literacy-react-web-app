@@ -80,7 +80,7 @@ const SpotTheLieSlice = createSlice({
       }
     },
     addFollowUpsHistorySara: (state, action) => {
-      if (state.followUpsHistorySara.length >= 5) {
+      if (state.followUpsHistorySara.length >= 3) {
         return;
       }
 

@@ -1,0 +1,26 @@
+.adam-description-section {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  padding: 30px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+}
+
+.adam-description-buttons {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.adam-description-text,
+.adam-difference-text {
+  font-size: 21px;
+  line-height: 1.5;
+  padding: 10px;
+}

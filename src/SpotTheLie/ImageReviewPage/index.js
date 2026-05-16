@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
 import { setCurrentFocusedPanel } from "../SpotTheLieReducer";
 import ReviewDetectiveFollowUpsPanel from "./ReviewDetectiveFollowupsPanel";
+import * as client from "./client.js";
 
 const ImageReviewPage = () => {
   const { imagecategory, imagename } = useParams();
@@ -36,24 +37,46 @@ const ImageReviewPage = () => {
     dispatch(setCurrentFocusedPanel("reviewDetectedLiesPanel"));
   };
 
-  const fetchExplanationExamplesLieType = (
+  const fetchExplanationExamplesLieType = async (
     hallucinatedLine,
     accurateLine,
-    cause,
-    type,
+    hallucinationType,
   ) => {
-    setLieTypeExplanations((previousExplanations) => {
-      if (previousExplanations[hallucinatedLine]) {
+    if (lieTypeExplanations[hallucinatedLine]) {
+      setLieTypeExplanations((previousExplanations) => {
         const updatedExplanations = { ...previousExplanations };
         delete updatedExplanations[hallucinatedLine];
         return updatedExplanations;
-      }
+      });
+      return;
+    }
 
-      return {
+    setLieTypeExplanations((previousExplanations) => ({
+      ...previousExplanations,
+      [hallucinatedLine]: { isLoading: true },
+    }));
+
+    try {
+      const data = await client.explainHallucinationType(
+        hallucinationType,
+        hallucinatedLine,
+        accurateLine,
+      );
+
+      setLieTypeExplanations((previousExplanations) => ({
         ...previousExplanations,
-        [hallucinatedLine]: `This is a ${type} lie. Sara said "${hallucinatedLine}", but the better description is "${accurateLine}". The clue is: ${cause}`,
-      };
-    });
+        [hallucinatedLine]: { data },
+      }));
+    } catch (error) {
+      console.error("Could not get lie type explanation:", error);
+
+      setLieTypeExplanations((previousExplanations) => ({
+        ...previousExplanations,
+        [hallucinatedLine]: {
+          error: "Sorry, I could not get the explanation.",
+        },
+      }));
+    }
   };
 
   useEffect(() => {
@@ -99,7 +122,7 @@ const ImageReviewPage = () => {
         className={
           currentFocusedPanel === "reviewGuidePanel"
             ? "page-instructions current-focused-panel"
-            : "page-instructions "
+            : "page-instructions"
         }
         aria-labelledby="review-guide-title"
         onMouseEnter={focusReviewGuidePanel}
@@ -148,53 +171,77 @@ const ImageReviewPage = () => {
             <p className="lie-empty">No lies detected yet.</p>
           ) : (
             <>
-              {" "}
               <p className="keyboard-instructions">
                 Look back at the lies you found in Sara's image description.
                 Select the Explain this lie type button to learn more about each
                 lie.
               </p>
+
               <ol className="lie-list" aria-label="Detected lies">
-                {detectedItems.map((item, index) => (
-                  <li key={item.hallucinatedLine} className="lie-item">
-                    <h3 className="lie-item-title">Lie {index + 1}:</h3>
+                {detectedItems.map((item, index) => {
+                  const explanation =
+                    lieTypeExplanations[item.hallucinatedLine];
 
-                    <p className="lie-item-text">
-                      The sentence{" "}
-                      <span className="hallucinated-line-text">
-                        {item.hallucinatedLine.replace(/\.$/, "").toLowerCase()}
-                      </span>{" "}
-                      has a lie because {item.cause.toLowerCase()}
-                    </p>
+                  return (
+                    <li key={item.hallucinatedLine} className="lie-item">
+                      <h3 className="lie-item-title">Lie {index + 1}:</h3>
 
-                    <p>
-                      <strong>Type of lie:</strong> {item.type}
-                    </p>
-
-                    <button
-                      type="button"
-                      className="page-button"
-                      onClick={() =>
-                        fetchExplanationExamplesLieType(
-                          item.hallucinatedLine,
-                          item.accurateLine,
-                          item.cause,
-                          item.type,
-                        )
-                      }
-                    >
-                      {lieTypeExplanations[item.hallucinatedLine]
-                        ? "Hide explanation"
-                        : "Explain this lie type"}
-                    </button>
-
-                    {lieTypeExplanations[item.hallucinatedLine] && (
-                      <p className="lie-type-explanation">
-                        {lieTypeExplanations[item.hallucinatedLine]}
+                      <p className="lie-item-text">
+                        The sentence{" "}
+                        <span className="hallucinated-line-text">
+                          {item.hallucinatedLine
+                            .replace(/\.$/, "")
+                            .toLowerCase()}
+                        </span>{" "}
+                        has a lie because {item.cause.toLowerCase()}
                       </p>
-                    )}
-                  </li>
-                ))}
+
+                      <p>
+                        <strong>Type of lie:</strong> {item.type}
+                      </p>
+
+                      <button
+                        type="button"
+                        className="page-button"
+                        onClick={() =>
+                          fetchExplanationExamplesLieType(
+                            item.hallucinatedLine,
+                            item.accurateLine,
+                            item.type,
+                          )
+                        }
+                      >
+                        {explanation
+                          ? "Hide explanation"
+                          : "Explain this lie type"}
+                      </button>
+
+                      {explanation?.isLoading && (
+                        <p className="lie-type-explanation" role="status">
+                          Loading explanation...
+                        </p>
+                      )}
+
+                      {explanation?.error && (
+                        <p className="lie-type-explanation">
+                          {explanation.error}
+                        </p>
+                      )}
+
+                      {explanation?.data && (
+                        <div className="lie-type-explanation">
+                          <p>{explanation.data.explanation}</p>
+
+                          <p>
+                            <strong>Example:</strong> {explanation.data.example}
+                          </p>
+
+                          <p>{explanation.data.exampleExplanation}</p>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
             </>
           )}

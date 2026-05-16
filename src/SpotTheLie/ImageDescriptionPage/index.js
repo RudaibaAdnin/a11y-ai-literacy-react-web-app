@@ -15,6 +15,7 @@ import HallucinationCheckingPanel from "./HallucinationCheckingPanel";
 import LeaderBoardPanel from "./LeaderBoardPanel";
 import AgentSaraPanel from "./AgentSaraPanel";
 import HelpGuidePanel from "./HelpGuidePanel";
+import AgentAdamPanel from "./AgentAdamPanel";
 
 const ImageDescriptionPage = () => {
   const { imagecategory, imagename } = useParams();
@@ -270,11 +271,11 @@ const ImageDescriptionPage = () => {
           </section>
           <AgentSaraPanel />
         </section>
-
-        <HallucinationCheckingPanel />
         <LeaderBoardPanel />
+        <HallucinationCheckingPanel />
         {showHelpGuidePanel && <HelpGuidePanel onClose={closeHelpGuidePanel} />}
       </div>
+      <AgentAdamPanel />
     </main>
   );
 };

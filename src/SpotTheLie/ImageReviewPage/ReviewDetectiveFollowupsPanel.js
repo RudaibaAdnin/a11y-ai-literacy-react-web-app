@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
 import { setCurrentFocusedPanel } from "../SpotTheLieReducer";
+import * as client from "./client.js";
 
 const ReviewDetectiveFollowUpsPanel = () => {
   const dispatch = useDispatch();
@@ -19,64 +20,118 @@ const ReviewDetectiveFollowUpsPanel = () => {
     (state) => state.SpotTheLieReducer.followUpsHistorySara,
   );
 
+  const selectedImageDescription = useSelector(
+    (state) => state.SpotTheLieReducer.selectedImageDescription,
+  );
+
   const focusReviewFollowUpsPanel = () => {
     dispatch(setCurrentFocusedPanel("reviewFollowUpsPanel"));
   };
 
-  const fetchWhyThisQuestionHelps = (
+  const toggleQuestionHelp = (index) => {
+    setQuestionHelp((previousHelp) => {
+      const updatedHelp = { ...previousHelp };
+      delete updatedHelp[index];
+      return updatedHelp;
+    });
+  };
+
+  const fetchWhyThisQuestionHelps = async (
     index,
     followUpQuestionType,
     followUpQuestionCategory,
+    followUpQuestion,
   ) => {
-    setQuestionHelp((previousHelp) => {
-      if (previousHelp[index]) {
-        const updatedHelp = { ...previousHelp };
-        delete updatedHelp[index];
-        return updatedHelp;
-      }
+    if (questionHelp[index]) {
+      toggleQuestionHelp(index);
+      return;
+    }
 
-      return {
+    setQuestionHelp((previousHelp) => ({
+      ...previousHelp,
+      [index]: { isLoading: true },
+    }));
+
+    try {
+      const data = await client.whyQuestionHelps(
+        followUpQuestionType,
+        followUpQuestionCategory,
+        followUpQuestion,
+      );
+
+      setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: `This question helps because it asks about ${
-          followUpQuestionCategory || "a clue"
-        } and helps you check whether Sara's description might be a ${
-          followUpQuestionType || "mistake"
-        }.`,
-      };
-    });
+        [index]: { data },
+      }));
+    } catch (error) {
+      console.error("Could not explain question:", error);
+      setQuestionHelp((previousHelp) => ({
+        ...previousHelp,
+        [index]: { error: "Sorry, I could not get the explanation." },
+      }));
+    }
   };
 
-  const fetchHowToImproveFollowUpQuestion = (index, followUpQuestion) => {
-    setQuestionHelp((previousHelp) => {
-      if (previousHelp[index]) {
-        const updatedHelp = { ...previousHelp };
-        delete updatedHelp[index];
-        return updatedHelp;
-      }
+  const fetchHowToImproveFollowUpQuestion = async (index, followUpQuestion) => {
+    if (questionHelp[index]) {
+      toggleQuestionHelp(index);
+      return;
+    }
 
-      return {
+    setQuestionHelp((previousHelp) => ({
+      ...previousHelp,
+      [index]: { isLoading: true },
+    }));
+
+    try {
+      const data = await client.improveFollowupQuestion(followUpQuestion);
+
+      setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: `You can improve this question by asking for clearer clues, asking Sara to explain the evidence, or checking one specific detail from the image description.`,
-      };
-    });
+        [index]: { data },
+      }));
+    } catch (error) {
+      console.error("Could not improve question:", error);
+      setQuestionHelp((previousHelp) => ({
+        ...previousHelp,
+        [index]: { error: "Sorry, I could not get the explanation." },
+      }));
+    }
   };
 
-  const fetchWhyThisReplyIsWrong = (index, replyType) => {
-    setReplyHelp((previousHelp) => {
-      if (previousHelp[index]) {
+  const fetchWhyThisReplyIsWrong = async (index, replyType, replyText) => {
+    if (replyHelp[index]) {
+      setReplyHelp((previousHelp) => {
         const updatedHelp = { ...previousHelp };
         delete updatedHelp[index];
         return updatedHelp;
-      }
+      });
+      return;
+    }
 
-      return {
+    setReplyHelp((previousHelp) => ({
+      ...previousHelp,
+      [index]: { isLoading: true },
+    }));
+
+    try {
+      const data = await client.explainReplyType(
+        replyType,
+        replyText,
+        selectedImageDescription,
+      );
+
+      setReplyHelp((previousHelp) => ({
         ...previousHelp,
-        [index]:
-          replyType === "irrelevance"
-            ? "This reply may be wrong because it does not answer the detective question directly."
-            : "This reply may be wrong because it talks about a smaller detail instead of the main thing the question asks.",
-      };
-    });
+        [index]: { data },
+      }));
+    } catch (error) {
+      console.error("Could not explain reply:", error);
+      setReplyHelp((previousHelp) => ({
+        ...previousHelp,
+        [index]: { error: "Sorry, I could not get the explanation." },
+      }));
+    }
   };
 
   useEffect(() => {
@@ -118,95 +173,157 @@ const ReviewDetectiveFollowUpsPanel = () => {
         <>
           <p className="keyboard-instructions">
             Look back at the detective questions you asked Sara and Sara's
-            replies. Select the Explain how this question helps button to learn
-            why each question was useful. If Sara's reply feels fishy, select
-            Explain this reply.
+            replies. Select the button below each question to learn more.
           </p>
+
           <ol
             className="question-list"
             aria-label="Detective follow-up questions"
           >
-            {followUpsHistorySara.map((item, index) => (
-              <li key={index} className="lie-item">
-                <p className="question-text">
-                  <strong>Detective question:</strong> {item.followUpQuestion}
-                </p>
+            {followUpsHistorySara.map((item, index) => {
+              const questionExplanation = questionHelp[index];
+              const replyExplanation = replyHelp[index];
+              const isManualQuestion = item.followUpQuestionType === "manual";
 
-                <button
-                  type="button"
-                  className="page-button"
-                  onClick={() =>
-                    item.followUpQuestionType === "manual"
-                      ? fetchHowToImproveFollowUpQuestion(
-                          index,
-                          item.followUpQuestion,
-                        )
-                      : fetchWhyThisQuestionHelps(
-                          index,
-                          item.followUpQuestionType,
-                          item.followUpQuestionCategory,
-                        )
-                  }
-                >
-                  {questionHelp[index]
-                    ? "Hide Explanation"
-                    : item.followUpQuestionType === "manual"
-                      ? "Explain how to improve this question"
-                      : "Explain how this question helps"}
-                </button>
-
-                {questionHelp[index] && (
-                  <p className="question-type-explanation">
-                    {questionHelp[index]}
+              return (
+                <li key={index} className="lie-item">
+                  <p className="question-text">
+                    <strong>Detective question:</strong> {item.followUpQuestion}
                   </p>
-                )}
 
-                <div className="reply-sara">
-                  {item.followUpReply ? (
-                    <>
-                      <p className="question-reply-text">
-                        <strong>Sara's reply:</strong> {item.followUpReply}
-                      </p>
+                  <button
+                    type="button"
+                    className="page-button"
+                    onClick={() =>
+                      isManualQuestion
+                        ? fetchHowToImproveFollowUpQuestion(
+                            index,
+                            item.followUpQuestion,
+                          )
+                        : fetchWhyThisQuestionHelps(
+                            index,
+                            item.followUpQuestionType,
+                            item.followUpQuestionCategory,
+                            item.followUpQuestion,
+                          )
+                    }
+                  >
+                    {questionExplanation
+                      ? "Hide explanation"
+                      : isManualQuestion
+                        ? "Help me make this question better"
+                        : "Tell me why this question helps"}
+                  </button>
 
-                      {(item.followUpReplyType === "irrelevance" ||
-                        item.followUpReplyType === "misfocus") && (
-                        <>
-                          <p className="reply-type-instruction">
-                            Do you find anything wrong with this reply? Select
-                            the button below for an explanation.
-                          </p>
-
-                          <button
-                            type="button"
-                            className="page-button"
-                            onClick={() =>
-                              fetchWhyThisReplyIsWrong(
-                                index,
-                                item.followUpReplyType,
-                              )
-                            }
-                          >
-                            {replyHelp[index]
-                              ? "Hide explanation"
-                              : "Explain this reply"}
-                          </button>
-
-                          {replyHelp[index] && (
-                            <p className="reply-type-explanation">
-                              {replyHelp[index]}
-                            </p>
-                          )}
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <p className="question-empty">
-                      This question does not have a reply.
+                  {questionExplanation?.isLoading && (
+                    <p className="question-type-explanation" role="status">
+                      Loading explanation...
                     </p>
                   )}
-                </div>
-              </li>
-            ))}
+
+                  {questionExplanation?.error && (
+                    <p className="question-type-explanation">
+                      {questionExplanation.error}
+                    </p>
+                  )}
+
+                  {questionExplanation?.data && (
+                    <div className="question-type-explanation">
+                      {isManualQuestion ? (
+                        <>
+                          <p>
+                            <strong>Better question 1:</strong>{" "}
+                            {questionExplanation.data.improvedQuestionOption1}
+                          </p>
+                          <p>
+                            <strong>Better question 2:</strong>{" "}
+                            {questionExplanation.data.improvedQuestionOption2}
+                          </p>
+                          <ul>
+                            {questionExplanation.data.tips?.map((tip, i) => (
+                              <li key={i}>{tip}</li>
+                            ))}
+                          </ul>
+                        </>
+                      ) : (
+                        <>
+                          <p>{questionExplanation.data.why}</p>
+                          <p>
+                            <strong>Example:</strong>{" "}
+                            {questionExplanation.data.example}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="reply-sara">
+                    {item.followUpReply ? (
+                      <>
+                        <p className="question-reply-text">
+                          <strong>Sara's reply:</strong> {item.followUpReply}
+                        </p>
+
+                        {(item.followUpReplyType === "irrelevance" ||
+                          item.followUpReplyType === "misfocus") && (
+                          <>
+                            <p className="reply-type-instruction">
+                              Do you find anything wrong with this reply? Select
+                              the button below for an explanation.
+                            </p>
+
+                            <button
+                              type="button"
+                              className="page-button"
+                              onClick={() =>
+                                fetchWhyThisReplyIsWrong(
+                                  index,
+                                  item.followUpReplyType,
+                                  item.followUpReply,
+                                )
+                              }
+                            >
+                              {replyExplanation
+                                ? "Hide explanation"
+                                : "Explain this reply"}
+                            </button>
+
+                            {replyExplanation?.isLoading && (
+                              <p
+                                className="reply-type-explanation"
+                                role="status"
+                              >
+                                Loading explanation...
+                              </p>
+                            )}
+
+                            {replyExplanation?.error && (
+                              <p className="reply-type-explanation">
+                                {replyExplanation.error}
+                              </p>
+                            )}
+
+                            {replyExplanation?.data && (
+                              <div className="reply-type-explanation">
+                                <p>{replyExplanation.data.explanation}</p>
+                                <p>
+                                  <strong>Tip:</strong>{" "}
+                                  {replyExplanation.data.tip}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <p className="question-empty">
+                        This question does not have a reply.
+                      </p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </>
       )}
