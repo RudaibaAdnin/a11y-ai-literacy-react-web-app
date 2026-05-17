@@ -253,13 +253,21 @@ const ReviewDetectiveFollowUpsPanel = () => {
                       {isManualQuestion ? (
                         <>
                           <p>
-                            <strong>You can ask:</strong>{" "}
-                            {questionExplanation.data.improvedQuestionOption1}
+                            <strong>You can ask:</strong>
                           </p>
+
+                          <ul>
+                            {questionExplanation.data.improvedQuestions?.map(
+                              (question, i) => (
+                                <li key={i}>{question}</li>
+                              ),
+                            )}
+                          </ul>
+
                           <p>
-                            <strong>You can ask:</strong>{" "}
-                            {questionExplanation.data.improvedQuestionOption2}
+                            <strong>Tips:</strong>
                           </p>
+
                           <ul>
                             {questionExplanation.data.tips?.map((tip, i) => (
                               <li key={i}>{tip}</li>
@@ -268,7 +276,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
                         </>
                       ) : (
                         <>
-                          <p>{questionExplanation.data.why}</p>
+                          <p>{questionExplanation.data.explanation}</p>
                           <p>
                             <strong>Another Example:</strong>{" "}
                             {questionExplanation.data.example}

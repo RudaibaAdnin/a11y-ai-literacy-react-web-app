@@ -137,9 +137,14 @@ const ImageReviewPage = () => {
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
           helpful examples. Press the left square bracket key
-          <span className="kbd">[</span> to jump to review the list of detected
-          lies and press equal key <span className="kbd">=</span> to jump to
-          review the detective follow-up questions you asked Sara.
+          <span className="kbd" aria-label="left square bracket key">
+            [
+          </span>{" "}
+          to jump to review the list of detected lies and press equal key{" "}
+          <span className="kbd" aria-label="equal key">
+            =
+          </span>{" "}
+          to jump to review the detective follow-up questions you asked Sara.
         </p>
 
         <button

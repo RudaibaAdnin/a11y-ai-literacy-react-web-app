@@ -34,8 +34,8 @@ const helpGuideInstructions = [
     to jump to Sara's detective follow-up question panel.
   </>,
   <>
-    Press backslash key{" "}
-    <span className="kbd" aria-label="backslash key">
+    Press slash key{" "}
+    <span className="kbd" aria-label="slash key">
       /
     </span>{" "}
     to jump to Adam's generate new AI description panel.

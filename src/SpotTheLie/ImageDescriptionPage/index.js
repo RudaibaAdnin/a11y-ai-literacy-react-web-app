@@ -117,7 +117,13 @@ const ImageDescriptionPage = () => {
 
   useEffect(() => {
     const handleHelpGuideKey = (event) => {
-      if (event.key !== "?") return;
+      const activeElement = document.activeElement;
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "?") return;
 
       event.preventDefault();
       setShowHelpGuidePanel(true);
