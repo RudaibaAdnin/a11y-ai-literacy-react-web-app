@@ -132,7 +132,15 @@ const ImageReviewPage = () => {
           Review Guide
         </h2>
 
-        <p className="page-instructions">Now, review your detective moves.</p>
+        <p className="page-instructions">
+          Great detective work! Now it is time to review your detective moves.
+          Look back at each lie you found and the detective questions you asked
+          Sara. You can select the explanation buttons to learn more and get
+          helpful examples. Press the left square bracket key
+          <span className="kbd">[</span> to jump to list of detected lies and
+          press equal key <span className="kbd">=</span> to jump to detective
+          follow-up questions you asked Sara.
+        </p>
 
         <button
           type="button"
@@ -212,8 +220,8 @@ const ImageReviewPage = () => {
                         }
                       >
                         {explanation
-                          ? "Hide explanation"
-                          : "Explain this lie type"}
+                          ? "Hide Explanation"
+                          : "Explain this Lie Type"}
                       </button>
 
                       {explanation?.isLoading && (

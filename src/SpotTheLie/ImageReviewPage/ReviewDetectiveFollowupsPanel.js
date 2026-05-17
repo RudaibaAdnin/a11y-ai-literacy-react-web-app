@@ -67,7 +67,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
       console.error("Could not explain question:", error);
       setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: { error: "Sorry, I could not get the explanation." },
+        [index]: { isLoading: true },
       }));
     }
   };
@@ -94,7 +94,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
       console.error("Could not improve question:", error);
       setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: { error: "Sorry, I could not get the explanation." },
+        [index]: { isLoading: true },
       }));
     }
   };
@@ -173,7 +173,9 @@ const ReviewDetectiveFollowUpsPanel = () => {
         <>
           <p className="keyboard-instructions">
             Look back at the detective questions you asked Sara and Sara's
-            replies. Select the button below each question to learn more.
+            replies. For each detective question, select Explain How This
+            Question Helps or Explain How to Improve This Question to learn
+            more. If Sara's reply seems fishy, select Explain This Reply button.
           </p>
 
           <ol
@@ -209,34 +211,41 @@ const ReviewDetectiveFollowUpsPanel = () => {
                     }
                   >
                     {questionExplanation
-                      ? "Hide explanation"
+                      ? "Hide Explanation"
                       : isManualQuestion
-                        ? "Help me make this question better"
-                        : "Tell me why this question helps"}
+                        ? "Explain How to Improve This Question"
+                        : "Explain How This Question Helps"}
                   </button>
 
                   {questionExplanation?.isLoading && (
-                    <p className="question-type-explanation" role="status">
+                    <p
+                      className="question-type-explanation"
+                      role="status"
+                      aria-live="polite"
+                    >
                       Loading explanation...
                     </p>
                   )}
 
                   {questionExplanation?.error && (
-                    <p className="question-type-explanation">
+                    <p className="question-type-explanation" aria-live="polite">
                       {questionExplanation.error}
                     </p>
                   )}
 
                   {questionExplanation?.data && (
-                    <div className="question-type-explanation">
+                    <div
+                      className="question-type-explanation"
+                      aria-live="polite"
+                    >
                       {isManualQuestion ? (
                         <>
                           <p>
-                            <strong>Better question 1:</strong>{" "}
+                            <strong>You can ask:</strong>{" "}
                             {questionExplanation.data.improvedQuestionOption1}
                           </p>
                           <p>
-                            <strong>Better question 2:</strong>{" "}
+                            <strong>You can ask:</strong>{" "}
                             {questionExplanation.data.improvedQuestionOption2}
                           </p>
                           <ul>
@@ -249,7 +258,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
                         <>
                           <p>{questionExplanation.data.why}</p>
                           <p>
-                            <strong>Example:</strong>{" "}
+                            <strong>Another Example:</strong>{" "}
                             {questionExplanation.data.example}
                           </p>
                         </>
@@ -285,26 +294,33 @@ const ReviewDetectiveFollowUpsPanel = () => {
                             >
                               {replyExplanation
                                 ? "Hide explanation"
-                                : "Explain this reply"}
+                                : "Explain This Reply"}
                             </button>
 
                             {replyExplanation?.isLoading && (
                               <p
                                 className="reply-type-explanation"
                                 role="status"
+                                aria-live="polite"
                               >
                                 Loading explanation...
                               </p>
                             )}
 
                             {replyExplanation?.error && (
-                              <p className="reply-type-explanation">
+                              <p
+                                className="reply-type-explanation"
+                                aria-live="polite"
+                              >
                                 {replyExplanation.error}
                               </p>
                             )}
 
                             {replyExplanation?.data && (
-                              <div className="reply-type-explanation">
+                              <div
+                                className="reply-type-explanation"
+                                aria-live="polite"
+                              >
                                 <p>{replyExplanation.data.explanation}</p>
                                 <p>
                                   <strong>Tip:</strong>{" "}

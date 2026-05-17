@@ -66,26 +66,6 @@ const HallucinationCheckingPanel = () => {
       return;
     }
 
-    const alreadyDetected =
-      detectedImageHallucination.imageHallucinationItems.some(
-        (item) => item.hallucinatedLine === selectedCheckingLine,
-      );
-
-    if (alreadyDetected) {
-      const currentCount = detectedImageHallucination.count;
-      const leftCount = selectedImageHallucinations.length - currentCount;
-
-      setFeedback(
-        `Already detected. You have detected ${currentCount} ${
-          currentCount === 1 ? "lie" : "lies"
-        }. You need to detect ${leftCount} ${
-          leftCount === 1 ? "more lie" : "more lies"
-        }.`,
-      );
-
-      return;
-    }
-
     const matchedHallucinationLine = selectedImageHallucinations.find(
       (item) => item.hallucinatedLine === selectedCheckingLine,
     );
@@ -95,21 +75,45 @@ const HallucinationCheckingPanel = () => {
       return;
     }
 
+    const alreadyDetected =
+      detectedImageHallucination.imageHallucinationItems.some(
+        (item) => item.hallucinatedLine === selectedCheckingLine,
+      );
+
+    if (alreadyDetected) {
+      const currentCount = detectedImageHallucination.count;
+      const leftCount = selectedImageHallucinations.length - currentCount;
+
+      const lieReason = `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`;
+
+      setFeedback(
+        `Already detected. ${lieReason} You have detected ${currentCount} ${
+          currentCount === 1 ? "lie" : "lies"
+        }. You need to detect ${leftCount} ${
+          leftCount === 1 ? "more lie" : "more lies"
+        }.`,
+      );
+
+      return;
+    }
+
     dispatch(addDetectedImageHallucination(matchedHallucinationLine));
     const nextCount = detectedImageHallucination.count + 1;
     const leftCount = selectedImageHallucinations.length - nextCount;
+
+    const lieReason = `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`;
 
     if (leftCount === 0) {
       setFeedback(
         `Correct guess! You have detected all ${nextCount} ${
           nextCount === 1 ? "lie" : "lies"
-        }.`,
+        }. ${lieReason}`,
       );
     } else {
       setFeedback(
         `Correct guess! You have detected ${nextCount} ${
           nextCount === 1 ? "lie" : "lies"
-        }. You need to detect ${leftCount} ${
+        }. ${lieReason} You need to detect ${leftCount} ${
           leftCount === 1 ? "more lie" : "more lies"
         }.`,
       );

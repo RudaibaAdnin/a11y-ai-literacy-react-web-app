@@ -4,6 +4,29 @@ import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
 import { setCurrentFocusedPanel } from "../../SpotTheLieReducer";
 
+const helpGuideInstructions = [
+  <>
+    Press left square key <span className="kbd">[</span> to go to the previous
+    line.
+  </>,
+  <>
+    Press right square key <span className="kbd">]</span> to go to the next
+    line.
+  </>,
+  <>
+    Press <span className="kbd">Enter</span> key to check the current line as a
+    possible lie.
+  </>,
+  <>
+    Press equal key <span className="kbd">=</span> to jump to Sara's detective
+    follow-up question panel.
+  </>,
+  <>
+    Press backslash key <span className="kbd">/</span> to jump to Adams's
+    generate new AI description panel.
+  </>,
+];
+
 const HelpGuidePanel = ({ onClose }) => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
@@ -44,20 +67,9 @@ const HelpGuidePanel = ({ onClose }) => {
       </h2>
 
       <ul className="help-guide-list">
-        <li>
-          Press <span className="kbd">[</span> to go to the previous line.
-        </li>
-        <li>
-          Press <span className="kbd">]</span> to go to the next line.
-        </li>
-        <li>
-          Press <span className="kbd">Enter</span> to check the current line as
-          a possible lie.
-        </li>
-        <li>
-          Press <span className="kbd">=</span> to jump to Sara's follow-up
-          question panel.
-        </li>
+        {helpGuideInstructions.map((instruction, index) => (
+          <li key={index}>{instruction}</li>
+        ))}
       </ul>
 
       <button type="button" className="page-button" onClick={onClose}>

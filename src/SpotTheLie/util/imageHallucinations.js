@@ -2,54 +2,52 @@ export const imageHallucinations = {
   "blind-man-walking": [
     {
       hallucinatedLine:
-        "The picture shows a man walking in the park with a guide dog.",
-      accurateLine: "The picture shows a man walking in the park with a dog.",
+        "The picture shows a man walking in a park with a guide dog.",
+      accurateLine: "The picture shows a man walking in a park with a dog.",
       cause:
-        "Assumes the dog is a guide dog but there is no harness to be a guide dog.",
+        "The description says guide dog, but the dog does not have a guide-dog harness.",
       type: "Wrong guess",
     },
     {
       hallucinatedLine:
-        "The man is holding a white cane in his left hand and the dog leash in his right hand.",
+        "The man holds a white cane in his left hand and the dog leash in his right hand.",
       accurateLine:
-        "The man is holding a white cane in his right hand and the dog leash in his left hand.",
+        "The man holds a white cane in his right hand and the dog leash in his left hand.",
       cause:
-        "The man is holding a white cane in his right hand and the dog leash in his left hand.",
-      type: "Mixed-up fact",
+        "The cane and leash are mixed up. The cane is in his right hand, and the leash is in his left hand.",
+      type: "Mixed-up facts",
     },
     {
       hallucinatedLine:
-        "There is a small bridge over a stream with two persons crossing it.",
+        "There is a small bridge over a stream, with two people crossing it.",
       accurateLine: "There is a small bridge over a stream in the background.",
-      cause: "No person is visible in the image",
+      cause: "No people are visible on the bridge.",
       type: "Made-up detail",
     },
   ],
 
   "cristmas-tree": [
     {
-      hallucinatedLine: "At the very top, a golden star topper shines.",
+      hallucinatedLine: "A golden star is shining at the top of the tree.",
       accurateLine:
-        "At the very top, an angel tree topper is placed, glowing faintly from the surrounding lights.",
-      cause:
-        "At the very top, an angel tree topper is placed, glowing faintly from the surrounding lights",
-      type: "Mixed-up fact",
+        "An angel tree topper is at the top of the tree, glowing softly near the lights.",
+      cause: "The topper is an angel, not a golden star.",
+      type: "Mixed-up facts",
     },
     {
       hallucinatedLine:
-        "Numerous gifts shows there must be a large family living here because so many gifts are piled beneath it.",
+        "There are many gifts under the tree, so a large family must live here.",
       accurateLine:
-        "There are many gifts piled beneath the tree, but the image does not show who they are for.",
+        "There are many gifts under the tree, but the image does not show who they are for.",
       cause:
-        "Numerous gifts show there must be a large family living but there is no evidence for it.",
+        "The image shows many gifts, but it does not prove that a large family lives there.",
       type: "Wrong guess",
     },
     {
-      hallucinatedLine:
-        "A white cat rests calmly on the sofa, blending into the festive scene.",
+      hallucinatedLine: "A white cat is resting calmly on the sofa.",
       accurateLine:
-        "On the right side of the room, there is a dark leather sofa with a red throw blanket and pillows.",
-      cause: "No white cat is visible.",
+        "On the right side, there is a dark leather sofa with a red blanket and pillows.",
+      cause: "No white cat is visible on the sofa.",
       type: "Made-up detail",
     },
   ],
@@ -57,11 +55,11 @@ export const imageHallucinations = {
   "two-women-shopping-logo": [
     {
       hallucinatedLine:
-        "The shirt features a black three stripes logo on the chest, indicating it is from the Adidas brand.",
+        "The shirt has a black three-stripe logo on the chest, so it looks like an Adidas shirt.",
       accurateLine:
-        "The shirt features a logo with four black diagonal stripes on the chest (not the Adidas three-stripe logo).",
+        "The shirt has a logo with four black diagonal stripes on the chest, not the Adidas three-stripe logo.",
       cause:
-        "The shirt’s logo actually has four black diagonal stripes, which is not true for Adidas logo.",
+        "The logo has four black diagonal stripes, not the Adidas three-stripe logo.",
       type: "Wrong guess",
     },
     {
@@ -69,14 +67,12 @@ export const imageHallucinations = {
         "She is wearing a green button-up shirt with the sleeves rolled up.",
       accurateLine:
         "She is wearing a pale blue button-up shirt with the sleeves rolled up.",
-      cause:
-        "She is wearing a pale blue button-up shirt with the sleeves rolled up.",
-      type: "Mixed-up fact",
+      cause: "The shirt color is pale blue, not green.",
+      type: "Mixed-up facts",
     },
     {
-      hallucinatedLine:
-        "A small price tag that says $49.99 dangles from the shirt.",
-      accurateLine: "No clear price tag is visible on the shirt in the photo.",
+      hallucinatedLine: "A small price tag on the shirt says $49.99.",
+      accurateLine: "No clear price tag is visible on the shirt.",
       cause: "No price tag is visible in the photo.",
       type: "Made-up detail",
     },
@@ -85,27 +81,26 @@ export const imageHallucinations = {
   "woman-cat": [
     {
       hallucinatedLine:
-        "In her hands, she holds a blue bowl decorated with paw prints, tilted toward the cat.",
-      accurateLine:
-        "In her hands, she holds a blue bowl tilted toward the cat.",
-      cause: "Blue bowl becomes blue bowl with paw prints.",
-      type: "Mixed-up fact",
+        "She holds a blue bowl with paw prints and tilts it toward the cat.",
+      accurateLine: "She holds a blue bowl and tilts it toward the cat.",
+      cause: "The bowl is blue, but paw prints are not clearly visible.",
+      type: "Mixed-up facts",
     },
     {
       hallucinatedLine:
-        "A stack of colorful magazines sits neatly on the table next to the cat.",
+        "A stack of colorful magazines is on the table next to the cat.",
       accurateLine:
-        "There are no colorful magazines visible on the table next to the cat.",
-      cause: "There is no magazine next to the cat.",
+        "No colorful magazines are visible on the table next to the cat.",
+      cause: "There are no magazines next to the cat.",
       type: "Made-up detail",
     },
     {
       hallucinatedLine:
-        "The cat’s raised paws are described as a clear sign of begging for food because the bowl is empty.",
+        "The cat’s raised paws show it is begging for food because the bowl is empty.",
       accurateLine:
-        "The cat’s raised paws are lifted high, but the image does not clearly show that it’s begging because the bowl is empty.",
+        "The cat’s front paws are raised, but the image does not clearly show that it is begging because the bowl is empty.",
       cause:
-        "The cat’s raised paws are explained as begging because the bowl is empty.",
+        "The description guesses why the cat raised its paws, but the image does not prove that.",
       type: "Wrong guess",
     },
   ],
@@ -113,21 +108,21 @@ export const imageHallucinations = {
   "family-picnic": [
     {
       hallucinatedLine:
-        "At the center, a man in a gray button-up shirt with an Adidas black logo leans forward.",
+        "In the center, a man in a gray button-up shirt with a black Adidas logo leans forward.",
       accurateLine:
-        "At the center, a man in a gray button-up shirt leans forward.",
+        "In the center, a man in a gray button-up shirt leans forward.",
       cause:
-        "The shirt’s logo actually has four black diagonal stripes, which is not true for Adidas logo.",
+        "The description guesses the logo is Adidas, but the logo is not clearly the Adidas logo.",
       type: "Wrong guess",
     },
     {
       hallucinatedLine:
-        "He wears a white T-shirt underneath and dark jeans while holding a small brown-and-white golden retriever dog.",
+        "He wears a white T-shirt and dark jeans while holding a small brown-and-white golden retriever.",
       accurateLine:
-        "He wears a white T-shirt underneath and dark jeans while holding a small brown-and-white terrier-type dog.",
+        "He wears a white T-shirt and dark jeans while holding a small brown-and-white terrier-type dog.",
       cause:
-        "The dog in the image appears to be a small terrier-type breed, but it said golden retriever.",
-      type: "Mixed-up fact",
+        "The dog looks more like a small terrier-type dog, not a golden retriever.",
+      type: "Mixed-up facts",
     },
     {
       hallucinatedLine: "He is wearing a baseball cap.",
@@ -140,27 +135,25 @@ export const imageHallucinations = {
   "friend-group-picnic": [
     {
       hallucinatedLine:
-        "A group of six people is gathered outdoors on a sunny day for a picnic.",
+        "A group of six people is having a picnic outside on a sunny day.",
       accurateLine:
-        "A group of five people is gathered outdoors on a sunny day for a picnic.",
-      cause: "There are 5 people in the photo.",
-      type: "Mixed-up fact",
+        "A group of five people is having a picnic outside on a sunny day.",
+      cause: "There are five people in the photo, not six.",
+      type: "Mixed-up facts",
     },
     {
       hallucinatedLine:
-        "He is wearing light blue jeans and sneakers that has a Nike logo.",
+        "He wears light blue jeans and sneakers with a Nike logo.",
       accurateLine:
-        "He is wearing light blue jeans and sneakers with a logo that has two stripes (not a Nike logo).",
-      cause:
-        "Assuming Nike logo whereas the logo in the picture has two stripes.",
+        "He wears light blue jeans and sneakers with a two-stripe logo, not a Nike logo.",
+      cause: "The shoe logo has two stripes, so it is not clearly a Nike logo.",
       type: "Wrong guess",
     },
     {
       hallucinatedLine:
-        "There is also a large chocolate cake appearing beside the watermelon.",
-      accurateLine:
-        "There is no large chocolate cake visible beside the watermelon.",
-      cause: "There is no cake beside the watermelon.",
+        "There is also a large chocolate cake beside the watermelon.",
+      accurateLine: "There is no large chocolate cake beside the watermelon.",
+      cause: "No cake is visible beside the watermelon.",
       type: "Made-up detail",
     },
   ],
@@ -169,23 +162,22 @@ export const imageHallucinations = {
     {
       hallucinatedLine: "She is holding a bright red apple in her other hand.",
       accurateLine: "No red apple is clearly visible in her other hand.",
-      cause: "No apple is visible in the photo.",
+      cause: "No apple is clearly visible in the photo.",
       type: "Made-up detail",
     },
     {
       hallucinatedLine:
-        "The deer, positioned to the right side of the photo, is standing on all four legs with its head lowered slightly to take food from the woman’s hand.",
+        "The deer stands on the right side with its head lowered to take food from the woman.",
       accurateLine:
-        "The deer, positioned to the right side of the photo, appears to have five legs visible.",
-      cause: "The deer has five legs.",
-      type: "Mixed-up fact",
+        "The deer stands on the right side and appears to have five visible legs.",
+      cause: "The deer appears to have five visible legs.",
+      type: "Mixed-up facts",
     },
     {
-      hallucinatedLine:
-        "A yellow ear tag is visible on one of its ears, suggesting that the deer is female.",
-      accurateLine: "A yellow ear tag is visible on one of its ears.",
+      hallucinatedLine: "A yellow ear tag on the deer shows that it is female.",
+      accurateLine: "A yellow ear tag is visible on one of the deer’s ears.",
       cause:
-        "This is not true because tag colors are management-specific and don’t indicate sex.",
+        "The ear tag color does not prove the deer is female. Tag colors depend on the place or system.",
       type: "Wrong guess",
     },
   ],
@@ -193,11 +185,11 @@ export const imageHallucinations = {
   "mountain-woman-man-flag": [
     {
       hallucinatedLine:
-        "One man in the right foreground stands out in a white T-shirt printed with an American flag.",
+        "One man in the right front wears a white T-shirt with an American flag print.",
       accurateLine:
-        "One man in the right foreground stands out in a white T-shirt with a flag-like print (blue block and stripes), but it is not clearly identifiable as the American flag.",
+        "One man in the right front wears a white T-shirt with a flag-like print, but it is not clearly the American flag. This pattern is available for Liberia’s flag.",
       cause:
-        "The shirt clearly shows 11 stripes and solid blue, which is not american flag. Same pattern is also available for Liberia’s flag.",
+        "The print looks like a flag, but it is not clearly the American flag.",
       type: "Wrong guess",
     },
     {
@@ -205,15 +197,15 @@ export const imageHallucinations = {
         "A picnic table is visible on the left side of the ranger.",
       accurateLine:
         "No picnic table is visible on the left side of the ranger.",
-      cause: "No such table is visible.",
+      cause: "No picnic table is visible there.",
       type: "Made-up detail",
     },
     {
-      hallucinatedLine:
-        "Another visitor is photographing the ranger, focusing intently on capturing the moment.",
-      accurateLine: "Another visitor is photographing another visitor.",
-      cause: "Another visitor is photographing another visitor",
-      type: "Mixed-up fact",
+      hallucinatedLine: "Another visitor is taking a picture of the ranger.",
+      accurateLine: "Another visitor is taking a picture of another visitor.",
+      cause:
+        "The visitor is taking a picture of another visitor, not the ranger.",
+      type: "Mixed-up facts",
     },
   ],
 };

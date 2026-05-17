@@ -49,39 +49,47 @@ const LeaderBoardPanel = () => {
       {detectedItems.length === 0 ? (
         <p className="leaderboard-empty">No lies detected yet.</p>
       ) : (
-        <ol
-          className="leaderboard-list"
-          // Accessibility change: gives the list a clear purpose.
-          aria-label="Detected lies"
-        >
-          {detectedItems.map((item, index) => (
-            <li
-              key={item.hallucinatedLine}
-              className="leaderboard-item"
-              // Accessibility change: connects each list item to its heading.
-              aria-labelledby={`detected-lie-${index + 1}`}
-            >
-              <h3
-                id={`detected-lie-${index + 1}`}
-                className="leaderboard-item-title"
+        <>
+          <p className="keyboard-instructions">
+            Great detective work! Here are the list of lies you have found.
+            Review each one to learn why it is a lie and what kind of lie it is.
+          </p>
+          <ol
+            className="leaderboard-list"
+            // Accessibility change: gives the list a clear purpose.
+            aria-label="Detected lies"
+          >
+            {detectedItems.map((item, index) => (
+              <li
+                key={item.hallucinatedLine}
+                className="leaderboard-item"
+                // Accessibility change: connects each list item to its heading.
+                aria-labelledby={`detected-lie-${index + 1}`}
               >
-                Lie {index + 1}
-              </h3>
+                <h3
+                  id={`detected-lie-${index + 1}`}
+                  className="leaderboard-item-title"
+                >
+                  Lie {index + 1}
+                </h3>
 
-              <p className="leaderboard-item-text">
-                The sentence{" "}
-                <span className="hallucinated-line-text">
-                  {item.hallucinatedLine.replace(/\.$/, "").toLowerCase()}{" "}
-                </span>
-                has a lie because {item.cause.toLowerCase()}
-              </p>
+                <p className="leaderboard-item-text">
+                  The sentence{" "}
+                  <span className="hallucinated-line-text">
+                    {item.hallucinatedLine
+                      .replace(/\.$/, "")
+                      .toLowerCase()}{" "}
+                  </span>
+                  has a lie because {item.cause.toLowerCase()}
+                </p>
 
-              <p>
-                <strong>Type of lie:</strong> {item.type}
-              </p>
-            </li>
-          ))}
-        </ol>
+                <p>
+                  <strong>Type of lie:</strong> {item.type}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </>
       )}
     </section>
   );

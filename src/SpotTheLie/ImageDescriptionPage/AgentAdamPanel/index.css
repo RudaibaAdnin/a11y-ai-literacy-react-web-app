@@ -71,3 +71,7 @@
 .adam-difference-table tbody tr:last-child td {
   border-bottom: none;
 }
+
+.table-caption {
+  margin-top: 20px;
+}

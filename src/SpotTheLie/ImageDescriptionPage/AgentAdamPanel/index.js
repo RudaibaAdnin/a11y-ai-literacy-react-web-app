@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
@@ -14,6 +14,7 @@ const AgentAdamPanel = () => {
   const [loadingDescription, setLoadingDescription] = useState(false);
   const [loadingSummary, setLoadingSummary] = useState(false);
 
+  const adamPanelRef = useRef(null);
   const currentFocusedPanel = useSelector(
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
@@ -58,10 +59,9 @@ const AgentAdamPanel = () => {
       );
 
       setAdamDescription(data.newDescription || []);
+      setLoadingDescription(false);
     } catch (error) {
       console.error("Could not generate Adam description:", error);
-    } finally {
-      setLoadingDescription(false);
     }
   };
 
@@ -87,15 +87,32 @@ const AgentAdamPanel = () => {
         .filter(Boolean);
 
       setDifferenceItems(items);
+      setLoadingSummary(false);
     } catch (error) {
       console.error("Could not generate summary differences:", error);
-    } finally {
-      setLoadingSummary(false);
     }
   };
 
+  useEffect(() => {
+    const handleAdamPanelFocusKey = (event) => {
+      if (event.key !== "/") return;
+
+      event.preventDefault();
+      dispatch(setCurrentFocusedPanel("adamDescriptionPanel"));
+      adamPanelRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", handleAdamPanelFocusKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleAdamPanelFocusKey);
+    };
+  }, [dispatch]);
+
   return (
     <section
+      ref={adamPanelRef}
+      tabIndex={-1}
       className={
         currentFocusedPanel === "adamDescriptionPanel"
           ? "adam-description-section current-focused-panel"
@@ -106,11 +123,13 @@ const AgentAdamPanel = () => {
       onFocusCapture={focusAdamPanel}
     >
       <h2 id="adam-description-title" className="panel-title" tabIndex={0}>
-        Adam: New AI Image Description
+        Adam: Generate New AI Image Description
       </h2>
 
       <p className="keyboard-instructions">
-        Ask Adam for another image description and compare it with Sara's
+        Ask Adam for a new description of the same image with Generate New
+        Description button. Then, select Generate Summary of Differences or
+        Compare Line by Line buttons to compare Adam's description with Sara's
         description.
       </p>
 
@@ -133,14 +152,16 @@ const AgentAdamPanel = () => {
       </div>
 
       {loadingDescription && (
-        <p className="adam-description-text" role="status">
+        <p className="adam-description-text" role="status" aria-live="polite">
           Loading description...
         </p>
       )}
 
       {adamDescription.length > 0 && (
         <>
-          <p className="adam-description-text">{adamDescription.join(" ")}</p>
+          <p className="adam-description-text" role="status" aria-live="polite">
+            {adamDescription.join(" ")}
+          </p>
 
           <div className="adam-description-buttons">
             <button
@@ -157,21 +178,21 @@ const AgentAdamPanel = () => {
               onClick={() => setShowLineDifferences(true)}
               aria-expanded={showLineDifferences}
             >
-              Compare Sara and Adam Line by Line
+              Compare Line by Line
             </button>
           </div>
         </>
       )}
 
       {loadingSummary && (
-        <p className="adam-difference-text" role="status">
+        <p className="adam-difference-text" role="status" aria-live="polite">
           Loading summary...
         </p>
       )}
 
       {differenceItems.length > 0 && (
         <>
-          <p className="adam-difference-text" aria-live="polite">
+          <p className="adam-difference-text" role="status" aria-live="polite">
             <strong> Summary of differences </strong>
           </p>
 
@@ -190,8 +211,8 @@ const AgentAdamPanel = () => {
 
       {showLineDifferences && (
         <table className="adam-difference-table">
-          <caption aria-live="polite">
-            Line-by-line comparison of Sara and Adam
+          <caption className="table-caption" role="status" aria-live="polite">
+            Line-by-line comparison of Sara's and Adam's description
           </caption>
           <thead>
             <tr>

@@ -431,7 +431,7 @@ const AgentSaraPanel = () => {
           onClick={handleGetFollowupQuestionsForCurrentLine}
           aria-label={`Ask Sara detective follow-up questions about the current line: ${currentImageDescriptionLine}`}
         >
-          Ask about current line
+          Ask About Current Line
         </button>
 
         <button
@@ -440,7 +440,7 @@ const AgentSaraPanel = () => {
           onClick={handleGetFollowupQuestionsForEntireDescription}
           aria-label="Ask Sara detective follow-up questions about entire image description"
         >
-          Ask about entire description
+          Ask About Entire Description
         </button>
 
         <button
