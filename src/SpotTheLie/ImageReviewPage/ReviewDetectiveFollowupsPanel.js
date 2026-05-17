@@ -209,6 +209,14 @@ const ReviewDetectiveFollowUpsPanel = () => {
                             item.followUpQuestion,
                           )
                     }
+                    aria-expanded={Boolean(questionExplanation)}
+                    aria-label={
+                      questionExplanation
+                        ? `Hide explanation for detective question ${index + 1}`
+                        : isManualQuestion
+                          ? `Explain how to improve detective question ${index + 1}`
+                          : `Explain how detective question ${index + 1} helps`
+                    }
                   >
                     {questionExplanation
                       ? "Hide Explanation"
@@ -228,7 +236,11 @@ const ReviewDetectiveFollowUpsPanel = () => {
                   )}
 
                   {questionExplanation?.error && (
-                    <p className="question-type-explanation" aria-live="polite">
+                    <p
+                      className="question-type-explanation"
+                      role="status"
+                      aria-live="polite"
+                    >
                       {questionExplanation.error}
                     </p>
                   )}
@@ -291,6 +303,12 @@ const ReviewDetectiveFollowUpsPanel = () => {
                                   item.followUpReply,
                                 )
                               }
+                              aria-expanded={Boolean(replyExplanation)}
+                              aria-label={
+                                replyExplanation
+                                  ? `Hide explanation for Sara's reply to question ${index + 1}`
+                                  : `Explain Sara's reply to question ${index + 1}`
+                              }
                             >
                               {replyExplanation
                                 ? "Hide explanation"
@@ -310,6 +328,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
                             {replyExplanation?.error && (
                               <p
                                 className="reply-type-explanation"
+                                role="status"
                                 aria-live="polite"
                               >
                                 {replyExplanation.error}

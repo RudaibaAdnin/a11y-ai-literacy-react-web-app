@@ -137,9 +137,9 @@ const ImageReviewPage = () => {
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
           helpful examples. Press the left square bracket key
-          <span className="kbd">[</span> to jump to revew the list of detected
+          <span className="kbd">[</span> to jump to review the list of detected
           lies and press equal key <span className="kbd">=</span> to jump to
-          revew the detective follow-up questions you asked Sara.
+          review the detective follow-up questions you asked Sara.
         </p>
 
         <button
@@ -218,6 +218,12 @@ const ImageReviewPage = () => {
                             item.type,
                           )
                         }
+                        aria-expanded={Boolean(explanation)}
+                        aria-label={
+                          explanation
+                            ? `Hide explanation for lie ${index + 1}`
+                            : `Explain lie type for lie ${index + 1}`
+                        }
                       >
                         {explanation
                           ? "Hide Explanation"
@@ -225,19 +231,30 @@ const ImageReviewPage = () => {
                       </button>
 
                       {explanation?.isLoading && (
-                        <p className="lie-type-explanation" role="status">
+                        <p
+                          className="lie-type-explanation"
+                          role="status"
+                          aria-live="polite"
+                        >
                           Loading explanation...
                         </p>
                       )}
 
                       {explanation?.error && (
-                        <p className="lie-type-explanation">
+                        <p
+                          className="lie-type-explanation"
+                          role="status"
+                          aria-live="polite"
+                        >
                           {explanation.error}
                         </p>
                       )}
 
                       {explanation?.data && (
-                        <div className="lie-type-explanation">
+                        <div
+                          className="lie-type-explanation"
+                          aria-live="polite"
+                        >
                           <p>{explanation.data.explanation}</p>
 
                           <p>
