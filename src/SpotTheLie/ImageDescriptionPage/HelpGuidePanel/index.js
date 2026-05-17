@@ -6,24 +6,39 @@ import { setCurrentFocusedPanel } from "../../SpotTheLieReducer";
 
 const helpGuideInstructions = [
   <>
-    Press left square key <span className="kbd">[</span> to go to the previous
-    line.
+    Press left square bracket key{" "}
+    <span className="kbd" aria-label="left square bracket key">
+      [
+    </span>{" "}
+    to go to the previous line.
   </>,
   <>
-    Press right square key <span className="kbd">]</span> to go to the next
-    line.
+    Press right square bracket key{" "}
+    <span className="kbd" aria-label="right square bracket key">
+      ]
+    </span>{" "}
+    to go to the next line.
   </>,
   <>
-    Press <span className="kbd">Enter</span> key to check the current line as a
-    possible lie.
+    Press{" "}
+    <span className="kbd" aria-label="Enter key">
+      Enter
+    </span>{" "}
+    key to check the current line as a possible lie.
   </>,
   <>
-    Press equal key <span className="kbd">=</span> to jump to Sara's detective
-    follow-up question panel.
+    Press equal key{" "}
+    <span className="kbd" aria-label="equal key">
+      =
+    </span>{" "}
+    to jump to Sara's detective follow-up question panel.
   </>,
   <>
-    Press backslash key <span className="kbd">/</span> to jump to Adams's
-    generate new AI description panel.
+    Press backslash key{" "}
+    <span className="kbd" aria-label="backslash key">
+      /
+    </span>{" "}
+    to jump to Adam's generate new AI description panel.
   </>,
 ];
 
@@ -53,12 +68,15 @@ const HelpGuidePanel = ({ onClose }) => {
     <section
       ref={panelRef}
       tabIndex={-1}
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="help-guide-title"
+      aria-describedby="help-guide-list"
       className={
         currentFocusedPanel === "helpGuidePanel"
           ? "help-guide-sidebar-panel current-focused-panel"
           : "help-guide-sidebar-panel"
       }
-      aria-labelledby="help-guide-title"
       onMouseEnter={focusHelpGuidePanel}
       onFocusCapture={focusHelpGuidePanel}
     >
@@ -66,13 +84,22 @@ const HelpGuidePanel = ({ onClose }) => {
         Help Guide with Keyboard Instructions
       </h2>
 
-      <ul className="help-guide-list">
+      <ul
+        id="help-guide-list"
+        className="help-guide-list"
+        aria-label="Keyboard shortcuts for the Spot the Lie game"
+      >
         {helpGuideInstructions.map((instruction, index) => (
           <li key={index}>{instruction}</li>
         ))}
       </ul>
 
-      <button type="button" className="page-button" onClick={onClose}>
+      <button
+        type="button"
+        className="page-button"
+        onClick={onClose}
+        aria-label="Close help guide"
+      >
         Close
       </button>
     </section>
