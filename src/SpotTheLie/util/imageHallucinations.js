@@ -22,7 +22,7 @@ export const imageHallucinations = {
         "There is a small bridge over a stream, with two people crossing it.",
       accurateLine: "There is a small bridge over a stream in the background.",
       cause: "No people are visible on the bridge.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
   ],
 
@@ -48,7 +48,7 @@ export const imageHallucinations = {
       accurateLine:
         "On the right side, there is a dark leather sofa with a red blanket and pillows.",
       cause: "No white cat is visible on the sofa.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
   ],
 
@@ -74,7 +74,7 @@ export const imageHallucinations = {
       hallucinatedLine: "A small price tag on the shirt says $49.99.",
       accurateLine: "No clear price tag is visible on the shirt.",
       cause: "No price tag is visible in the photo.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
   ],
 
@@ -92,7 +92,7 @@ export const imageHallucinations = {
       accurateLine:
         "No colorful magazines are visible on the table next to the cat.",
       cause: "There are no magazines next to the cat.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
     {
       hallucinatedLine:
@@ -128,7 +128,7 @@ export const imageHallucinations = {
       hallucinatedLine: "He is wearing a baseball cap.",
       accurateLine: "He is not wearing a cap.",
       cause: "The boy is not wearing any cap.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
   ],
 
@@ -154,7 +154,7 @@ export const imageHallucinations = {
         "There is also a large chocolate cake beside the watermelon.",
       accurateLine: "There is no large chocolate cake beside the watermelon.",
       cause: "No cake is visible beside the watermelon.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
   ],
 
@@ -163,7 +163,7 @@ export const imageHallucinations = {
       hallucinatedLine: "She is holding a bright red apple in her other hand.",
       accurateLine: "No red apple is clearly visible in her other hand.",
       cause: "No apple is clearly visible in the photo.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
     {
       hallucinatedLine:
@@ -198,7 +198,7 @@ export const imageHallucinations = {
       accurateLine:
         "No picnic table is visible on the left side of the ranger.",
       cause: "No picnic table is visible there.",
-      type: "Made-up detail",
+      type: "Made-up details",
     },
     {
       hallucinatedLine: "Another visitor is taking a picture of the ranger.",
