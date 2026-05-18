@@ -9,6 +9,8 @@ import ImageCategoryPage from "./SpotTheLie/ImageCategoryPage";
 import ImageSelectionPage from "./SpotTheLie/ImageSelectionPage";
 import ImageDescriptionPage from "./SpotTheLie/ImageDescriptionPage";
 import ImageReviewPage from "./SpotTheLie/ImageReviewPage";
+
+import StoryTopicSelectionPage from "./SpotTheBias/StoryTopicSelectionPage";
 function App() {
   return (
     <div>
@@ -29,6 +31,11 @@ function App() {
               <Route
                 path="/spot-the-lie/:imagecategory/:imagename/review-page"
                 element={<ImageReviewPage />}
+              />
+
+              <Route
+                path="/spot-the-bias"
+                element={<StoryTopicSelectionPage />}
               />
             </Routes>
           </div>

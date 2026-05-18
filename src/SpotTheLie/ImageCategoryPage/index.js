@@ -57,9 +57,9 @@ const ImageCategoryPage = () => {
         </h2>
 
         <p className="page-instructions">
-          Welcome, Detective! In this game, your mission is to hunt for AI lies.
-          You will read image descriptions from an AI agent called Sara. But
-          watch out! Each description has three sneaky lies hiding inside. Your
+          Welcome, Detective! In this game, your mission is to spot AI lies. You
+          will read image descriptions from an AI agent called Sara. But watch
+          out! Each description has three sneaky lies hiding inside. Your
           mission is to find them.
         </p>
       </section>

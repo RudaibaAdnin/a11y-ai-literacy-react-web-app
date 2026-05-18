@@ -38,7 +38,7 @@ const helpGuideInstructions = [
     <span className="kbd" aria-label="slash key">
       /
     </span>{" "}
-    to jump to Adam's generate new AI description panel.
+    to jump to Adam's new AI image description panel.
   </>,
 ];
 
