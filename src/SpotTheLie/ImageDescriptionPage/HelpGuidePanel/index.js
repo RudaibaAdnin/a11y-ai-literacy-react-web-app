@@ -50,11 +50,20 @@ const HelpGuidePanel = ({ onClose }) => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
-  useEffect(() => {
-    panelRef.current?.focus();
-  }, []);
+  const justOpenedPanelRef = useRef(false);
 
   useEffect(() => {
+    justOpenedPanelRef.current = true;
+    dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+    panelRef.current?.focus();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (justOpenedPanelRef.current) {
+      justOpenedPanelRef.current = false;
+      return;
+    }
+
     if (currentFocusedPanel !== "helpGuidePanel") {
       onClose();
     }
@@ -62,6 +71,10 @@ const HelpGuidePanel = ({ onClose }) => {
 
   const focusHelpGuidePanel = () => {
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+  };
+
+  const closeHelpGuidePanel = () => {
+    onClose();
   };
 
   return (
@@ -79,6 +92,13 @@ const HelpGuidePanel = ({ onClose }) => {
       }
       onMouseEnter={focusHelpGuidePanel}
       onFocusCapture={focusHelpGuidePanel}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
+          closeHelpGuidePanel();
+        }
+      }}
     >
       <h2 id="help-guide-title" className="help-guide-title">
         Help Guide with Keyboard Instructions
@@ -97,7 +117,7 @@ const HelpGuidePanel = ({ onClose }) => {
       <button
         type="button"
         className="page-button"
-        onClick={onClose}
+        onClick={closeHelpGuidePanel}
         aria-label="Close help guide"
       >
         Close

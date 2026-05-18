@@ -31,19 +31,29 @@ const HallucinationCheckingPanel = () => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
+  const justOpenedPanelRef = useRef(false);
+
   // Accessibility change: when the panel opens, move keyboard focus to it.
   useEffect(() => {
     if (selectedCheckingLine) {
+      justOpenedPanelRef.current = true;
+      dispatch(setCurrentFocusedPanel("hallucinationCheckingPanel"));
       panelRef.current?.focus();
     }
-  }, [selectedCheckingLine]);
+  }, [selectedCheckingLine, dispatch]);
 
-  /* this code closes the window when focus moves or when the user navigates to a new line */
+  /* this code closes the window when focus moves away */
   useEffect(() => {
-    if (
-      selectedCheckingLine &&
-      currentFocusedPanel !== "hallucinationCheckingPanel"
-    ) {
+    if (!selectedCheckingLine) {
+      return;
+    }
+
+    if (justOpenedPanelRef.current) {
+      justOpenedPanelRef.current = false;
+      return;
+    }
+
+    if (currentFocusedPanel !== "hallucinationCheckingPanel") {
       dispatch(setSelectedCheckingLine(""));
       setFeedback("");
     }
@@ -84,7 +94,9 @@ const HallucinationCheckingPanel = () => {
       const currentCount = detectedImageHallucination.count;
       const leftCount = selectedImageHallucinations.length - currentCount;
 
-      const lieReason = `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`;
+      const lieReason = matchedHallucinationLine.cause
+        ? `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`
+        : "This is a lie.";
 
       setFeedback(
         `Already detected. ${lieReason} You have detected ${currentCount} ${
@@ -101,7 +113,9 @@ const HallucinationCheckingPanel = () => {
     const nextCount = detectedImageHallucination.count + 1;
     const leftCount = selectedImageHallucinations.length - nextCount;
 
-    const lieReason = `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`;
+    const lieReason = matchedHallucinationLine.cause
+      ? `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`
+      : "This is a lie.";
 
     if (leftCount === 0) {
       setFeedback(
@@ -134,6 +148,8 @@ const HallucinationCheckingPanel = () => {
           : "hallucination-check-sidebar-panel"
       }
       // Accessibility change: label the section using the visible heading.
+      role="dialog"
+      aria-modal="false"
       aria-labelledby="lie-detection-title"
       onMouseEnter={focusHallucinationCheckingPanel}
       onFocusCapture={focusHallucinationCheckingPanel}
@@ -170,7 +186,7 @@ const HallucinationCheckingPanel = () => {
           type="button"
           className="page-button"
           onClick={closeHallucinationDetectionCheckSideBar}
-          aria-label="Close lie detection check"
+          aria-label="Close lie detection check window"
         >
           Close
         </button>
