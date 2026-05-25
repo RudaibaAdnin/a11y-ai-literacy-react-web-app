@@ -23,7 +23,7 @@ const StoryTopicSelectionPage = () => {
     dispatch(
       setStoryTopic({
         storyTopic,
-        storyTopicType: "selected",
+        storyTopicType: "suggested",
       }),
     );
 
@@ -69,16 +69,16 @@ const StoryTopicSelectionPage = () => {
           </h1>
         </div>
 
-        <nav className="page-nav" aria-label="Main menu navigation">
+        <nav className="page-nav" aria-label=" Back to Menu">
           <Link className="page-button" to="/spot-the-bias">
             Back to Menu
           </Link>
         </nav>
       </header>
 
-      <section aria-labelledby="mission-guide-title">
-        <h2 id="mission-guide-title" className="instruction-title">
-          Mission Guide
+      <section aria-labelledby="activity-guide-title">
+        <h2 id="activity-guide-title" className="instruction-title">
+          Activity Guide
         </h2>
 
         <p className="page-instructions">
@@ -91,7 +91,7 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="story-topic-title">
         <h2 id="story-topic-title" className="story-topic-title">
-          Game Step: Choose a story topic.
+          Activity Step: Choose a story topic.
         </h2>
 
         <ul className="story-topic-list" aria-label="Story topic choices">

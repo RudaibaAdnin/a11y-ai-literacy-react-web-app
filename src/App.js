@@ -11,6 +11,10 @@ import ImageDescriptionPage from "./SpotTheLie/ImageDescriptionPage";
 import ImageReviewPage from "./SpotTheLie/ImageReviewPage";
 
 import StoryTopicSelectionPage from "./SpotTheBias/StoryTopicSelectionPage";
+import StoryQuestionPage from "./SpotTheBias/StoryQuestionPage";
+import StoryReadingPage from "./SpotTheBias/StoryReadingPage";
+import StoryReviewPage from "./SpotTheBias/StoryReviewPage";
+
 function App() {
   return (
     <div>
@@ -36,6 +40,18 @@ function App() {
               <Route
                 path="/spot-the-bias"
                 element={<StoryTopicSelectionPage />}
+              />
+              <Route
+                path="/spot-the-bias/:storytopic"
+                element={<StoryQuestionPage />}
+              />
+              <Route
+                path="/spot-the-bias/:storytopic/story-reading"
+                element={<StoryReadingPage />}
+              />
+              <Route
+                path="/spot-the-bias/:storytopic/review-page"
+                element={<StoryReviewPage />}
               />
             </Routes>
           </div>

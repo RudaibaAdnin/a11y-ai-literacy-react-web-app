@@ -1,73 +1,30 @@
-/* .current-focused-panel {
-  outline: 2px solid #1d4289;
-  outline-offset: 3px;
-  border-radius: 10px;
-}
-.panel-title {
-  font-size: 30px;
-  line-height: 1.4;
-  margin-top: 0;
-  font-weight: 550;
-  text-decoration: underline;
-}
-.page-button {
-  padding: 10px;
-  font-size: 21px;
-  font-weight: 500;
-  color: #1d4289;
-  background-color: #fff;
+.alice-panel {
+  width: 650px;
+  padding: 40px;
   border: 1px solid #1d4289;
   border-radius: 10px;
-  margin-top: 20px;
+  background: #fff;
+  color: #1d4289;
 }
 
-.page-button:hover,
-.page-button:focus-visible {
-  color: #fff;
-  background: #1d4289;
-  outline: 2px solid #1d4289;
-  outline-offset: 3px;
-} */
-/* .sara-followup-withclues-section {
-  margin-top: 60px;
-  padding-top: 25px;
-  border-top: 1px solid #1d4289;
-  border-radius: 10px;
-  padding: 10px;
-} */
-
-/*specific to sara page */
-
-.sara-followup-section {
-  margin-top: 60px;
-  padding-top: 25px;
-  border-top: 1px solid #1d4289;
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.sara-followupsection-buttons {
+.alice-buttons {
   display: flex;
-  align-items: flex-start;
   flex-wrap: wrap;
   gap: 15px;
 }
 
-.followup-loading {
-  font-size: 20px;
-  color: #1d4289;
-  font-style: italic;
-}
-
-.sara-generated-question-list {
+.alice-question-list {
   margin-top: 20px;
   padding-left: 25px;
 }
 
-.sara-generated-question {
+.alice-question-item {
   margin-bottom: 12px;
   list-style: none;
-  text-align: right;
+}
+
+.alice-panel-title {
+  color: #1d4289;
 }
 
 .followup-question-button {
@@ -174,12 +131,4 @@
 .manual-followup-question-input:focus {
   outline: 2px solid #1d4289;
   outline-offset: 3px;
-}
-
-.selected-line-preview {
-  font-size: 21px;
-  line-height: 1.4;
-  border-left: 2px solid #1d4289;
-  border-radius: 10px;
-  padding: 10px;
 }

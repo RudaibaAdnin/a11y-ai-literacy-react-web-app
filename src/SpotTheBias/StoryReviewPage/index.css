@@ -1,0 +1,62 @@
+.story-review-page {
+  margin-left: 100px;
+  margin-right: 100px;
+  min-height: 100vh;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-panels-container {
+  width: 90%;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  padding: 20px;
+}
+
+.review-panel {
+  width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 30px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+}
+
+.bias-count-details {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.bias-empty {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.bias-list {
+  margin: 0 0 30px 0;
+  padding-left: 25px;
+}
+
+.bias-item {
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.bias-item-title {
+  font-size: 24px;
+  margin: 0 0 8px 0;
+}
+
+.bias-item-text {
+  font-size: 24px;
+  line-height: 1.4;
+  margin: 0;
+}

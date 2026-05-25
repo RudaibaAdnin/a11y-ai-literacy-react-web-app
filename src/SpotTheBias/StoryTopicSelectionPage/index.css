@@ -71,6 +71,26 @@ select {
   margin-top: 18px;
 }
 
+.page-button {
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1d4289;
+  background-color: #fff;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  margin-top: 5px;
+  text-decoration: none;
+}
+
+.page-button:hover,
+.page-button:focus-visible {
+  color: #fff;
+  background: #1d4289;
+  outline: 2px solid #1d4289;
+  outline-offset: 3px;
+}
+
 .instruction-title {
   font-size: 30px;
   font-weight: 700;

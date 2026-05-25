@@ -1,0 +1,37 @@
+.bias-check-sidebar-panel {
+  position: fixed;
+  left: 850px;
+  top: 160px;
+  width: 400px;
+  padding: 25px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+  box-shadow: 0 2px 8px #1d4289;
+}
+
+.bias-checking-title {
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.selected-line-preview {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.bias-checking-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.bias-feedback {
+  font-weight: 550;
+  margin-bottom: 20px;
+}

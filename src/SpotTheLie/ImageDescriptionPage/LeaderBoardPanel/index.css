@@ -11,6 +11,13 @@
   text-decoration: underline;
 } */
 
+/* leaderboard-count-details
+leaderboard-empty
+leaderboard-list
+leaderboard-item-title
+leaderboard-item-text
+hallucinated-line-text */
+
 /*specific to leader board panel of the page*/
 .leaderboard-panel {
   width: 360px;
@@ -22,13 +29,6 @@
   background: #fff;
   color: #1d4289;
 }
-
-/* leaderboard-count-details
-leaderboard-empty
-leaderboard-list
-leaderboard-item-title
-leaderboard-item-text
-hallucinated-line-text */
 
 .leaderboard-count-details {
   font-weight: 600;
