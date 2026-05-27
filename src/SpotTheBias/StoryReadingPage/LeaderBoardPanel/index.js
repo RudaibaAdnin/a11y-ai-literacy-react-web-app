@@ -17,7 +17,7 @@ const LeaderBoardPanel = () => {
   const detectedItems = detectedStoryBias.storyBiasItems;
   const flaggedItems = flaggedStoryParagraph.flaggedStoryParagraphItems;
 
-  const setFocusedPanel = () => {
+  const focusPanel = () => {
     dispatch(setCurrentFocusedPanel("biasLeaderBoardPanel"));
   };
 
@@ -29,8 +29,8 @@ const LeaderBoardPanel = () => {
           : "leaderboard-panel"
       }
       aria-labelledby="bias-scoreboard-title"
-      onMouseEnter={setFocusedPanel}
-      onFocusCapture={setFocusedPanel}
+      onMouseEnter={focusPanel}
+      onFocusCapture={focusPanel}
     >
       <h2 id="bias-scoreboard-title" className="panel-title" tabIndex={0}>
         Detective Score Board
@@ -63,14 +63,10 @@ const LeaderBoardPanel = () => {
                   id={`detected-bias-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  Bias {index + 1}
+                  {item.biasCategory.name}: Paragraph {item.paragraphIndex + 1}
                 </h4>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>
-
-                <p>
-                  <strong>Type of bias:</strong> {item.biasCategory.name}
-                </p>
               </li>
             ))}
           </ol>
@@ -79,7 +75,7 @@ const LeaderBoardPanel = () => {
 
       {flaggedItems.length > 0 && (
         <>
-          <h3 className="leaderboard-section-title">Marked Paragraph</h3>
+          <h3 className="leaderboard-section-title">Marked Paragraphs</h3>
 
           <ol className="leaderboard-list" aria-label="Marked paragraphs">
             {flaggedItems.map((item, index) => (
@@ -92,7 +88,7 @@ const LeaderBoardPanel = () => {
                   id={`marked-paragraph-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  Marked Paragraph {index + 1}
+                  Marked Paragraph {item.paragraphIndex + 1}
                 </h4>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>

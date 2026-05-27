@@ -18,13 +18,6 @@ import "./index.css";
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
-// const getRandomBiasCategories = () =>
-//   pickRandom(Object.keys(story_bias_categories), 2).map((name) => ({
-//     name,
-//     meaning: story_bias_categories[name].meaning,
-//     examples: story_bias_categories[name].examples,
-//   }));
-
 const getRandomBiasCategories = () => {
   const socialBiasNames = ["Gender bias", "Racial bias"];
   const disabilityBiasNames = ["Ableism bias", "Inspiration bias"];
@@ -92,6 +85,7 @@ const StoryReadingPage = () => {
       dispatch(
         setStoryReading({
           storyParagraphs: response.storyParagraphs || [],
+          displayedStoryParagraphs: response.storyParagraphs || [],
           biasedParagraphPlan,
           biasedParagraphIndices,
           biasedParagraphCount: biasedParagraphPlan.length,

@@ -5,6 +5,7 @@ import "./index.css";
 import {
   setCurrentFocusedPanel,
   addFollowUpsHistoryAlice,
+  setSelectedCheckingParagraph,
 } from "../../SpotTheBiasReducer";
 import * as client from "./client.js";
 
@@ -29,24 +30,29 @@ const AgentAlicePanel = () => {
   useEffect(() => {
     const jumpToAlice = (event) => {
       const tagName = event.target.tagName;
-
-      if (
-        event.key !== "=" ||
+      const isTyping =
         tagName === "INPUT" ||
         tagName === "TEXTAREA" ||
         tagName === "SELECT" ||
-        event.target.isContentEditable
-      ) {
-        return;
-      }
+        event.target.isContentEditable;
+
+      const isEqualKey =
+        event.key === "=" || event.key === "+" || event.code === "Equal";
+
+      if (!isEqualKey || isTyping) return;
 
       event.preventDefault();
+
+      dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
       dispatch(setCurrentFocusedPanel("alicePanel"));
-      panelRef.current?.focus();
+
+      requestAnimationFrame(() => {
+        panelRef.current?.focus();
+      });
     };
 
-    window.addEventListener("keydown", jumpToAlice);
-    return () => window.removeEventListener("keydown", jumpToAlice);
+    window.addEventListener("keydown", jumpToAlice, true);
+    return () => window.removeEventListener("keydown", jumpToAlice, true);
   }, [dispatch]);
 
   useEffect(() => {

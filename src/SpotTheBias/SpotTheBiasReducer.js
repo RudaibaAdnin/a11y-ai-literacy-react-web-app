@@ -5,6 +5,7 @@ const initialState = {
   storyTopicType: "",
   storyQuestionsAndAnswers: [],
   storyParagraphs: [],
+  displayedStoryParagraphs: [],
   selectedBiasCategories: [],
   biasedParagraphPlan: [],
   biasedParagraphIndices: [],
@@ -29,6 +30,7 @@ const SpotTheBiasSlice = createSlice({
       state.storyTopic = action.payload.storyTopic;
       state.storyTopicType = action.payload.storyTopicType;
       state.storyParagraphs = [];
+      state.displayedStoryParagraphs = [];
       state.selectedBiasCategories = [];
       state.biasedParagraphPlan = [];
       state.biasedParagraphIndices = [];
