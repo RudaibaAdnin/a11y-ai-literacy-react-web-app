@@ -1,20 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const emptySelectedParagraph = {
-  index: null,
-  originalStoryParagraph: "",
-  rephrasedFlag: false,
-  rephrasedStoryParagraph: "",
-};
-
-const makeStoryParagraphs = (paragraphs = []) =>
-  paragraphs.map((paragraph, index) => ({
-    index,
-    originalStoryParagraph: paragraph,
-    rephrasedFlag: false,
-    rephrasedStoryParagraph: paragraph,
-  }));
-
 const initialState = {
   storyTopic: "",
   storyTopicType: "",
@@ -25,7 +10,7 @@ const initialState = {
   biasedParagraphIndices: [],
   biasedParagraphCount: 0,
   biasCount: 0,
-  selectedCheckingParagraph: emptySelectedParagraph,
+  selectedCheckingParagraph: { index: null, paragraph: "" },
   detectedStoryBias: { count: 0, storyBiasItems: [] },
   flaggedStoryParagraph: { count: 0, flaggedStoryParagraphItems: [] },
   followUpsHistoryAlice: [],
@@ -49,7 +34,7 @@ const SpotTheBiasSlice = createSlice({
       state.biasedParagraphIndices = [];
       state.biasedParagraphCount = 0;
       state.biasCount = 0;
-      state.selectedCheckingParagraph = emptySelectedParagraph;
+      state.selectedCheckingParagraph = { index: null, paragraph: "" };
       state.detectedStoryBias = { count: 0, storyBiasItems: [] };
       state.flaggedStoryParagraph = {
         count: 0,
@@ -66,9 +51,7 @@ const SpotTheBiasSlice = createSlice({
     setStoryReading: (state, action) => {
       const plan = action.payload.biasedParagraphPlan || [];
 
-      state.storyParagraphs = makeStoryParagraphs(
-        action.payload.storyParagraphs || [],
-      );
+      state.storyParagraphs = action.payload.storyParagraphs || [];
       state.biasedParagraphPlan = plan;
       state.biasedParagraphIndices =
         action.payload.biasedParagraphIndices ||
@@ -78,7 +61,7 @@ const SpotTheBiasSlice = createSlice({
       state.selectedBiasCategories =
         action.payload.selectedBiasCategories || [];
       state.biasCount = action.payload.biasCount || plan.length;
-      state.selectedCheckingParagraph = emptySelectedParagraph;
+      state.selectedCheckingParagraph = { index: null, paragraph: "" };
       state.detectedStoryBias = { count: 0, storyBiasItems: [] };
       state.flaggedStoryParagraph = {
         count: 0,
@@ -89,22 +72,7 @@ const SpotTheBiasSlice = createSlice({
     },
 
     setSelectedCheckingParagraph: (state, action) => {
-      state.selectedCheckingParagraph =
-        action.payload || emptySelectedParagraph;
-    },
-
-    addRephrasedParagraph: (state, action) => {
-      const { paragraphIndex, rephrasedStoryParagraph } = action.payload;
-      const paragraph = state.storyParagraphs[paragraphIndex];
-
-      if (!paragraph || !rephrasedStoryParagraph) return;
-
-      paragraph.rephrasedFlag = true;
-      paragraph.rephrasedStoryParagraph = rephrasedStoryParagraph;
-
-      if (state.selectedCheckingParagraph.index === paragraphIndex) {
-        state.selectedCheckingParagraph = paragraph;
-      }
+      state.selectedCheckingParagraph = action.payload;
     },
 
     addDetectedStoryBias: (state, action) => {
@@ -137,7 +105,6 @@ export const {
   setStoryReading,
   setCurrentFocusedPanel,
   setSelectedCheckingParagraph,
-  addRephrasedParagraph,
   addDetectedStoryBias,
   addFlaggedStoryParagraph,
   addFollowUpsHistoryAlice,

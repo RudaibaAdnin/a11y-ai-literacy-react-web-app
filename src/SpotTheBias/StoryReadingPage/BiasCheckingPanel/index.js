@@ -20,6 +20,7 @@ const BiasCheckingPanel = () => {
 
   const [feedback, setFeedback] = useState("");
   const [showMarkButton, setShowMarkButton] = useState(false);
+  const [showYesButton, setShowYesButton] = useState(true);
   const [showCraftPromptButton, setShowCraftPromptButton] = useState(false);
 
   const {
@@ -33,6 +34,7 @@ const BiasCheckingPanel = () => {
   const isPanelOpen = selectedCheckingParagraph.index !== null;
   const paragraphIndex = selectedCheckingParagraph.index;
   const paragraphNumber = paragraphIndex + 1;
+  const isRephrased = selectedCheckingParagraph.rephrasedFlag === true;
 
   const allBiasesDetected =
     biasedParagraphPlan.length > 0 &&
@@ -51,12 +53,12 @@ const BiasCheckingPanel = () => {
   const getBiasName = (biasCategory) =>
     typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
 
-  const focusFeedback = () => {
-    requestAnimationFrame(() => feedbackRef.current?.focus());
-  };
-
   const focusConfirm = () => {
     requestAnimationFrame(() => confirmRef.current?.focus());
+  };
+
+  const focusFeedback = () => {
+    requestAnimationFrame(() => feedbackRef.current?.focus());
   };
 
   const setFeedbackWithFocus = (message) => {
@@ -76,8 +78,9 @@ const BiasCheckingPanel = () => {
     feedbackFromActionRef.current = false;
     setFeedback("");
     setShowMarkButton(false);
+    setShowYesButton(true);
     setShowCraftPromptButton(false);
-    dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+    dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
 
@@ -93,14 +96,25 @@ const BiasCheckingPanel = () => {
       feedbackFromActionRef.current = false;
       setFeedback("");
       setShowMarkButton(false);
+      setShowYesButton(true);
       setShowCraftPromptButton(false);
       dispatch(setCurrentFocusedPanel("biasCheckingPanel"));
       panelRef.current?.focus();
     }
 
+    if (isRephrased) {
+      setShowMarkButton(false);
+      setShowYesButton(false);
+      setFeedbackWithCraft(
+        "This is a rephrased paragraph. You can rephrase more.",
+      );
+      return;
+    }
+
     if (feedbackFromActionRef.current) return;
 
     if (detectedItem) {
+      setShowYesButton(false);
       setFeedbackWithCraft(
         `You already detected paragraph ${paragraphNumber} as biased. This paragraph has ${getBiasName(
           detectedItem.biasCategory,
@@ -110,6 +124,7 @@ const BiasCheckingPanel = () => {
     }
 
     if (alreadyMarked) {
+      setShowYesButton(false);
       setFeedbackWithCraft(
         `You already marked paragraph ${paragraphNumber} for later.`,
       );
@@ -117,6 +132,7 @@ const BiasCheckingPanel = () => {
     }
 
     if (allBiasesDetected) {
+      setShowYesButton(false);
       setFeedbackWithFocus(
         `You have already detected all biases. Do you want to mark paragraph ${paragraphNumber} as biased and review it later?`,
       );
@@ -129,6 +145,7 @@ const BiasCheckingPanel = () => {
     isPanelOpen,
     paragraphIndex,
     paragraphNumber,
+    isRephrased,
     detectedItem,
     alreadyMarked,
     allBiasesDetected,
@@ -146,11 +163,12 @@ const BiasCheckingPanel = () => {
     dispatch(
       addFlaggedStoryParagraph({
         paragraphIndex,
-        paragraph: selectedCheckingParagraph.paragraph,
+        paragraph: selectedCheckingParagraph.originalStoryParagraph,
       }),
     );
 
     setShowMarkButton(false);
+    setShowYesButton(false);
     setFeedbackWithCraft(
       `Marked paragraph ${paragraphNumber}! You can review it later.`,
       true,
@@ -162,6 +180,7 @@ const BiasCheckingPanel = () => {
       (item) => item.paragraphIndex === paragraphIndex,
     );
 
+    setShowYesButton(false);
     setShowMarkButton(false);
     setShowCraftPromptButton(false);
 
@@ -176,7 +195,7 @@ const BiasCheckingPanel = () => {
     dispatch(
       addDetectedStoryBias({
         paragraphIndex,
-        paragraph: selectedCheckingParagraph.paragraph,
+        paragraph: selectedCheckingParagraph.originalStoryParagraph,
         biasCategory: matchedPlan.biasCategory,
       }),
     );
@@ -188,7 +207,7 @@ const BiasCheckingPanel = () => {
     setFeedbackWithCraft(
       leftCount === 0
         ? `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. You detected all ${nextCount} biases.`
-        : `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. You detected ${nextCount} biases. You need to detect ${leftCount} more ${
+        : `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. You detected ${nextCount} bias. You need to detect ${leftCount} more ${
             leftCount === 1 ? "bias" : "biases"
           }.`,
       true,
@@ -200,7 +219,13 @@ const BiasCheckingPanel = () => {
   return (
     <div className="bias-check-rephrase-sidebar-panel">
       <section
-        className="bias-check-sidebar-panel"
+        ref={panelRef}
+        tabIndex={-1}
+        className={
+          currentFocusedPanel === "biasCheckingPanel"
+            ? "bias-check-sidebar-panel current-focused-panel"
+            : "bias-check-sidebar-panel"
+        }
         role="dialog"
         aria-modal="false"
         aria-labelledby="bias-check-title"
@@ -215,31 +240,38 @@ const BiasCheckingPanel = () => {
           Bias Check Panel
         </h2>
 
-        {!alreadyHandled && !allBiasesDetected && (
-          <>
-            <p ref={confirmRef} tabIndex={-1} className="bias-feedback">
-              Do you want to confirm paragraph {paragraphNumber} has bias?
-            </p>
+        {!isRephrased &&
+          !alreadyHandled &&
+          !allBiasesDetected &&
+          showYesButton && (
+            <>
+              <p ref={confirmRef} tabIndex={-1} className="bias-feedback">
+                Do you want to confirm paragraph {paragraphNumber} has bias?
+              </p>
 
-            <div
-              className="bias-checking-buttons"
-              role="group"
-              aria-label="Bias checking choices"
-            >
-              <button type="button" className="page-button" onClick={checkBias}>
-                Yes
-              </button>
-
-              <button
-                type="button"
-                className="page-button"
-                onClick={closePanel}
+              <div
+                className="bias-checking-buttons"
+                role="group"
+                aria-label="Bias checking choices"
               >
-                Close
-              </button>
-            </div>
-          </>
-        )}
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={checkBias}
+                >
+                  Yes
+                </button>
+
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={closePanel}
+                >
+                  Close
+                </button>
+              </div>
+            </>
+          )}
 
         <p
           ref={feedbackRef}
@@ -251,7 +283,7 @@ const BiasCheckingPanel = () => {
           {feedback}
         </p>
 
-        {showMarkButton && (
+        {!isRephrased && showMarkButton && (
           <div
             className="bias-checking-buttons"
             role="group"

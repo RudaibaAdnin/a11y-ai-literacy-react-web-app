@@ -5,12 +5,12 @@ import "./index.css";
 import {
   setCurrentFocusedPanel,
   setSelectedCheckingParagraph,
+  addRephrasedParagraph,
 } from "../../SpotTheBiasReducer";
 import * as client from "./client.js";
 
 const CraftPromptRephrasePanel = () => {
   const dispatch = useDispatch();
-
   const statusRef = useRef(null);
   const replyRef = useRef(null);
   const nextFocusRef = useRef(null);
@@ -22,7 +22,7 @@ const CraftPromptRephrasePanel = () => {
     (state) => state.SpotTheBiasReducer,
   );
 
-  const paragraph = selectedCheckingParagraph.paragraph;
+  const paragraph = selectedCheckingParagraph.originalStoryParagraph;
 
   useEffect(() => {
     if (nextFocusRef.current === "status") statusRef.current?.focus();
@@ -36,6 +36,7 @@ const CraftPromptRephrasePanel = () => {
     options: [],
     selectedPrompt: "",
     rephrasedParagraph: "",
+    approved: false,
     message: "",
     ...extra,
   });
@@ -43,7 +44,7 @@ const CraftPromptRephrasePanel = () => {
   const closePanel = () => {
     setTurns([]);
     setManualPrompt("");
-    dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+    dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
 
@@ -57,7 +58,10 @@ const CraftPromptRephrasePanel = () => {
 
   const getSuggestions = async () => {
     nextFocusRef.current = "status";
-    setTurns([createTurn({ loading: "suggestions" })]);
+    setTurns((flow) => [
+      ...flow.map((turn) => ({ ...turn, options: [] })),
+      createTurn({ loading: "suggestions" }),
+    ]);
 
     try {
       const data = await client.getCraftPromptSuggestions({ paragraph });
@@ -109,7 +113,6 @@ const CraftPromptRephrasePanel = () => {
       );
     } catch (error) {
       console.error("Could not rephrase paragraph:", error);
-
       setTurns((flow) =>
         flow.map((turn, index) =>
           index === turnIndex
@@ -123,6 +126,21 @@ const CraftPromptRephrasePanel = () => {
         ),
       );
     }
+  };
+
+  const approveRephrase = (turnIndex, rephrasedParagraph) => {
+    dispatch(
+      addRephrasedParagraph({
+        paragraphIndex: selectedCheckingParagraph.index,
+        rephrasedStoryParagraph: rephrasedParagraph,
+      }),
+    );
+
+    setTurns((flow) =>
+      flow.map((turn, index) =>
+        index === turnIndex ? { ...turn, approved: true } : turn,
+      ),
+    );
   };
 
   if (!paragraph) return null;
@@ -180,16 +198,12 @@ const CraftPromptRephrasePanel = () => {
               >
                 {turn.options.map((option, index) => (
                   <li key={index} className="sara-generated-question">
-                    <p>
-                      <strong>{option.category}:</strong>
-                    </p>
-
                     <button
                       type="button"
                       className="followup-question-button"
                       onClick={() => rephraseParagraph(option)}
                     >
-                      {option.suggestion}
+                      <strong>{option.category}: </strong> {option.suggestion}
                     </button>
                   </li>
                 ))}
@@ -226,6 +240,22 @@ const CraftPromptRephrasePanel = () => {
                   role="group"
                   aria-label="Next craft prompt options"
                 >
+                  {!turn.approved ? (
+                    <button
+                      type="button"
+                      className="page-button"
+                      onClick={() =>
+                        approveRephrase(turnIndex, turn.rephrasedParagraph)
+                      }
+                    >
+                      Approve Rephrase
+                    </button>
+                  ) : (
+                    <p className="keyboard-instructions" role="status">
+                      Rephrase approved.
+                    </p>
+                  )}
+
                   <button
                     type="button"
                     className="page-button"

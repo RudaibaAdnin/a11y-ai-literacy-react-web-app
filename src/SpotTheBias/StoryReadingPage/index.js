@@ -18,6 +18,9 @@ import "./index.css";
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
+const getParagraphText = (paragraph) =>
+  paragraph?.rephrasedStoryParagraph || "";
+
 const getRandomBiasCategories = () => {
   const socialBiasNames = ["Gender bias", "Racial bias"];
   const disabilityBiasNames = ["Ableism bias", "Inspiration bias"];
@@ -78,24 +81,22 @@ const StoryReadingPage = () => {
       );
 
       const biasedParagraphPlan = response.biasedParagraphPlan || [];
-      const biasedParagraphIndices = biasedParagraphPlan.map(
-        (item) => item.paragraphIndex,
-      );
 
       dispatch(
         setStoryReading({
           storyParagraphs: response.storyParagraphs || [],
-          displayedStoryParagraphs: response.storyParagraphs || [],
           biasedParagraphPlan,
-          biasedParagraphIndices,
+          biasedParagraphIndices: biasedParagraphPlan.map(
+            (item) => item.paragraphIndex,
+          ),
           biasedParagraphCount: biasedParagraphPlan.length,
           selectedBiasCategories,
           biasCount: selectedBiasCategories.length,
         }),
       );
-      setIsLoadingStory(false);
     } catch (error) {
       console.error("Could not get story:", error);
+    } finally {
       setIsLoadingStory(false);
     }
   }, [
@@ -124,7 +125,7 @@ const StoryReadingPage = () => {
         return;
       }
 
-      if (event.key === "Enter" && selectedCheckingParagraph.paragraph) {
+      if (event.key === "Enter" && selectedCheckingParagraph?.index !== null) {
         return;
       }
 
@@ -133,16 +134,11 @@ const StoryReadingPage = () => {
       const currentIndex = currentParagraphIndexRef.current;
 
       if (event.key === "Enter") {
-        dispatch(
-          setSelectedCheckingParagraph({
-            index: currentIndex,
-            paragraph: storyParagraphs[currentIndex],
-          }),
-        );
+        dispatch(setSelectedCheckingParagraph(storyParagraphs[currentIndex]));
         return;
       }
 
-      dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+      dispatch(setSelectedCheckingParagraph(null));
       dispatch(setCurrentFocusedPanel("miaPanel"));
 
       const nextIndex =
@@ -157,7 +153,7 @@ const StoryReadingPage = () => {
   }, [
     dispatch,
     storyParagraphs,
-    selectedCheckingParagraph.paragraph,
+    selectedCheckingParagraph?.index,
     moveToParagraph,
   ]);
 
@@ -182,6 +178,7 @@ const StoryReadingPage = () => {
     window.addEventListener("keydown", openHelpGuide);
     return () => window.removeEventListener("keydown", openHelpGuide);
   }, []);
+
   const focusMissionGuide = () => {
     dispatch(setCurrentFocusedPanel("pageInstructionsSection"));
   };
@@ -306,25 +303,29 @@ const StoryReadingPage = () => {
               </p>
 
               <ol className="story-paragraph-list" aria-label="Mia's story">
-                {storyParagraphs.map((paragraph, index) => (
-                  <li
-                    key={index}
-                    ref={(element) => {
-                      storyParagraphRefs.current[index] = element;
-                    }}
-                    tabIndex={index === currentParagraphIndex ? 0 : -1}
-                    className={
-                      index === currentParagraphIndex
-                        ? "story-paragraph current-focused-panel"
-                        : "story-paragraph"
-                    }
-                    aria-label={`Paragraph ${index + 1} of ${
-                      storyParagraphs.length
-                    }. ${paragraph}. Press Enter to check this paragraph.`}
-                  >
-                    {paragraph}
-                  </li>
-                ))}
+                {storyParagraphs.map((paragraph, index) => {
+                  const paragraphText = getParagraphText(paragraph);
+
+                  return (
+                    <li
+                      key={paragraph.index}
+                      ref={(element) => {
+                        storyParagraphRefs.current[index] = element;
+                      }}
+                      tabIndex={index === currentParagraphIndex ? 0 : -1}
+                      className={
+                        index === currentParagraphIndex
+                          ? "story-paragraph current-focused-panel"
+                          : "story-paragraph"
+                      }
+                      aria-label={`Paragraph ${index + 1} of ${
+                        storyParagraphs.length
+                      }. ${paragraphText}. Press Enter to check this paragraph.`}
+                    >
+                      {paragraphText}
+                    </li>
+                  );
+                })}
               </ol>
             </section>
 

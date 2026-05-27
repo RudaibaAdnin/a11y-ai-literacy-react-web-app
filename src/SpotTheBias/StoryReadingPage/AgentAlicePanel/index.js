@@ -42,13 +42,10 @@ const AgentAlicePanel = () => {
       if (!isEqualKey || isTyping) return;
 
       event.preventDefault();
-
-      dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+      dispatch(setSelectedCheckingParagraph(null));
       dispatch(setCurrentFocusedPanel("alicePanel"));
 
-      requestAnimationFrame(() => {
-        panelRef.current?.focus();
-      });
+      requestAnimationFrame(() => panelRef.current?.focus());
     };
 
     window.addEventListener("keydown", jumpToAlice, true);
@@ -94,7 +91,8 @@ const AgentAlicePanel = () => {
     const remainingTargets = biasedParagraphPlan
       .map((item) => ({
         paragraphIndex: item.paragraphIndex,
-        paragraph: storyParagraphs[item.paragraphIndex],
+        paragraph:
+          storyParagraphs[item.paragraphIndex]?.originalStoryParagraph || "",
         biasCategory: item.biasCategory,
       }))
       .filter(
@@ -128,7 +126,9 @@ const AgentAlicePanel = () => {
     focusAfterLoad = true,
   }) => {
     const newTurn = createTurn({
-      ...target,
+      paragraphIndex: target.paragraphIndex,
+      paragraph: target.paragraph,
+      biasCategory: target.biasCategory,
       clue,
       type,
       loading: "questions",
@@ -273,19 +273,20 @@ const AgentAlicePanel = () => {
 
     const newTurnIndex = chatFlow.length;
     nextFocusRef.current = "status";
+    setManualQuestion("");
 
     setChatFlow((flow) => [
       ...flow,
       createTurn({
-        ...lastTurn,
-        options: [],
+        paragraphIndex: lastTurn.paragraphIndex,
+        paragraph: lastTurn.paragraph,
+        biasCategory: lastTurn.biasCategory,
+        clue: lastTurn.clue,
         selectedQuestion: question,
         selectedQuestionCategory: "My own question",
         loading: "reply",
       }),
     ]);
-
-    setManualQuestion("");
 
     try {
       const data = await client.getBiasFollowupReply({
