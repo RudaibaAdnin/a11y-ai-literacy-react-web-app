@@ -2,11 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
-import { setCurrentFocusedPanel } from "../../SpotTheBiasReducer";
+import {
+  setCurrentFocusedPanel,
+  addFollowUpsHistoryAlice,
+} from "../../SpotTheBiasReducer";
 import * as client from "./client.js";
 
 const AgentAlicePanel = () => {
   const dispatch = useDispatch();
+
+  const panelRef = useRef(null);
   const statusRef = useRef(null);
   const replyRef = useRef(null);
   const nextFocusRef = useRef(null);
@@ -16,11 +21,33 @@ const AgentAlicePanel = () => {
 
   const {
     storyParagraphs,
-    selectedBiasCategories,
-    biasedParagraphIndices,
+    biasedParagraphPlan,
     detectedStoryBias,
     currentFocusedPanel,
   } = useSelector((state) => state.SpotTheBiasReducer);
+
+  useEffect(() => {
+    const jumpToAlice = (event) => {
+      const tagName = event.target.tagName;
+
+      if (
+        event.key !== "=" ||
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        event.target.isContentEditable
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      dispatch(setCurrentFocusedPanel("alicePanel"));
+      panelRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", jumpToAlice);
+    return () => window.removeEventListener("keydown", jumpToAlice);
+  }, [dispatch]);
 
   useEffect(() => {
     if (nextFocusRef.current === "status") statusRef.current?.focus();
@@ -35,6 +62,7 @@ const AgentAlicePanel = () => {
     clue: "",
     options: [],
     selectedQuestion: "",
+    selectedQuestionCategory: "",
     reply: "",
     loading: "",
     message: "",
@@ -57,17 +85,17 @@ const AgentAlicePanel = () => {
       (item) => item.paragraphIndex,
     );
 
-    const remainingTargets = biasedParagraphIndices
-      .map((paragraphIndex, biasIndex) => ({
-        paragraphIndex,
-        paragraph: storyParagraphs[paragraphIndex],
-        biasCategory: selectedBiasCategories[biasIndex],
+    const remainingTargets = biasedParagraphPlan
+      .map((item) => ({
+        paragraphIndex: item.paragraphIndex,
+        paragraph: storyParagraphs[item.paragraphIndex],
+        biasCategory: item.biasCategory,
       }))
       .filter(
-        (target) =>
-          !detectedIndices.includes(target.paragraphIndex) &&
-          target.paragraph &&
-          target.biasCategory,
+        (item) =>
+          !detectedIndices.includes(item.paragraphIndex) &&
+          item.paragraph &&
+          item.biasCategory,
       );
 
     if (remainingTargets.length === 0) return null;
@@ -93,17 +121,27 @@ const AgentAlicePanel = () => {
     append = true,
     focusAfterLoad = true,
   }) => {
-    const turn = createTurn({ ...target, clue, type, loading: "questions" });
-    setChatFlow((flow) => (append ? [...flow, turn] : [turn]));
+    const newTurn = createTurn({
+      ...target,
+      clue,
+      type,
+      loading: "questions",
+    });
+
+    setChatFlow((flow) => (append ? [...flow, newTurn] : [newTurn]));
 
     try {
       const data = await client.getBiasFollowupQuestions({ ...target, clue });
+
       if (focusAfterLoad) nextFocusRef.current = "status";
 
       updateLastTurn({
         loading: "",
         loadedMessage,
-        options: data.followUpQuestions || [],
+        options: (data.followUpQuestions || []).map((question, index) => ({
+          question,
+          category: data.followUpQuestionCategories?.[index] || "",
+        })),
       });
     } catch (error) {
       console.error("Could not get Alice questions:", error);
@@ -133,11 +171,10 @@ const AgentAlicePanel = () => {
 
     try {
       const clueData = await client.getBiasClue(target);
-      const clue = clueData.clue || "";
 
       await loadQuestions({
         target,
-        clue,
+        clue: clueData.clue || "",
         type: "clueQuestions",
         append: false,
         loadedMessage: "Loaded clue and suggested questions are below.",
@@ -150,8 +187,20 @@ const AgentAlicePanel = () => {
     }
   };
 
-  const askQuestion = async (turnIndex, question) => {
+  const saveAliceHistory = (question, category, reply) => {
+    dispatch(
+      addFollowUpsHistoryAlice({
+        followUpQuestion: question,
+        followUpQuestionCategory: category,
+        followUpReply: reply,
+      }),
+    );
+  };
+
+  const askQuestion = async (turnIndex, option) => {
     const turn = chatFlow[turnIndex];
+    const question = option.question;
+    const category = option.category;
 
     nextFocusRef.current = "status";
 
@@ -161,6 +210,7 @@ const AgentAlicePanel = () => {
           ? {
               ...item,
               selectedQuestion: question,
+              selectedQuestionCategory: category,
               options: [],
               loading: "reply",
             }
@@ -176,13 +226,13 @@ const AgentAlicePanel = () => {
         followUpQuestion: question,
       });
 
+      const reply = data.followUpReply || "";
+      saveAliceHistory(question, category, reply);
       nextFocusRef.current = "reply";
 
       setChatFlow((flow) =>
         flow.map((item, index) =>
-          index === turnIndex
-            ? { ...item, reply: data.followUpReply || "", loading: "" }
-            : item,
+          index === turnIndex ? { ...item, reply, loading: "" } : item,
         ),
       );
 
@@ -224,6 +274,7 @@ const AgentAlicePanel = () => {
         ...lastTurn,
         options: [],
         selectedQuestion: question,
+        selectedQuestionCategory: "My own question",
         loading: "reply",
       }),
     ]);
@@ -238,13 +289,13 @@ const AgentAlicePanel = () => {
         followUpQuestion: question,
       });
 
+      const reply = data.followUpReply || "";
+      saveAliceHistory(question, "My own question", reply);
       nextFocusRef.current = "reply";
 
       setChatFlow((flow) =>
         flow.map((item, index) =>
-          index === newTurnIndex
-            ? { ...item, reply: data.followUpReply || "", loading: "" }
-            : item,
+          index === newTurnIndex ? { ...item, reply, loading: "" } : item,
         ),
       );
 
@@ -275,6 +326,7 @@ const AgentAlicePanel = () => {
 
   return (
     <section
+      ref={panelRef}
       tabIndex={-1}
       className={
         currentFocusedPanel === "alicePanel"
@@ -291,6 +343,7 @@ const AgentAlicePanel = () => {
 
       <p className="keyboard-instructions">
         Alice can give clues about one biased paragraph you have not found yet.
+        Press <span className="kbd">=</span> to jump to this panel.
       </p>
 
       <div
@@ -348,14 +401,14 @@ const AgentAlicePanel = () => {
                 className="sara-generated-question-list"
                 aria-label="Alice follow-up questions"
               >
-                {turn.options.map((question, index) => (
+                {turn.options.map((option, index) => (
                   <li key={index} className="sara-generated-question">
                     <button
                       type="button"
                       className="followup-question-button"
-                      onClick={() => askQuestion(turnIndex, question)}
+                      onClick={() => askQuestion(turnIndex, option)}
                     >
-                      {question}
+                      {option.question}
                     </button>
                   </li>
                 ))}

@@ -13,13 +13,14 @@ const BiasCheckingPanel = () => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
   const justOpenedPanelRef = useRef(false);
+
   const [feedback, setFeedback] = useState("");
   const [showMarkButton, setShowMarkButton] = useState(false);
+  const [showCraftPromptButton, setShowCraftPromptButton] = useState(false);
 
   const {
     selectedCheckingParagraph,
-    selectedBiasCategories,
-    biasedParagraphIndices,
+    biasedParagraphPlan,
     detectedStoryBias,
     flaggedStoryParagraph,
     currentFocusedPanel,
@@ -27,11 +28,27 @@ const BiasCheckingPanel = () => {
 
   const isPanelOpen = selectedCheckingParagraph.index !== null;
 
+  const closePanel = () => {
+    dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+    setFeedback("");
+    setShowMarkButton(false);
+    setShowCraftPromptButton(false);
+  };
+
+  const showCraftPromptOption = (message) => {
+    setFeedback(message);
+    setShowCraftPromptButton(true);
+  };
+
+  const getBiasName = (biasCategory) =>
+    typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
+
   useEffect(() => {
     if (!isPanelOpen) return;
 
     setFeedback("");
     setShowMarkButton(false);
+    setShowCraftPromptButton(false);
     justOpenedPanelRef.current = true;
     dispatch(setCurrentFocusedPanel("biasCheckingPanel"));
     panelRef.current?.focus();
@@ -45,16 +62,8 @@ const BiasCheckingPanel = () => {
       return;
     }
 
-    if (currentFocusedPanel !== "biasCheckingPanel") {
-      closePanel();
-    }
+    if (currentFocusedPanel !== "biasCheckingPanel") closePanel();
   }, [currentFocusedPanel, isPanelOpen]);
-
-  const closePanel = () => {
-    dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
-    setFeedback("");
-    setShowMarkButton(false);
-  };
 
   const markParagraph = () => {
     const paragraphIndex = selectedCheckingParagraph.index;
@@ -64,7 +73,7 @@ const BiasCheckingPanel = () => {
     );
 
     if (alreadyMarked) {
-      setFeedback("You have marked this paragraph for later review.");
+      showCraftPromptOption("You have marked this paragraph for later review.");
       return;
     }
 
@@ -75,16 +84,19 @@ const BiasCheckingPanel = () => {
       }),
     );
 
-    setFeedback("Marked! You can review this paragraph later.");
     setShowMarkButton(false);
+    showCraftPromptOption("Marked! You can review this paragraph later.");
   };
 
   const checkBias = () => {
     const paragraphIndex = selectedCheckingParagraph.index;
-    const totalBiasCount = biasedParagraphIndices.length;
-    const biasIndex = biasedParagraphIndices.indexOf(paragraphIndex);
+    const totalBiasCount = biasedParagraphPlan.length;
 
-    const alreadyDetected = detectedStoryBias.storyBiasItems.some(
+    const matchedPlan = biasedParagraphPlan.find(
+      (item) => item.paragraphIndex === paragraphIndex,
+    );
+
+    const detectedItem = detectedStoryBias.storyBiasItems.find(
       (item) => item.paragraphIndex === paragraphIndex,
     );
 
@@ -93,16 +105,19 @@ const BiasCheckingPanel = () => {
     );
 
     setShowMarkButton(false);
+    setShowCraftPromptButton(false);
 
-    if (alreadyDetected) {
-      const biasCategory = selectedBiasCategories[biasIndex];
-
-      setFeedback(`Already detected. This paragraph has ${biasCategory.name}.`);
+    if (detectedItem) {
+      showCraftPromptOption(
+        `Already detected. This paragraph has ${getBiasName(
+          detectedItem.biasCategory,
+        )}.`,
+      );
       return;
     }
 
     if (alreadyMarked) {
-      setFeedback("You already marked this paragraph for later.");
+      showCraftPromptOption("You already marked this paragraph for later.");
       return;
     }
 
@@ -114,7 +129,7 @@ const BiasCheckingPanel = () => {
       return;
     }
 
-    if (biasIndex === -1) {
+    if (!matchedPlan) {
       setFeedback(
         "Good try! This might not be a biased paragraph. Do you still want to mark it as biased and review it later?",
       );
@@ -122,76 +137,97 @@ const BiasCheckingPanel = () => {
       return;
     }
 
-    const biasCategory = selectedBiasCategories[biasIndex];
-
     dispatch(
       addDetectedStoryBias({
         paragraphIndex,
         paragraph: selectedCheckingParagraph.paragraph,
-        biasCategory,
+        biasCategory: matchedPlan.biasCategory,
       }),
     );
 
     const nextCount = detectedStoryBias.count + 1;
     const leftCount = totalBiasCount - nextCount;
+    const biasName = getBiasName(matchedPlan.biasCategory);
 
-    setFeedback(
+    showCraftPromptOption(
       leftCount === 0
-        ? `Correct guess! You detected all ${nextCount} biases. This paragraph has ${biasCategory.name}.`
-        : `Correct guess! You detected ${nextCount} biases. This paragraph has ${biasCategory.name}. You need to detect ${leftCount} more ${
+        ? `Correct guess! You detected all ${nextCount} biases. This paragraph has ${biasName}.`
+        : `Correct guess! You detected ${nextCount} biases. This paragraph has ${biasName}. You need to detect ${leftCount} more ${
             leftCount === 1 ? "bias" : "biases"
           }.`,
     );
   };
 
+  const craftPrompt = () => {
+    dispatch(setCurrentFocusedPanel("craftPromptPanel"));
+  };
+
   if (!isPanelOpen) return null;
 
   return (
-    <section
-      ref={panelRef}
-      tabIndex={-1}
-      className={
-        currentFocusedPanel === "biasCheckingPanel"
-          ? "bias-check-sidebar-panel current-focused-panel"
-          : "bias-check-sidebar-panel"
-      }
-      role="dialog"
-      aria-modal="false"
-      aria-labelledby="bias-check-title"
-      onMouseEnter={() => dispatch(setCurrentFocusedPanel("biasCheckingPanel"))}
-      onFocusCapture={() =>
-        dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
-      }
-    >
-      <h2 id="bias-check-title" className="bias-checking-title">
-        Do you want to confirm paragraph {selectedCheckingParagraph.index + 1}{" "}
-        has bias?
-      </h2>
-
-      <div
-        className="bias-checking-buttons"
-        role="group"
-        aria-label="Bias checking choices"
+    <>
+      <section
+        ref={panelRef}
+        tabIndex={-1}
+        className={
+          currentFocusedPanel === "biasCheckingPanel"
+            ? "bias-check-sidebar-panel current-focused-panel"
+            : "bias-check-sidebar-panel"
+        }
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="bias-check-title"
+        onMouseEnter={() =>
+          dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
+        }
+        onFocusCapture={() =>
+          dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
+        }
       >
-        <button type="button" className="page-button" onClick={checkBias}>
-          Yes
-        </button>
+        <h2 id="bias-check-title" className="bias-checking-title">
+          Do you want to confirm paragraph {selectedCheckingParagraph.index + 1}{" "}
+          has bias?
+        </h2>
 
-        <button type="button" className="page-button" onClick={closePanel}>
-          Close
-        </button>
-      </div>
+        <div
+          className="bias-checking-buttons"
+          role="group"
+          aria-label="Bias checking choices"
+        >
+          <button type="button" className="page-button" onClick={checkBias}>
+            Yes
+          </button>
 
-      <p className="bias-feedback" role="status" aria-live="polite">
-        {feedback}
-      </p>
+          <button type="button" className="page-button" onClick={closePanel}>
+            Close
+          </button>
+        </div>
 
-      {showMarkButton && (
-        <button type="button" className="page-button" onClick={markParagraph}>
-          Mark this para
-        </button>
-      )}
-    </section>
+        <p className="bias-feedback" role="status" aria-live="polite">
+          {feedback}
+        </p>
+
+        {showMarkButton && (
+          <button type="button" className="page-button" onClick={markParagraph}>
+            Mark this paragraph
+          </button>
+        )}
+        {showCraftPromptButton && (
+          <section
+            className="craft-prompt-option"
+            aria-labelledby="craft-prompt-title"
+          >
+            <h3 id="craft-prompt-title" className="bias-checking-title">
+              Do you want to rephrase this paragraph?
+            </h3>
+
+            <button type="button" className="page-button" onClick={craftPrompt}>
+              Craft Prompt to Rephrase this Paragraph
+            </button>
+          </section>
+        )}
+      </section>
+    </>
   );
 };
 

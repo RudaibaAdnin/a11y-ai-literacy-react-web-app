@@ -18,12 +18,28 @@ import "./index.css";
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
-const getRandomBiasCategories = () =>
-  pickRandom(Object.keys(story_bias_categories), 2).map((name) => ({
+// const getRandomBiasCategories = () =>
+//   pickRandom(Object.keys(story_bias_categories), 2).map((name) => ({
+//     name,
+//     meaning: story_bias_categories[name].meaning,
+//     examples: story_bias_categories[name].examples,
+//   }));
+
+const getRandomBiasCategories = () => {
+  const socialBiasNames = ["Gender bias", "Racial bias"];
+  const disabilityBiasNames = ["Ableism bias", "Inspiration bias"];
+
+  const selectedNames = [
+    pickRandom(socialBiasNames, 1)[0],
+    pickRandom(disabilityBiasNames, 1)[0],
+  ];
+
+  return selectedNames.map((name) => ({
     name,
     meaning: story_bias_categories[name].meaning,
     examples: story_bias_categories[name].examples,
   }));
+};
 
 const StoryReadingPage = () => {
   const dispatch = useDispatch();
@@ -68,12 +84,17 @@ const StoryReadingPage = () => {
         selectedBiasCategories,
       );
 
+      const biasedParagraphPlan = response.biasedParagraphPlan || [];
+      const biasedParagraphIndices = biasedParagraphPlan.map(
+        (item) => item.paragraphIndex,
+      );
+
       dispatch(
         setStoryReading({
           storyParagraphs: response.storyParagraphs || [],
-          biasedParagraphIndices: response.biasedParagraphIndices || [],
-          biasedParagraphPlan: response.biasedParagraphPlan || [],
-          biasedParagraphCount: response.biasedParagraphIndices?.length || 0,
+          biasedParagraphPlan,
+          biasedParagraphIndices,
+          biasedParagraphCount: biasedParagraphPlan.length,
           selectedBiasCategories,
           biasCount: selectedBiasCategories.length,
         }),
@@ -103,10 +124,13 @@ const StoryReadingPage = () => {
   useEffect(() => {
     const handleStoryKeyDown = (event) => {
       if (
-        selectedCheckingParagraph.paragraph ||
         storyParagraphs.length === 0 ||
         !["[", "]", "Enter"].includes(event.key)
       ) {
+        return;
+      }
+
+      if (event.key === "Enter" && selectedCheckingParagraph.paragraph) {
         return;
       }
 
@@ -124,6 +148,9 @@ const StoryReadingPage = () => {
         return;
       }
 
+      dispatch(setSelectedCheckingParagraph({ index: null, paragraph: "" }));
+      dispatch(setCurrentFocusedPanel("miaPanel"));
+
       const nextIndex =
         (currentIndex + (event.key === "[" ? -1 : 1) + storyParagraphs.length) %
         storyParagraphs.length;
@@ -140,6 +167,27 @@ const StoryReadingPage = () => {
     moveToParagraph,
   ]);
 
+  useEffect(() => {
+    const openHelpGuide = (event) => {
+      const tagName = event.target.tagName;
+
+      if (
+        event.key !== "?" ||
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        event.target.isContentEditable
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      setShowHelpGuidePanel(true);
+    };
+
+    window.addEventListener("keydown", openHelpGuide);
+    return () => window.removeEventListener("keydown", openHelpGuide);
+  }, []);
   const focusMissionGuide = () => {
     dispatch(setCurrentFocusedPanel("pageInstructionsSection"));
   };

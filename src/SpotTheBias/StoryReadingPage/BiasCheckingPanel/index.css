@@ -1,8 +1,8 @@
 .bias-check-sidebar-panel {
   position: fixed;
-  left: 850px;
+  left: 600px;
   top: 160px;
-  width: 400px;
+  width: 600px;
   padding: 25px;
   border: 1px solid #1d4289;
   border-radius: 10px;
