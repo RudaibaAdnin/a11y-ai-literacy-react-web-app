@@ -6,13 +6,16 @@ import {
   setCurrentFocusedPanel,
   setSelectedCheckingParagraph,
   addRephrasedParagraph,
+  addRephrasedParagraphHistory,
 } from "../../SpotTheBiasReducer";
 import * as client from "./client.js";
 
 const CraftPromptRephrasePanel = () => {
   const dispatch = useDispatch();
+
   const statusRef = useRef(null);
   const replyRef = useRef(null);
+  const approvedRef = useRef(null);
   const nextFocusRef = useRef(null);
 
   const [turns, setTurns] = useState([]);
@@ -27,6 +30,7 @@ const CraftPromptRephrasePanel = () => {
   useEffect(() => {
     if (nextFocusRef.current === "status") statusRef.current?.focus();
     if (nextFocusRef.current === "reply") replyRef.current?.focus();
+    if (nextFocusRef.current === "approved") approvedRef.current?.focus();
     nextFocusRef.current = null;
   }, [turns]);
 
@@ -58,6 +62,7 @@ const CraftPromptRephrasePanel = () => {
 
   const getSuggestions = async () => {
     nextFocusRef.current = "status";
+
     setTurns((flow) => [
       ...flow.map((turn) => ({ ...turn, options: [] })),
       createTurn({ loading: "suggestions" }),
@@ -103,6 +108,13 @@ const CraftPromptRephrasePanel = () => {
       const data = await client.getRephrasedParagraph({ paragraph, prompt });
       const rephrasedParagraph = data.rephrasedParagraph || "";
 
+      dispatch(
+        addRephrasedParagraphHistory({
+          promptUsedForRephrase: prompt,
+          rephrasedParagraph,
+        }),
+      );
+
       nextFocusRef.current = "reply";
       setTurns((flow) =>
         flow.map((turn, index) =>
@@ -113,6 +125,7 @@ const CraftPromptRephrasePanel = () => {
       );
     } catch (error) {
       console.error("Could not rephrase paragraph:", error);
+
       setTurns((flow) =>
         flow.map((turn, index) =>
           index === turnIndex
@@ -129,6 +142,8 @@ const CraftPromptRephrasePanel = () => {
   };
 
   const approveRephrase = (turnIndex, rephrasedParagraph) => {
+    nextFocusRef.current = "approved";
+
     dispatch(
       addRephrasedParagraph({
         paragraphIndex: selectedCheckingParagraph.index,
@@ -203,7 +218,8 @@ const CraftPromptRephrasePanel = () => {
                       className="followup-question-button"
                       onClick={() => rephraseParagraph(option)}
                     >
-                      <strong>{option.category}: </strong> {option.suggestion}
+                      <strong>{option.category}: </strong>
+                      {option.suggestion}
                     </button>
                   </li>
                 ))}
@@ -251,7 +267,12 @@ const CraftPromptRephrasePanel = () => {
                       Approve Rephrase
                     </button>
                   ) : (
-                    <p className="keyboard-instructions" role="status">
+                    <p
+                      ref={approvedRef}
+                      tabIndex={-1}
+                      className="keyboard-instructions"
+                      role="status"
+                    >
                       Rephrase approved.
                     </p>
                   )}

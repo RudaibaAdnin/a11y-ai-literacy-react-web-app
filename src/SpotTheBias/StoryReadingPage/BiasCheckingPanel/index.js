@@ -15,6 +15,7 @@ const BiasCheckingPanel = () => {
   const panelRef = useRef(null);
   const confirmRef = useRef(null);
   const feedbackRef = useRef(null);
+  const originalRef = useRef(null);
   const openedParagraphRef = useRef(null);
   const feedbackFromActionRef = useRef(false);
 
@@ -22,6 +23,7 @@ const BiasCheckingPanel = () => {
   const [showMarkButton, setShowMarkButton] = useState(false);
   const [showYesButton, setShowYesButton] = useState(true);
   const [showCraftPromptButton, setShowCraftPromptButton] = useState(false);
+  const [showOriginalParagraph, setShowOriginalParagraph] = useState(false);
 
   const {
     selectedCheckingParagraph,
@@ -53,13 +55,11 @@ const BiasCheckingPanel = () => {
   const getBiasName = (biasCategory) =>
     typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
 
-  const focusConfirm = () => {
+  const focusConfirm = () =>
     requestAnimationFrame(() => confirmRef.current?.focus());
-  };
 
-  const focusFeedback = () => {
+  const focusFeedback = () =>
     requestAnimationFrame(() => feedbackRef.current?.focus());
-  };
 
   const setFeedbackWithFocus = (message) => {
     setFeedback(message);
@@ -73,6 +73,11 @@ const BiasCheckingPanel = () => {
     focusFeedback();
   };
 
+  const showOriginalText = () => {
+    setShowOriginalParagraph(true);
+    requestAnimationFrame(() => originalRef.current?.focus());
+  };
+
   const closePanel = () => {
     openedParagraphRef.current = null;
     feedbackFromActionRef.current = false;
@@ -80,6 +85,7 @@ const BiasCheckingPanel = () => {
     setShowMarkButton(false);
     setShowYesButton(true);
     setShowCraftPromptButton(false);
+    setShowOriginalParagraph(false);
     dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
@@ -98,6 +104,7 @@ const BiasCheckingPanel = () => {
       setShowMarkButton(false);
       setShowYesButton(true);
       setShowCraftPromptButton(false);
+      setShowOriginalParagraph(false);
       dispatch(setCurrentFocusedPanel("biasCheckingPanel"));
       panelRef.current?.focus();
     }
@@ -105,9 +112,8 @@ const BiasCheckingPanel = () => {
     if (isRephrased) {
       setShowMarkButton(false);
       setShowYesButton(false);
-      setFeedbackWithCraft(
-        "This is a rephrased paragraph. You can rephrase more.",
-      );
+      setFeedback("This is a rephrased paragraph. You can rephrase more.");
+      setShowCraftPromptButton(true);
       return;
     }
 
@@ -282,6 +288,25 @@ const BiasCheckingPanel = () => {
         >
           {feedback}
         </p>
+
+        {isRephrased && (
+          <>
+            <button
+              type="button"
+              className="page-button"
+              onClick={showOriginalText}
+            >
+              Read previous paragraph text
+            </button>
+
+            {showOriginalParagraph && (
+              <p ref={originalRef} tabIndex={-1} className="bias-feedback">
+                Previous paragraph text:{" "}
+                {selectedCheckingParagraph.originalStoryParagraph}
+              </p>
+            )}
+          </>
+        )}
 
         {!isRephrased && showMarkButton && (
           <div

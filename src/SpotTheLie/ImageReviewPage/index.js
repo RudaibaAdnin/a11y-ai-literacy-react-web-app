@@ -13,21 +13,19 @@ const ImageReviewPage = () => {
   const navigate = useNavigate();
 
   const detectedLiesPanelRef = useRef(null);
+  const loadingRef = useRef(null);
+  const explanationRef = useRef(null);
 
-  const currentFocusedPanel = useSelector(
-    (state) => state.SpotTheLieReducer.currentFocusedPanel,
-  );
+  const [activeExplanationLine, setActiveExplanationLine] = useState(null);
+  const [lieTypeExplanations, setLieTypeExplanations] = useState({});
 
-  const selectedImageHallucinations = useSelector(
-    (state) => state.SpotTheLieReducer.selectedImageHallucinations,
-  );
-
-  const detectedImageHallucination = useSelector(
-    (state) => state.SpotTheLieReducer.detectedImageHallucination,
-  );
+  const {
+    currentFocusedPanel,
+    selectedImageHallucinations,
+    detectedImageHallucination,
+  } = useSelector((state) => state.SpotTheLieReducer);
 
   const detectedItems = detectedImageHallucination.imageHallucinationItems;
-  const [lieTypeExplanations, setLieTypeExplanations] = useState({});
 
   const focusReviewGuidePanel = () => {
     dispatch(setCurrentFocusedPanel("reviewGuidePanel"));
@@ -37,19 +35,34 @@ const ImageReviewPage = () => {
     dispatch(setCurrentFocusedPanel("reviewDetectedLiesPanel"));
   };
 
+  useEffect(() => {
+    const explanation = lieTypeExplanations[activeExplanationLine];
+    if (!explanation) return;
+
+    requestAnimationFrame(() => {
+      if (explanation.isLoading) loadingRef.current?.focus();
+      else explanationRef.current?.focus();
+    });
+  }, [lieTypeExplanations, activeExplanationLine]);
+
   const fetchExplanationExamplesLieType = async (
     hallucinatedLine,
     accurateLine,
     hallucinationType,
   ) => {
     if (lieTypeExplanations[hallucinatedLine]) {
+      setActiveExplanationLine(null);
+
       setLieTypeExplanations((previousExplanations) => {
         const updatedExplanations = { ...previousExplanations };
         delete updatedExplanations[hallucinatedLine];
         return updatedExplanations;
       });
+
       return;
     }
+
+    setActiveExplanationLine(hallucinatedLine);
 
     setLieTypeExplanations((previousExplanations) => ({
       ...previousExplanations,
@@ -136,7 +149,7 @@ const ImageReviewPage = () => {
           Great detective work! Now it is time to review your detective moves.
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
-          helpful examples. Press the left square bracket key
+          helpful examples. Press the left square bracket key{" "}
           <span className="kbd" aria-label="left square bracket key">
             [
           </span>{" "}
@@ -195,6 +208,9 @@ const ImageReviewPage = () => {
                   const explanation =
                     lieTypeExplanations[item.hallucinatedLine];
 
+                  const isActive =
+                    activeExplanationLine === item.hallucinatedLine;
+
                   return (
                     <li key={item.hallucinatedLine} className="lie-item">
                       <h3 className="lie-item-title">Lie {index + 1}:</h3>
@@ -237,6 +253,8 @@ const ImageReviewPage = () => {
 
                       {explanation?.isLoading && (
                         <p
+                          ref={isActive ? loadingRef : null}
+                          tabIndex={-1}
                           className="lie-type-explanation"
                           role="status"
                           aria-live="polite"
@@ -247,6 +265,8 @@ const ImageReviewPage = () => {
 
                       {explanation?.error && (
                         <p
+                          ref={isActive ? explanationRef : null}
+                          tabIndex={-1}
                           className="lie-type-explanation"
                           role="status"
                           aria-live="polite"
@@ -257,6 +277,8 @@ const ImageReviewPage = () => {
 
                       {explanation?.data && (
                         <div
+                          ref={isActive ? explanationRef : null}
+                          tabIndex={-1}
                           className="lie-type-explanation"
                           aria-live="polite"
                         >

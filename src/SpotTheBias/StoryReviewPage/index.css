@@ -60,3 +60,94 @@
   line-height: 1.4;
   margin: 0;
 }
+
+/*needs checking from below */
+.hallucinated-line-text {
+  background: #eef4ff;
+  padding: 2px 4px;
+  border: 0.5px solid #1d4289;
+  border-radius: 4px;
+}
+
+/* .lie-type-explanation {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 10px;
+} */
+
+.question-empty {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.question-list {
+  margin: 0;
+  padding-left: 25px;
+}
+
+.question-item {
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.question-item-title {
+  font-size: 24px;
+  margin: 0 10px 8px 0;
+}
+
+.question-text {
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.reply-sara {
+  margin-left: 20px;
+}
+
+.question-reply-text {
+  font-size: 24px;
+  line-height: 1.4;
+  margin-top: 20px;
+  /* border: 0.5px solid #1d4289;
+  border-radius: 10px; */
+}
+
+.bias-type-explanation {
+  font-size: 21px;
+  line-height: 1.4;
+  border: 0.5px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.question-type-explanation {
+  font-size: 21px;
+  line-height: 1.4;
+  border: 0.5px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.reply-type-explanation {
+  font-size: 21px;
+  line-height: 1.4;
+  border: 0.5px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 20px;
+}
+.reply-type-instruction {
+  font-size: 21px;
+  line-height: 1.4;
+  border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px;
+}

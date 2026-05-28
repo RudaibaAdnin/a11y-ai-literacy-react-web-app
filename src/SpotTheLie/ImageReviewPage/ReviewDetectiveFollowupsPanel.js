@@ -8,9 +8,12 @@ import * as client from "./client.js";
 const ReviewDetectiveFollowUpsPanel = () => {
   const dispatch = useDispatch();
   const followUpsPanelRef = useRef(null);
+  const loadingRef = useRef(null);
+  const explanationRef = useRef(null);
 
   const [questionHelp, setQuestionHelp] = useState({});
   const [replyHelp, setReplyHelp] = useState({});
+  const [activeHelp, setActiveHelp] = useState(null);
 
   const currentFocusedPanel = useSelector(
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
@@ -24,11 +27,29 @@ const ReviewDetectiveFollowUpsPanel = () => {
     (state) => state.SpotTheLieReducer.selectedImageDescription,
   );
 
+  const activeExplanation =
+    activeHelp?.type === "question"
+      ? questionHelp[activeHelp.index]
+      : activeHelp?.type === "reply"
+        ? replyHelp[activeHelp.index]
+        : null;
+
+  useEffect(() => {
+    if (!activeExplanation) return;
+
+    requestAnimationFrame(() => {
+      if (activeExplanation.isLoading) loadingRef.current?.focus();
+      else explanationRef.current?.focus();
+    });
+  }, [activeExplanation]);
+
   const focusReviewFollowUpsPanel = () => {
     dispatch(setCurrentFocusedPanel("reviewFollowUpsPanel"));
   };
 
   const toggleQuestionHelp = (index) => {
+    setActiveHelp(null);
+
     setQuestionHelp((previousHelp) => {
       const updatedHelp = { ...previousHelp };
       delete updatedHelp[index];
@@ -46,6 +67,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
       toggleQuestionHelp(index);
       return;
     }
+
+    setActiveHelp({ type: "question", index });
 
     setQuestionHelp((previousHelp) => ({
       ...previousHelp,
@@ -65,9 +88,10 @@ const ReviewDetectiveFollowUpsPanel = () => {
       }));
     } catch (error) {
       console.error("Could not explain question:", error);
+
       setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: { isLoading: true },
+        [index]: { error: "Sorry, I could not get the explanation." },
       }));
     }
   };
@@ -77,6 +101,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
       toggleQuestionHelp(index);
       return;
     }
+
+    setActiveHelp({ type: "question", index });
 
     setQuestionHelp((previousHelp) => ({
       ...previousHelp,
@@ -92,22 +118,28 @@ const ReviewDetectiveFollowUpsPanel = () => {
       }));
     } catch (error) {
       console.error("Could not improve question:", error);
+
       setQuestionHelp((previousHelp) => ({
         ...previousHelp,
-        [index]: { isLoading: true },
+        [index]: { error: "Sorry, I could not get the explanation." },
       }));
     }
   };
 
   const fetchWhyThisReplyIsWrong = async (index, replyType, replyText) => {
     if (replyHelp[index]) {
+      setActiveHelp(null);
+
       setReplyHelp((previousHelp) => {
         const updatedHelp = { ...previousHelp };
         delete updatedHelp[index];
         return updatedHelp;
       });
+
       return;
     }
+
+    setActiveHelp({ type: "reply", index });
 
     setReplyHelp((previousHelp) => ({
       ...previousHelp,
@@ -127,6 +159,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
       }));
     } catch (error) {
       console.error("Could not explain reply:", error);
+
       setReplyHelp((previousHelp) => ({
         ...previousHelp,
         [index]: { error: "Sorry, I could not get the explanation." },
@@ -186,6 +219,10 @@ const ReviewDetectiveFollowUpsPanel = () => {
               const questionExplanation = questionHelp[index];
               const replyExplanation = replyHelp[index];
               const isManualQuestion = item.followUpQuestionType === "manual";
+              const isActiveQuestion =
+                activeHelp?.type === "question" && activeHelp.index === index;
+              const isActiveReply =
+                activeHelp?.type === "reply" && activeHelp.index === index;
 
               return (
                 <li key={index} className="lie-item">
@@ -227,6 +264,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                   {questionExplanation?.isLoading && (
                     <p
+                      ref={isActiveQuestion ? loadingRef : null}
+                      tabIndex={-1}
                       className="question-type-explanation"
                       role="status"
                       aria-live="polite"
@@ -237,6 +276,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                   {questionExplanation?.error && (
                     <p
+                      ref={isActiveQuestion ? explanationRef : null}
+                      tabIndex={-1}
                       className="question-type-explanation"
                       role="status"
                       aria-live="polite"
@@ -247,6 +288,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                   {questionExplanation?.data && (
                     <div
+                      ref={isActiveQuestion ? explanationRef : null}
+                      tabIndex={-1}
                       className="question-type-explanation"
                       aria-live="polite"
                     >
@@ -325,6 +368,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                             {replyExplanation?.isLoading && (
                               <p
+                                ref={isActiveReply ? loadingRef : null}
+                                tabIndex={-1}
                                 className="reply-type-explanation"
                                 role="status"
                                 aria-live="polite"
@@ -335,6 +380,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                             {replyExplanation?.error && (
                               <p
+                                ref={isActiveReply ? explanationRef : null}
+                                tabIndex={-1}
                                 className="reply-type-explanation"
                                 role="status"
                                 aria-live="polite"
@@ -345,6 +392,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
 
                             {replyExplanation?.data && (
                               <div
+                                ref={isActiveReply ? explanationRef : null}
+                                tabIndex={-1}
                                 className="reply-type-explanation"
                                 aria-live="polite"
                               >

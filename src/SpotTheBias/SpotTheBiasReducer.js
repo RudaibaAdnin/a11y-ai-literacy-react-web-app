@@ -29,6 +29,7 @@ const initialState = {
   detectedStoryBias: { count: 0, storyBiasItems: [] },
   flaggedStoryParagraph: { count: 0, flaggedStoryParagraphItems: [] },
   followUpsHistoryAlice: [],
+  rephrasedParagraphHistory: [],
   currentFocusedPanel: "",
 };
 
@@ -56,6 +57,7 @@ const SpotTheBiasSlice = createSlice({
         flaggedStoryParagraphItems: [],
       };
       state.followUpsHistoryAlice = [];
+      state.rephrasedParagraphHistory = [];
       state.currentFocusedPanel = "";
     },
 
@@ -85,6 +87,7 @@ const SpotTheBiasSlice = createSlice({
         flaggedStoryParagraphItems: [],
       };
       state.followUpsHistoryAlice = [];
+      state.rephrasedParagraphHistory = [];
       state.currentFocusedPanel = "";
     },
 
@@ -120,12 +123,21 @@ const SpotTheBiasSlice = createSlice({
     },
 
     addFollowUpsHistoryAlice: (state, action) => {
-      if (state.followUpsHistoryAlice.length >= 3) return;
+      if (state.followUpsHistoryAlice.length >= 2) return;
 
       state.followUpsHistoryAlice.push({
         followUpQuestion: action.payload.followUpQuestion,
         followUpQuestionCategory: action.payload.followUpQuestionCategory,
         followUpReply: action.payload.followUpReply,
+      });
+    },
+
+    addRephrasedParagraphHistory: (state, action) => {
+      if (state.rephrasedParagraphHistory.length >= 2) return;
+
+      state.rephrasedParagraphHistory.push({
+        promptUsedForRephrase: action.payload.promptUsedForRephrase,
+        rephrasedParagraph: action.payload.rephrasedParagraph,
       });
     },
   },
@@ -141,6 +153,7 @@ export const {
   addDetectedStoryBias,
   addFlaggedStoryParagraph,
   addFollowUpsHistoryAlice,
+  addRephrasedParagraphHistory,
 } = SpotTheBiasSlice.actions;
 
 export default SpotTheBiasSlice.reducer;
