@@ -160,7 +160,7 @@ const ImageDescriptionPage = () => {
         </div>
 
         {/* Accessibility: changed nav label from review page to game page navigation. */}
-        <nav className="page-nav" aria-label="Main menu page navigation">
+        <nav className="page-nav" aria-label="Main menu navigation">
           <Link className="page-button" to="/spot-the-lie">
             Back to Menu
           </Link>

@@ -56,9 +56,13 @@
 }
 
 .bias-item-text {
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1.4;
   margin: 0;
+  margin-bottom: 20px;
+  /* border-left: 2px solid #1d4289;
+  border-radius: 10px;
+  padding: 10px; */
 }
 
 /*needs checking from below */

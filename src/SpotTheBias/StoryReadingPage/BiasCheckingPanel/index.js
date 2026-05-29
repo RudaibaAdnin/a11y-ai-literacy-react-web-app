@@ -243,7 +243,7 @@ const BiasCheckingPanel = () => {
         }
       >
         <h2 id="bias-check-title" className="panel-title">
-          Bias Check Panel
+          Bias Checking and Fixing Panel
         </h2>
 
         {!isRephrased &&

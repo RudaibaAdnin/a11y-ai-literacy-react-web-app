@@ -197,7 +197,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
       onFocusCapture={focusReviewFollowUpsPanel}
     >
       <h2 id="review-followups-title" className="panel-title" tabIndex={0}>
-        Detective Follow-up Questions You Asked Sara
+        List of Detective Follow-up Questions You Asked Sara
       </h2>
 
       {followUpsHistorySara.length === 0 ? (

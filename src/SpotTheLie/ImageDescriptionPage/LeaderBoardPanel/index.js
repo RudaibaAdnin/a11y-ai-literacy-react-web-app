@@ -51,8 +51,8 @@ const LeaderBoardPanel = () => {
       ) : (
         <>
           <p className="keyboard-instructions">
-            Great detective work! Here are the list of lies you have found.
-            Review each one to learn why it is a lie and what kind of lie it is.
+            List of lies you have found. Review each one to learn why it is a
+            lie and what type of lie it is.
           </p>
           <ol
             className="leaderboard-list"
@@ -66,12 +66,12 @@ const LeaderBoardPanel = () => {
                 // Accessibility change: connects each list item to its heading.
                 aria-labelledby={`detected-lie-${index + 1}`}
               >
-                <h3
+                <p
                   id={`detected-lie-${index + 1}`}
                   className="leaderboard-item-title"
                 >
                   Lie {index + 1}
-                </h3>
+                </p>
 
                 <p className="leaderboard-item-text">
                   The sentence{" "}

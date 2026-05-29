@@ -6,25 +6,29 @@ import { setCurrentFocusedPanel } from "../../SpotTheBiasReducer";
 
 const instructions = [
   <>
-    Press{" "}
-    <span className="kbd" aria-label="left square bracket key">
+    Press left square bracket key
+    <span className="kbd" aria-hidden="true">
       [
     </span>{" "}
     to go to the previous paragraph.
   </>,
   <>
-    Press{" "}
-    <span className="kbd" aria-label="right square bracket key">
+    Press right square bracket key
+    <span className="kbd" aria-hidden="true">
       ]
-    </span>{" "}
+    </span>
     to go to the next paragraph.
   </>,
   <>
-    Press{" "}
-    <span className="kbd" aria-label="Enter key">
-      Enter
+    Press <span className="kbd">Enter</span> key to check the current paragraph
+    as possible bias.
+  </>,
+  <>
+    Press equal key{" "}
+    <span className="kbd" aria-hidden="true">
+      =
     </span>{" "}
-    to check the current paragraph as possible bias.
+    key to go to Alice panel.
   </>,
 ];
 
@@ -80,7 +84,7 @@ const HelpGuidePanel = ({ onClose }) => {
       }}
     >
       <h2 id="help-guide-title" className="help-guide-title">
-        Help Guide with Keyboard Instructions
+        Help Guide with the List of Keyboard Instructions
       </h2>
 
       <ul

@@ -124,7 +124,7 @@ const ImageReviewPage = () => {
           </h1>
         </div>
 
-        <nav className="page-nav" aria-label="Review page navigation">
+        <nav className="page-nav" aria-label="Main menu navigation">
           <Link className="page-button" to="/spot-the-lie">
             Back to Menu
           </Link>
@@ -213,7 +213,7 @@ const ImageReviewPage = () => {
 
                   return (
                     <li key={item.hallucinatedLine} className="lie-item">
-                      <h3 className="lie-item-title">Lie {index + 1}:</h3>
+                      <p className="lie-item-title">Lie {index + 1}:</p>
 
                       <p className="lie-item-text">
                         The sentence{" "}

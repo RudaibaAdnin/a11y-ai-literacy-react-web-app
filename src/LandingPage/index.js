@@ -12,7 +12,7 @@ const games = [
   {
     name: "Spot the Bias",
     description:
-      "Find biases in AI-generated stories from a topic of your choice.",
+      "Work with an AI agent to create a story and an image, then make your creation better by spotting and fixing biased parts.",
     link: "/spot-the-bias",
   },
   {

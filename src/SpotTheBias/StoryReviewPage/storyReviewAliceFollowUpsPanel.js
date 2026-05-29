@@ -106,7 +106,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        Follow-up Questions You Asked Alice
+        List of Bias-Spotting Follow-up Questions You Asked Alice
       </h2>
 
       {followUpsHistoryAlice.length === 0 ? (
@@ -114,8 +114,9 @@ const StoryReviewAliceFollowUpsPanel = () => {
       ) : (
         <>
           <p className="keyboard-instructions">
-            Review the questions you asked Alice. Select Explain How This
-            Question Helps to learn how the question can help detect bias.
+            Review the follow-up questions you asked Alice. Select Explain How
+            This Question Helps button to learn how the question can help detect
+            bias.
           </p>
 
           <ol className="question-list" aria-label="Alice follow-up questions">

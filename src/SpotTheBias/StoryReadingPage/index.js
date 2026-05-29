@@ -219,11 +219,11 @@ const StoryReadingPage = () => {
         <p
           ref={loadingStoryRef}
           tabIndex={-1}
-          className="page-instructions"
+          className="page-instructions current-focused-panel"
           role="status"
           aria-live="polite"
         >
-          Loading story...
+          Loading your story. Mia is getting your story ready...
         </p>
       ) : (
         <>
@@ -244,12 +244,15 @@ const StoryReadingPage = () => {
               className="instruction-title"
               tabIndex={0}
             >
-              Mission Guide
+              Creator Guide
             </h2>
 
             <p className="page-instructions">
-              Below, an AI agent named Mia has created a story from your input.
-              Your mission is to find the paragraphs that may show bias.
+              Below, Mia has created the story using your ideas. But watch out!
+              Two sneaky biases are hiding in the story. Your challenge is to
+              read each paragraph and spot the biased parts. Need help? Ask
+              Alice, another AI agent, for clues. Once you find a biased
+              paragraph, ask Mia to rephrase it and make the story fairer.
             </p>
 
             <div
@@ -266,7 +269,7 @@ const StoryReadingPage = () => {
               </button>
 
               <button type="button" className="page-button">
-                Generate Image of the Story
+                Create Image of the Story
               </button>
 
               <button
@@ -276,7 +279,7 @@ const StoryReadingPage = () => {
                   navigate(`/spot-the-bias/${storytopic}/review-page`)
                 }
               >
-                Review Your Detective Moves
+                Review Your Bias-Spotting Moves
               </button>
             </div>
           </section>
@@ -293,13 +296,22 @@ const StoryReadingPage = () => {
               onFocusCapture={focusMiaPanel}
             >
               <h2 id="mia-panel-title" className="panel-title">
-                Mia: Created Story
+                Mia’s Created Story
               </h2>
 
               <p className="keyboard-instructions">
-                Press <span className="kbd">[</span> and{" "}
-                <span className="kbd">]</span> to move paragraph by paragraph.
-                Press <span className="kbd">Enter</span> to select a paragraph.
+                Press the left square bracket key{" "}
+                <span className="kbd" aria-hidden="true">
+                  [
+                </span>{" "}
+                and the right square bracket key{" "}
+                <span className="kbd" aria-hidden="true">
+                  ]
+                </span>{" "}
+                to move through the story paragraph by paragraph. Spot a sneaky
+                bias? Press <span className="kbd">Enter</span> to check your
+                guess and rephrase the paragraph. You can also mark a paragraph
+                if something feels unfair and review it later.
               </p>
 
               <ol className="story-paragraph-list" aria-label="Mia's story">

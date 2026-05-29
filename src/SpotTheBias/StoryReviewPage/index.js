@@ -233,12 +233,30 @@ const StoryReviewPage = () => {
         </h2>
 
         <p className="page-instructions">
-          Great detective work! Now review the bias you found and the paragraphs
-          you marked. Press the left square bracket key{" "}
-          <span className="kbd" aria-label="left square bracket key">
+          Great work! Now, it is time to review your bias-spotting moves. Below,
+          review each bias you spotted, the paragraphs you marked, follow-up
+          questions you asked Alice, and the prompts you used to rewrite and fix
+          a biased paragraph. You can select the explanation buttons to learn
+          more and get helpful examples.
+        </p>
+
+        <p className="page-instructions">
+          Press the left square bracket key{" "}
+          <span className="kbd" aria-hidden="true">
             [
           </span>{" "}
-          to jump to the list of detected bias.
+          to jump to the list of detected bias panel. Press the right square
+          bracket key{" "}
+          <span className="kbd" aria-hidden="true">
+            ]
+          </span>{" "}
+          to jump to review the list of follow-up questions you asked Alice
+          panel. Press equal key{" "}
+          <span className="kbd" aria-hidden="true">
+            =
+          </span>{" "}
+          to jump to review the list of prompts you used to rewrite and fix a
+          biased paragraph.
         </p>
 
         <button
@@ -267,96 +285,95 @@ const StoryReviewPage = () => {
             List of Detected Bias
           </h2>
 
-          <p className="bias-count-details">
+          {/* <p className="bias-count-details">
             You found {detectedStoryBias.count} biased paragraph
             {detectedStoryBias.count === 1 ? "" : "s"}.
-          </p>
+          </p> */}
 
           {detectedItems.length === 0 ? (
             <p className="bias-empty">No bias detected yet.</p>
           ) : (
-            <ol className="bias-list" aria-label="Detected bias">
-              {detectedItems.map((item, index) => {
-                const key = `bias-${getIndex(item)}`;
-                const explanation = explanations[key];
+            <>
+              <p className="keyboard-instructions">
+                Review the list of detected biases. Select Explain Bias Type
+                button to learn more and get helpful examples.
+              </p>
+              <ol className="bias-list" aria-label="Detected bias">
+                {detectedItems.map((item, index) => {
+                  const key = `bias-${getIndex(item)}`;
+                  const explanation = explanations[key];
 
-                return (
-                  <li key={`detected-${index}`} className="bias-item">
-                    <h3 className="bias-item-title">
-                      Detected Bias {index + 1}
-                    </h3>
+                  return (
+                    <li key={`detected-${index}`} className="bias-item">
+                      {/* <p className="bias-item-title">Bias {index + 1}</p> */}
 
-                    {getIndex(item) !== undefined && (
-                      <p>
-                        <strong>Paragraph:</strong> {getIndex(item) + 1}
-                      </p>
-                    )}
+                      {item.biasCategory && (
+                        <p>
+                          <strong>Bias type:</strong>{" "}
+                          {getBiasCategoryName(item.biasCategory)} in paragraph{" "}
+                          {getIndex(item) + 1}.
+                        </p>
+                      )}
 
-                    <p className="bias-item-text">{getParagraph(item)}</p>
+                      <p className="bias-item-text">{getParagraph(item)}</p>
 
-                    {item.biasCategory && (
-                      <p>
-                        <strong>Bias type:</strong>{" "}
-                        {getBiasCategoryName(item.biasCategory)}
-                      </p>
-                    )}
+                      <button
+                        type="button"
+                        className="page-button"
+                        onClick={() => fetchExplanationBiasType(item)}
+                        aria-expanded={Boolean(explanation)}
+                      >
+                        {explanation ? "Hide Explanation" : "Explain Bias Type"}
+                      </button>
 
-                    <button
-                      type="button"
-                      className="page-button"
-                      onClick={() => fetchExplanationBiasType(item)}
-                      aria-expanded={Boolean(explanation)}
-                    >
-                      {explanation ? "Hide Explanation" : "Explain Bias Type"}
-                    </button>
-
-                    {renderExplanation(key)}
-                  </li>
-                );
-              })}
-            </ol>
+                      {renderExplanation(key)}
+                    </li>
+                  );
+                })}
+              </ol>
+            </>
           )}
 
-          <h2 className="panel-title">Marked Paragraphs</h2>
+          <h2 className="panel-title">List of Marked Paragraphs</h2>
 
           {flaggedItems.length === 0 ? (
             <p className="bias-empty">No paragraphs marked yet.</p>
           ) : (
-            <ol className="bias-list" aria-label="Marked paragraphs">
-              {flaggedItems.map((item, index) => {
-                const key = `wrong-${getIndex(item)}`;
-                const explanation = explanations[key];
+            <>
+              <p className="keyboard-instructions">
+                Review the list of marked paragraphs. Select Explain if Anything
+                Wrong button to learn if any bias exists in a marked paragraph.
+              </p>
+              <ol className="bias-list" aria-label="Marked paragraphs">
+                {flaggedItems.map((item, index) => {
+                  const key = `wrong-${getIndex(item)}`;
+                  const explanation = explanations[key];
 
-                return (
-                  <li key={`flagged-${index}`} className="bias-item">
-                    <h3 className="bias-item-title">
-                      Marked Paragraph {index + 1}
-                    </h3>
-
-                    {getIndex(item) !== undefined && (
-                      <p>
-                        <strong>Paragraph:</strong> {getIndex(item) + 1}
+                  return (
+                    <li key={`flagged-${index}`} className="bias-item">
+                      <p className="bias-item-title">
+                        <strong>Marked paragraph {getIndex(item) + 1}</strong>
                       </p>
-                    )}
 
-                    <p className="bias-item-text">{getParagraph(item)}</p>
+                      <p className="bias-item-text">{getParagraph(item)}</p>
 
-                    <button
-                      type="button"
-                      className="page-button"
-                      onClick={() => fetchExplanationIfAnythingWrong(item)}
-                      aria-expanded={Boolean(explanation)}
-                    >
-                      {explanation
-                        ? "Hide Explanation"
-                        : "Explain if Anything Wrong"}
-                    </button>
+                      <button
+                        type="button"
+                        className="page-button"
+                        onClick={() => fetchExplanationIfAnythingWrong(item)}
+                        aria-expanded={Boolean(explanation)}
+                      >
+                        {explanation
+                          ? "Hide Explanation"
+                          : "Explain if Anything Wrong"}
+                      </button>
 
-                    {renderExplanation(key)}
-                  </li>
-                );
-              })}
-            </ol>
+                      {renderExplanation(key)}
+                    </li>
+                  );
+                })}
+              </ol>
+            </>
           )}
         </section>
         <StoryReviewAliceFollowUpsPanel />

@@ -47,7 +47,7 @@ const LeaderBoardPanel = () => {
 
       {detectedItems.length > 0 && (
         <>
-          <h3 className="leaderboard-section-title">Found Biases</h3>
+          <h3 className="leaderboard-section-title">List of Spotted Biases</h3>
 
           <ol
             className="leaderboard-list"
@@ -59,12 +59,13 @@ const LeaderBoardPanel = () => {
                 className="leaderboard-item"
                 aria-labelledby={`detected-bias-${index + 1}`}
               >
-                <h4
+                <p
                   id={`detected-bias-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  {item.biasCategory.name}: Paragraph {item.paragraphIndex + 1}
-                </h4>
+                  {item.biasCategory.name} in Paragraph{" "}
+                  {item.paragraphIndex + 1}
+                </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>
               </li>
@@ -75,7 +76,9 @@ const LeaderBoardPanel = () => {
 
       {flaggedItems.length > 0 && (
         <>
-          <h3 className="leaderboard-section-title">Marked Paragraphs</h3>
+          <h3 className="leaderboard-section-title">
+            List of Marked Paragraphs
+          </h3>
 
           <ol className="leaderboard-list" aria-label="Marked paragraphs">
             {flaggedItems.map((item, index) => (
@@ -84,12 +87,12 @@ const LeaderBoardPanel = () => {
                 className="leaderboard-item"
                 aria-labelledby={`marked-paragraph-${index + 1}`}
               >
-                <h4
+                <p
                   id={`marked-paragraph-${index + 1}`}
                   className="leaderboard-item-title"
                 >
                   Marked Paragraph {item.paragraphIndex + 1}
-                </h4>
+                </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>
               </li>

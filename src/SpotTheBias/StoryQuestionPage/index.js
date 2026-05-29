@@ -107,11 +107,13 @@ const StoryQuestionPage = () => {
 
       <section aria-labelledby="activity-guide-title">
         <h2 id="activity-guide-title" className="instruction-title">
-          Activity Guide
+          Creator Guide
         </h2>
 
         <p className="page-instructions">
-          Ready to create your story and image {topicText}.
+          Ready to create a story and an image {topicText}? Answer three fun
+          questions. For each question, select one of the two suggestions or
+          write your own answer.
         </p>
       </section>
 
@@ -127,7 +129,7 @@ const StoryQuestionPage = () => {
             role="status"
             aria-live="polite"
           >
-            Loading questions...
+            Loading three fun questions and suggestions...
           </p>
         ) : (
           <>
@@ -137,7 +139,8 @@ const StoryQuestionPage = () => {
               tabIndex={-1}
               className="story-question-title"
             >
-              Activity Step: Answer the following three questions.
+              Second Step: Answer the following three questions. Select a
+              suggestion or write your own answer.
             </h2>
 
             <ol className="story-question-list">

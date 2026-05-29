@@ -78,20 +78,22 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="activity-guide-title">
         <h2 id="activity-guide-title" className="instruction-title">
-          Activity Guide
+          Creator Guide
         </h2>
 
         <p className="page-instructions">
-          Welcome! In this activity, you and Mia, an AI agent, will create a
-          story together. But watch out! Some sneaky AI bias may be hiding
-          inside the story. Your mission is to spot the bias and make the story
-          better.
+          Welcome, Story Creator! Get ready to team up with Mia, an AI agent, to
+          create a story and a matching image. But watch out! Mia might sneak in
+          biases into the story and image. Your challenge is to spot the biases,
+          fix the story and image, and make the final creation fair and
+          respectful.
         </p>
       </section>
 
       <section aria-labelledby="story-topic-title">
         <h2 id="story-topic-title" className="story-topic-title">
-          Activity Step: Choose a story topic.
+          First Step: Choose a topic from the list below or use any idea that
+          comes to your mind to start creating your story.
         </h2>
 
         <ul className="story-topic-list" aria-label="Story topic choices">
@@ -112,7 +114,7 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="custom-story-topic-title">
         <h2 id="custom-story-topic-title" className="story-topic-title">
-          Or write your own story idea.
+          Have your own idea? Write it here.
         </h2>
 
         <form
@@ -120,7 +122,7 @@ const StoryTopicSelectionPage = () => {
           onSubmit={submitCustomStoryTopic}
         >
           <label htmlFor="custom-story-topic" className="custom-topic-label">
-            What kind of story are you in the mood for?
+            What kind of story do you want to create today?
           </label>
 
           <textarea

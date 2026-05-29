@@ -183,7 +183,8 @@ const AgentAlicePanel = () => {
         clue: clueData.clue || "",
         type: "clueQuestions",
         append: false,
-        loadedMessage: "Loaded clue and suggested questions are below.",
+        loadedMessage:
+          "Loaded clue and suggested follow-up questions are below.",
       });
     } catch (error) {
       console.error("Could not get Alice clue:", error);
@@ -349,8 +350,9 @@ const AgentAlicePanel = () => {
       </h2>
 
       <p className="keyboard-instructions">
-        Alice can give clues about one biased paragraph you have not found yet.
-        Press <span className="kbd">=</span> to jump to this panel.
+        Select the button below to ask Alice for clues about sneaky biased
+        paragraphs you have not found yet. You can also ask Alice follow-up
+        questions.
       </p>
 
       <div
@@ -379,7 +381,7 @@ const AgentAlicePanel = () => {
                 className="keyboard-instructions"
                 role="status"
               >
-                Loading clue from Alice...
+                Loading clue and follow-up question suggestions from Alice...
               </p>
             )}
 
@@ -399,7 +401,7 @@ const AgentAlicePanel = () => {
 
             {turn.loading === "questions" && (
               <p className="keyboard-instructions" role="status">
-                Loading follow-up questions from Alice...
+                Loading follow-up question suggestions from Alice...
               </p>
             )}
 

@@ -31,6 +31,7 @@
 .leaderboard-section-title {
   font-size: 22px;
   margin-top: 20px;
+  text-decoration: underline;
 }
 
 .leaderboard-item-title {

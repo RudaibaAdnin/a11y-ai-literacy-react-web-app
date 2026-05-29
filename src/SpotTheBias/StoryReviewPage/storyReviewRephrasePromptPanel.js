@@ -107,17 +107,19 @@ const StoryReviewRephrasePromptPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        Rephrase Prompts You Used
+        List of Bias-Fixing Prompts You Used to Rewrite Biased Paragraphs
       </h2>
 
       {rephrasedParagraphHistory.length === 0 ? (
-        <p className="question-empty">No rephrase prompts used yet.</p>
+        <p className="question-empty">
+          No prompts used yet to rewrite and fix biased paragraphs.
+        </p>
       ) : (
         <>
           <p className="keyboard-instructions">
-            Review the prompts you used to rephrase paragraphs. Select Explain
-            How This Prompt Helps to learn why the prompt can improve a biased
-            paragraph.
+            Review the prompts you used to rewrite and fix biased paragraphs.
+            Select Explain How This Prompt Helps button to learn how each prompt
+            can help make a biased paragraph fairer.
           </p>
 
           <ol className="question-list" aria-label="Rephrase prompts">
