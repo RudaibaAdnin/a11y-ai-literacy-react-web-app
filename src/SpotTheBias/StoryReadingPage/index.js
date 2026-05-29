@@ -223,7 +223,7 @@ const StoryReadingPage = () => {
           role="status"
           aria-live="polite"
         >
-          Loading your story. Mia is getting your story ready...
+          Loading the story. Mia is getting your story ready...
         </p>
       ) : (
         <>

@@ -92,8 +92,8 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="story-topic-title">
         <h2 id="story-topic-title" className="story-topic-title">
-          First Step: Choose a topic from the list below or use any idea that
-          comes to your mind to start creating your story.
+          First Step: Choose a topic from the list below or use any fun idea to
+          start creating your story.
         </h2>
 
         <ul className="story-topic-list" aria-label="Story topic choices">
@@ -114,7 +114,7 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="custom-story-topic-title">
         <h2 id="custom-story-topic-title" className="story-topic-title">
-          Have your own idea? Write it here.
+          Have your own fun idea? Write it here.
         </h2>
 
         <form
