@@ -15,10 +15,14 @@ export const getCraftPromptSuggestions = async ({ paragraph }) => {
   return response.data;
 };
 
-export const getRephrasedParagraph = async ({ paragraph, prompt }) => {
+export const getRephrasedParagraph = async ({
+  paragraph,
+  prompt,
+  category,
+}) => {
   const response = await axios.post(
     rephraseParagraphAPI,
-    { paragraph, prompt },
+    { paragraph, prompt, category },
     { headers: { "Content-Type": "application/json" } },
   );
 

@@ -12,10 +12,11 @@ import {
 
 const BiasCheckingPanel = () => {
   const dispatch = useDispatch();
+
   const panelRef = useRef(null);
   const confirmRef = useRef(null);
   const feedbackRef = useRef(null);
-  const originalRef = useRef(null);
+  const originalParagraphRef = useRef(null);
   const openedParagraphRef = useRef(null);
   const feedbackFromActionRef = useRef(false);
 
@@ -38,10 +39,6 @@ const BiasCheckingPanel = () => {
   const paragraphNumber = paragraphIndex + 1;
   const isRephrased = selectedCheckingParagraph.rephrasedFlag === true;
 
-  const allBiasesDetected =
-    biasedParagraphPlan.length > 0 &&
-    detectedStoryBias.count === biasedParagraphPlan.length;
-
   const detectedItem = detectedStoryBias.storyBiasItems.find(
     (item) => item.paragraphIndex === paragraphIndex,
   );
@@ -51,6 +48,10 @@ const BiasCheckingPanel = () => {
   );
 
   const alreadyHandled = detectedItem || alreadyMarked;
+
+  const allBiasesDetected =
+    biasedParagraphPlan.length > 0 &&
+    detectedStoryBias.count === biasedParagraphPlan.length;
 
   const getBiasName = (biasCategory) =>
     typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
@@ -73,9 +74,16 @@ const BiasCheckingPanel = () => {
     focusFeedback();
   };
 
-  const showOriginalText = () => {
-    setShowOriginalParagraph(true);
-    requestAnimationFrame(() => originalRef.current?.focus());
+  const toggleOriginalText = () => {
+    setShowOriginalParagraph((showing) => {
+      const next = !showing;
+
+      if (next) {
+        requestAnimationFrame(() => originalParagraphRef.current?.focus());
+      }
+
+      return next;
+    });
   };
 
   const closePanel = () => {
@@ -97,7 +105,9 @@ const BiasCheckingPanel = () => {
       return;
     }
 
-    if (openedParagraphRef.current !== paragraphIndex) {
+    const openedNewParagraph = openedParagraphRef.current !== paragraphIndex;
+
+    if (openedNewParagraph) {
       openedParagraphRef.current = paragraphIndex;
       feedbackFromActionRef.current = false;
       setFeedback("");
@@ -107,14 +117,15 @@ const BiasCheckingPanel = () => {
       setShowOriginalParagraph(false);
       dispatch(setCurrentFocusedPanel("biasCheckingPanel"));
       panelRef.current?.focus();
-    }
 
-    if (isRephrased) {
-      setShowMarkButton(false);
-      setShowYesButton(false);
-      setFeedback("This is a rephrased paragraph. You can rephrase more.");
-      setShowCraftPromptButton(true);
-      return;
+      if (isRephrased) {
+        setShowMarkButton(false);
+        setShowYesButton(false);
+        setFeedback("This is a rephrased paragraph. You can rephrase more.");
+        setShowCraftPromptButton(true);
+        focusFeedback();
+        return;
+      }
     }
 
     if (feedbackFromActionRef.current) return;
@@ -139,14 +150,14 @@ const BiasCheckingPanel = () => {
 
     if (allBiasesDetected) {
       setShowYesButton(false);
+      setShowMarkButton(true);
       setFeedbackWithFocus(
         `You have already detected all biases. Do you want to mark paragraph ${paragraphNumber} as biased and review it later?`,
       );
-      setShowMarkButton(true);
       return;
     }
 
-    focusConfirm();
+    if (!isRephrased) focusConfirm();
   }, [
     isPanelOpen,
     paragraphIndex,
@@ -191,10 +202,10 @@ const BiasCheckingPanel = () => {
     setShowCraftPromptButton(false);
 
     if (!matchedPlan) {
+      setShowMarkButton(true);
       setFeedbackWithFocus(
         `Good try! Paragraph ${paragraphNumber} might not be a biased paragraph. Do you still want to mark it as biased and review it later?`,
       );
-      setShowMarkButton(true);
       return;
     }
 
@@ -294,13 +305,20 @@ const BiasCheckingPanel = () => {
             <button
               type="button"
               className="page-button"
-              onClick={showOriginalText}
+              onClick={toggleOriginalText}
+              aria-expanded={showOriginalParagraph}
             >
-              Read previous paragraph text
+              {showOriginalParagraph
+                ? "Hide previous paragraph text"
+                : "Read previous paragraph text"}
             </button>
 
             {showOriginalParagraph && (
-              <p ref={originalRef} tabIndex={-1} className="bias-feedback">
+              <p
+                ref={originalParagraphRef}
+                tabIndex={-1}
+                className="story-paragraph-text"
+              >
                 Previous paragraph text:{" "}
                 {selectedCheckingParagraph.originalStoryParagraph}
               </p>

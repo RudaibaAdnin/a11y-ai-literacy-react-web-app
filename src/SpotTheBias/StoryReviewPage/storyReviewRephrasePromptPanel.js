@@ -130,7 +130,9 @@ const StoryReviewRephrasePromptPanel = () => {
               return (
                 <li key={index} className="lie-item">
                   <p className="question-text">
-                    <strong>Prompt:</strong> {item.promptUsedForRephrase}
+                    <strong>Prompt:</strong>{" "}
+                    {item.promptUsedForRephraseCategory}
+                    {": "} {item.promptUsedForRephrase}
                   </p>
 
                   <p className="question-reply-text">
@@ -159,7 +161,8 @@ const StoryReviewRephrasePromptPanel = () => {
                       role="status"
                       aria-live="polite"
                     >
-                      Loading explanation...
+                      Loading explanation on how this prompt helps rephrase a
+                      paragraph to be fairer...
                     </p>
                   )}
 

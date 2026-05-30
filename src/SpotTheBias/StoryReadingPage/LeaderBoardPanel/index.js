@@ -33,7 +33,7 @@ const LeaderBoardPanel = () => {
       onFocusCapture={focusPanel}
     >
       <h2 id="bias-scoreboard-title" className="panel-title" tabIndex={0}>
-        Detective Score Board
+        Score Board
       </h2>
 
       <p className="leaderboard-count-details">

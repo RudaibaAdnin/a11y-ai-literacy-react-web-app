@@ -96,6 +96,10 @@ const SpotTheBiasSlice = createSlice({
         action.payload || emptySelectedParagraph;
     },
 
+    addDetectedStoryBias: (state, action) => {
+      state.detectedStoryBias.storyBiasItems.push(action.payload);
+      state.detectedStoryBias.count += 1;
+    },
     addRephrasedParagraph: (state, action) => {
       const { paragraphIndex, rephrasedStoryParagraph } = action.payload;
       const paragraph = state.storyParagraphs[paragraphIndex];
@@ -108,11 +112,6 @@ const SpotTheBiasSlice = createSlice({
       if (state.selectedCheckingParagraph.index === paragraphIndex) {
         state.selectedCheckingParagraph = paragraph;
       }
-    },
-
-    addDetectedStoryBias: (state, action) => {
-      state.detectedStoryBias.storyBiasItems.push(action.payload);
-      state.detectedStoryBias.count += 1;
     },
 
     addFlaggedStoryParagraph: (state, action) => {
@@ -137,6 +136,8 @@ const SpotTheBiasSlice = createSlice({
 
       state.rephrasedParagraphHistory.push({
         promptUsedForRephrase: action.payload.promptUsedForRephrase,
+        promptUsedForRephraseCategory:
+          action.payload.promptUsedForRephraseCategory,
         rephrasedParagraph: action.payload.rephrasedParagraph,
       });
     },

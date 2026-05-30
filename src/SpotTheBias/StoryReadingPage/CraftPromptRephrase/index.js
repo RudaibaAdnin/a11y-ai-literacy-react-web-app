@@ -93,6 +93,11 @@ const CraftPromptRephrasePanel = () => {
     const prompt =
       typeof promptOption === "string" ? promptOption : promptOption.suggestion;
 
+    const category =
+      typeof promptOption === "string"
+        ? "My Own Prompt"
+        : promptOption.category;
+
     if (!prompt) return;
 
     const turnIndex = turns.length;
@@ -105,12 +110,17 @@ const CraftPromptRephrasePanel = () => {
     ]);
 
     try {
-      const data = await client.getRephrasedParagraph({ paragraph, prompt });
+      const data = await client.getRephrasedParagraph({
+        paragraph,
+        prompt,
+        category,
+      });
       const rephrasedParagraph = data.rephrasedParagraph || "";
 
       dispatch(
         addRephrasedParagraphHistory({
           promptUsedForRephrase: prompt,
+          promptUsedForRephraseCategory: category,
           rephrasedParagraph,
         }),
       );
