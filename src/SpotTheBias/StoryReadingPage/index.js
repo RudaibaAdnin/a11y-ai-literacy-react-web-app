@@ -86,17 +86,13 @@ const StoryReadingPage = () => {
         setStoryReading({
           storyParagraphs: response.storyParagraphs || [],
           biasedParagraphPlan,
-          biasedParagraphIndices: biasedParagraphPlan.map(
-            (item) => item.paragraphIndex,
-          ),
-          biasedParagraphCount: biasedParagraphPlan.length,
           selectedBiasCategories,
           biasCount: selectedBiasCategories.length,
         }),
       );
+      setIsLoadingStory(false);
     } catch (error) {
       console.error("Could not get story:", error);
-    } finally {
       setIsLoadingStory(false);
     }
   }, [
@@ -268,7 +264,13 @@ const StoryReadingPage = () => {
                 Help Guide
               </button>
 
-              <button type="button" className="page-button">
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/image-reading`)
+                }
+              >
                 Create Image of the Story
               </button>
 
@@ -279,7 +281,7 @@ const StoryReadingPage = () => {
                   navigate(`/spot-the-bias/${storytopic}/review-page`)
                 }
               >
-                Review Your Bias-Spotting Moves
+                Review Your Story Bias-Spotting Moves
               </button>
             </div>
           </section>

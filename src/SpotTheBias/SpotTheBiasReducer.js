@@ -22,8 +22,6 @@ const initialState = {
   storyParagraphs: [],
   selectedBiasCategories: [],
   biasedParagraphPlan: [],
-  biasedParagraphIndices: [],
-  biasedParagraphCount: 0,
   biasCount: 0,
   selectedCheckingParagraph: emptySelectedParagraph,
   detectedStoryBias: { count: 0, storyBiasItems: [] },
@@ -47,8 +45,6 @@ const SpotTheBiasSlice = createSlice({
       state.storyParagraphs = [];
       state.selectedBiasCategories = [];
       state.biasedParagraphPlan = [];
-      state.biasedParagraphIndices = [];
-      state.biasedParagraphCount = 0;
       state.biasCount = 0;
       state.selectedCheckingParagraph = emptySelectedParagraph;
       state.detectedStoryBias = { count: 0, storyBiasItems: [] };
@@ -72,11 +68,6 @@ const SpotTheBiasSlice = createSlice({
         action.payload.storyParagraphs || [],
       );
       state.biasedParagraphPlan = plan;
-      state.biasedParagraphIndices =
-        action.payload.biasedParagraphIndices ||
-        plan.map((item) => item.paragraphIndex);
-      state.biasedParagraphCount =
-        action.payload.biasedParagraphCount || plan.length;
       state.selectedBiasCategories =
         action.payload.selectedBiasCategories || [];
       state.biasCount = action.payload.biasCount || plan.length;

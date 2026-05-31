@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
 
 import { setStoryTopic } from "../SpotTheBiasReducer";
+import { setImageDescriptionReading } from "../ImageBiasReducer";
 
 const storyTopics = [
   "Adventure and Travel",
@@ -26,6 +27,8 @@ const StoryTopicSelectionPage = () => {
         storyTopicType: "suggested",
       }),
     );
+
+    dispatch(setImageDescriptionReading({}));
 
     navigate(`/spot-the-bias/${storyTopicSlug}`);
   };
@@ -85,8 +88,7 @@ const StoryTopicSelectionPage = () => {
           Welcome, Story Creator! Get ready to team up with Mia, an AI agent, to
           create a story and a matching image. But watch out! Mia might sneak in
           biases into the story and image. Your challenge is to spot the biases,
-          fix the story and image, and make the final creation fair and
-          respectful.
+          fix the story and image, and make the final creation fairer.
         </p>
       </section>
 

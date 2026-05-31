@@ -1,0 +1,8 @@
+.story-generated-image {
+  width: 450px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  align-items: center;
+  display: flex;
+}

@@ -234,14 +234,14 @@ const BiasCheckingPanel = () => {
   if (!isPanelOpen) return null;
 
   return (
-    <div className="bias-check-rephrase-sidebar-panel">
+    <div className="bias-check-rephrase-sidebar-wrapper">
       <section
         ref={panelRef}
         tabIndex={-1}
         className={
           currentFocusedPanel === "biasCheckingPanel"
-            ? "bias-check-sidebar-panel current-focused-panel"
-            : "bias-check-sidebar-panel"
+            ? "bias-check-rephrase-sidebar-panel current-focused-panel"
+            : "bias-check-rephrase-sidebar-panel"
         }
         role="dialog"
         aria-modal="false"

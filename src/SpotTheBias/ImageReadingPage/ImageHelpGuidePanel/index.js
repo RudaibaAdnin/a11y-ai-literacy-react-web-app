@@ -1,37 +1,30 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { setCurrentFocusedImagePanel } from "../../ImageBiasReducer";
 import "./index.css";
-import { setCurrentFocusedPanel } from "../../SpotTheBiasReducer";
 
 const instructions = [
   <>
-    Press left square bracket key
+    Press left square bracket key{" "}
     <span className="kbd" aria-hidden="true">
       [
     </span>{" "}
-    to go to the previous paragraph.
+    to go to the previous image description paragraph.
   </>,
   <>
-    Press right square bracket key
+    Press right square bracket key{" "}
     <span className="kbd" aria-hidden="true">
       ]
-    </span>
-    to go to the next paragraph.
-  </>,
-  <>
-    Press <span className="kbd">Enter</span> key to check the current paragraph
-    as possible bias.
-  </>,
-  <>
-    Press equal key{" "}
-    <span className="kbd" aria-hidden="true">
-      =
     </span>{" "}
-    key to go to Alice panel.
+    to go to the next image description paragraph.
   </>,
   <>
-    Press question mark
+    Press <span className="kbd">Enter</span> key to check the current image
+    description paragraph as possible image bias.
+  </>,
+  <>
+    Press question mark{" "}
     <span className="kbd" aria-hidden="true">
       ?
     </span>{" "}
@@ -39,18 +32,18 @@ const instructions = [
   </>,
 ];
 
-const HelpGuidePanel = ({ onClose }) => {
+const ImageHelpGuidePanel = ({ onClose }) => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
   const justOpenedPanelRef = useRef(false);
 
-  const currentFocusedPanel = useSelector(
-    (state) => state.SpotTheBiasReducer.currentFocusedPanel,
+  const currentFocusedImagePanel = useSelector(
+    (state) => state.ImageBiasReducer.currentFocusedImagePanel,
   );
 
   useEffect(() => {
     justOpenedPanelRef.current = true;
-    dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+    dispatch(setCurrentFocusedImagePanel("imageHelpGuidePanel"));
     panelRef.current?.focus();
   }, [dispatch]);
 
@@ -60,13 +53,11 @@ const HelpGuidePanel = ({ onClose }) => {
       return;
     }
 
-    if (currentFocusedPanel !== "helpGuidePanel") {
-      onClose();
-    }
-  }, [currentFocusedPanel, onClose]);
+    if (currentFocusedImagePanel !== "imageHelpGuidePanel") onClose();
+  }, [currentFocusedImagePanel, onClose]);
 
   const focusPanel = () => {
-    dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+    dispatch(setCurrentFocusedImagePanel("imageHelpGuidePanel"));
   };
 
   return (
@@ -75,9 +66,9 @@ const HelpGuidePanel = ({ onClose }) => {
       tabIndex={-1}
       role="dialog"
       aria-modal="false"
-      aria-labelledby="help-guide-title"
+      aria-labelledby="image-help-guide-title"
       className={
-        currentFocusedPanel === "helpGuidePanel"
+        currentFocusedImagePanel === "imageHelpGuidePanel"
           ? "help-guide-sidebar-panel current-focused-panel"
           : "help-guide-sidebar-panel"
       }
@@ -90,13 +81,13 @@ const HelpGuidePanel = ({ onClose }) => {
         }
       }}
     >
-      <h2 id="help-guide-title" className="help-guide-title">
+      <h2 id="image-help-guide-title" className="help-guide-title">
         Help Guide with the List of Keyboard Instructions
       </h2>
 
       <ul
         className="help-guide-list"
-        aria-label="Keyboard shortcuts for reading Mia's story"
+        aria-label="Keyboard shortcuts for reading Mia's image description"
       >
         {instructions.map((instruction, index) => (
           <li key={index}>{instruction}</li>
@@ -110,4 +101,4 @@ const HelpGuidePanel = ({ onClose }) => {
   );
 };
 
-export default HelpGuidePanel;
+export default ImageHelpGuidePanel;

@@ -1,49 +1,52 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { setCurrentFocusedImagePanel } from "../../ImageBiasReducer";
 import "./index.css";
-import { setCurrentFocusedPanel } from "../../SpotTheBiasReducer";
 
-const LeaderBoardPanel = () => {
+const ImageLeaderBoardPanel = () => {
   const dispatch = useDispatch();
 
   const {
-    currentFocusedPanel,
-    biasedParagraphPlan,
-    detectedStoryBias,
-    flaggedStoryParagraph,
-  } = useSelector((state) => state.SpotTheBiasReducer);
+    currentFocusedImagePanel,
+    biasedImageDescriptionParagraphPlan,
+    detectedImageDescriptionBiasParagraph,
+    flaggedImageDescriptionParagraph,
+  } = useSelector((state) => state.ImageBiasReducer);
 
-  const detectedItems = detectedStoryBias.storyBiasItems;
-  const flaggedItems = flaggedStoryParagraph.flaggedStoryParagraphItems;
+  const detectedItems =
+    detectedImageDescriptionBiasParagraph.imageDescriptionBiasItems;
+  const flaggedItems =
+    flaggedImageDescriptionParagraph.flaggedImageDescriptionParagraphItems;
 
   const focusPanel = () => {
-    dispatch(setCurrentFocusedPanel("biasLeaderBoardPanel"));
+    dispatch(setCurrentFocusedImagePanel("imageBiasLeaderBoardPanel"));
   };
 
   return (
     <section
       className={
-        currentFocusedPanel === "biasLeaderBoardPanel"
+        currentFocusedImagePanel === "imageBiasLeaderBoardPanel"
           ? "leaderboard-panel current-focused-panel"
           : "leaderboard-panel"
       }
-      aria-labelledby="bias-scoreboard-title"
+      aria-labelledby="image-bias-scoreboard-title"
       onMouseEnter={focusPanel}
       onFocusCapture={focusPanel}
     >
-      <h2 id="bias-scoreboard-title" className="panel-title" tabIndex={0}>
+      <h2 id="image-bias-scoreboard-title" className="panel-title" tabIndex={0}>
         Score Board
       </h2>
 
       <p className="leaderboard-count-details">
-        You have found {detectedStoryBias.count} out of{" "}
-        {biasedParagraphPlan.length} biased image description paragraphs.
+        You have found {detectedImageDescriptionBiasParagraph.count} out of{" "}
+        {biasedImageDescriptionParagraphPlan.length} biased image description
+        paragraphs.
       </p>
 
       <p className="leaderboard-count-details">
-        You marked {flaggedStoryParagraph.count} image description paragraphs to
-        review later.
+        You marked {flaggedImageDescriptionParagraph.count} paragraphs to review
+        later.
       </p>
 
       {detectedItems.length > 0 && (
@@ -52,20 +55,20 @@ const LeaderBoardPanel = () => {
 
           <ol
             className="leaderboard-list"
-            aria-label="Detected biased paragraphs"
+            aria-label="Detected biased image description paragraphs"
           >
             {detectedItems.map((item, index) => (
               <li
-                key={item.paragraphIndex}
+                key={item.imageDescriptionParagraphIndex}
                 className="leaderboard-item"
-                aria-labelledby={`detected-bias-${index + 1}`}
+                aria-labelledby={`detected-image-bias-${index + 1}`}
               >
                 <p
-                  id={`detected-bias-${index + 1}`}
+                  id={`detected-image-bias-${index + 1}`}
                   className="leaderboard-item-title"
                 >
                   {item.biasCategory.name} in Paragraph{" "}
-                  {item.paragraphIndex + 1}
+                  {item.imageDescriptionParagraphIndex + 1}
                 </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>
@@ -81,18 +84,21 @@ const LeaderBoardPanel = () => {
             List of Marked Paragraphs
           </h3>
 
-          <ol className="leaderboard-list" aria-label="Marked paragraphs">
+          <ol
+            className="leaderboard-list"
+            aria-label="Marked image description paragraphs"
+          >
             {flaggedItems.map((item, index) => (
               <li
-                key={item.paragraphIndex}
+                key={item.imageDescriptionParagraphIndex}
                 className="leaderboard-item"
-                aria-labelledby={`marked-paragraph-${index + 1}`}
+                aria-labelledby={`marked-image-paragraph-${index + 1}`}
               >
                 <p
-                  id={`marked-paragraph-${index + 1}`}
+                  id={`marked-image-paragraph-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  Marked Paragraph {item.paragraphIndex + 1}
+                  Marked Paragraph {item.imageDescriptionParagraphIndex + 1}
                 </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>
@@ -109,4 +115,4 @@ const LeaderBoardPanel = () => {
   );
 };
 
-export default LeaderBoardPanel;
+export default ImageLeaderBoardPanel;

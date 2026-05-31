@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -10,6 +10,10 @@ import {
 import { image_bias_categories } from "../util/ImageBiasCategories.js";
 import * as client from "./client.js";
 import "./index.css";
+
+import ImageHelpGuidePanel from "./ImageHelpGuidePanel/index.js";
+import ImageBiasCheckingPanel from "./ImageBiasCheckingPanel/index.js";
+import ImageLeaderBoardPanel from "./ImageLeaderBoardPanel/index.js";
 
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
@@ -29,9 +33,12 @@ const getRandomImageBiasCategory = () => {
 
 const ImageReadingPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { storytopic } = useParams();
 
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
+  const [showHelpGuidePanel, setShowHelpGuidePanel] = useState(false);
 
   const currentParagraphIndexRef = useRef(0);
   const loadingRef = useRef(null);
@@ -42,6 +49,7 @@ const ImageReadingPage = () => {
 
   const {
     imageUrl,
+    imagePrompt,
     imageDescriptionParagraphs,
     selectedCheckingImageDescriptionParagraph,
     currentFocusedImagePanel,
@@ -55,37 +63,37 @@ const ImageReadingPage = () => {
 
   const loadImageReading = useCallback(async () => {
     const selectedImageBiasCategory = getRandomImageBiasCategory();
-    const storyParagraphsForImage = storyParagraphs
-      .slice(0, 2)
-      .map((item) => item.originalStoryParagraph);
 
     try {
       setIsLoadingImage(true);
       moveToParagraph(0);
 
-      const response = await client.getImageReading({
-        storyParagraphs: storyParagraphsForImage,
-        selectedImageBiasCategory,
-      });
+      const imagePromptResponse = await client.getImageGenerationPrompt(
+        storyParagraphs.slice(0, 2).map((item) => item.originalStoryParagraph),
+        [selectedImageBiasCategory],
+      );
 
-      const plan = response.biasedImageDescriptionParagraphPlan || [];
+      const imageReading = await client.getImageDescription(
+        imagePromptResponse.imagePrompt.originalPrompt,
+        [selectedImageBiasCategory],
+      );
 
       dispatch(
         setImageDescriptionReading({
-          imageUrl: response.imageUrl || "",
-          imageDescriptionParagraphs: response.imageDescriptionParagraphs || [],
+          imageUrl: imageReading.imageBase64 || "",
+          imagePrompt: imagePromptResponse.imagePrompt || {},
+          imageDescriptionParagraphs:
+            imageReading.imageDescriptionParagraphs || [],
           selectedImageBiasCategories: [selectedImageBiasCategory],
-          biasedImageDescriptionParagraphPlan: plan,
-          biasedImageDescriptionParagraphIndices: plan.map(
-            (item) => item.imageDescriptionParagraphIndex,
-          ),
-          biasedImageDescriptionParagraphCount: plan.length,
-          biasImageDescriptionCount: 1,
+          biasedImageDescriptionParagraphPlan:
+            imageReading.biasedImageDescriptionParagraphPlan || [],
+          biasImageDescriptionCount:
+            imageReading.biasedImageDescriptionParagraphPlan?.length || 0,
         }),
       );
+      setIsLoadingImage(false);
     } catch (error) {
       console.error("Could not get image reading:", error);
-    } finally {
       setIsLoadingImage(false);
     }
   }, [dispatch, storyParagraphs, moveToParagraph]);
@@ -107,7 +115,14 @@ const ImageReadingPage = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+      if (event.key === "?") {
+        event.preventDefault();
+        setShowHelpGuidePanel(true);
+        return;
+      }
+
       if (
+        showHelpGuidePanel ||
         imageDescriptionParagraphs.length === 0 ||
         !["[", "]", "Enter"].includes(event.key)
       ) {
@@ -137,13 +152,12 @@ const ImageReadingPage = () => {
       dispatch(setSelectedCheckingImageDescriptionParagraph(null));
       dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
 
-      const nextIndex =
+      moveToParagraph(
         (currentIndex +
           (event.key === "[" ? -1 : 1) +
           imageDescriptionParagraphs.length) %
-        imageDescriptionParagraphs.length;
-
-      moveToParagraph(nextIndex);
+          imageDescriptionParagraphs.length,
+      );
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -152,6 +166,7 @@ const ImageReadingPage = () => {
     dispatch,
     imageDescriptionParagraphs,
     selectedCheckingImageDescriptionParagraph?.index,
+    showHelpGuidePanel,
     moveToParagraph,
   ]);
 
@@ -160,6 +175,11 @@ const ImageReadingPage = () => {
 
   const focusMiaImagePanel = () =>
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+
+  const closeHelpGuidePanel = useCallback(() => {
+    setShowHelpGuidePanel(false);
+    dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+  }, [dispatch]);
 
   return (
     <main className="story-reading-page" aria-labelledby="image-reading-title">
@@ -192,7 +212,8 @@ const ImageReadingPage = () => {
           role="status"
           aria-live="polite"
         >
-          Loading the image. Mia is creating your story image...
+          Loading the image. Mia is Creating your story image. This may take a
+          little time.
         </p>
       ) : (
         <>
@@ -209,76 +230,128 @@ const ImageReadingPage = () => {
             onFocusCapture={focusGuide}
           >
             <h2 id="image-guide-title" className="instruction-title">
-              Image Guide
+              Creator Guide
             </h2>
 
             <p className="page-instructions">
-              Mia created an image and description from the story. Read the
-              description paragraph by paragraph and check if any image bias is
-              hiding inside.
-            </p>
-          </section>
-
-          <section
-            className={
-              currentFocusedImagePanel === "miaImagePanel"
-                ? "mia-panel current-focused-panel"
-                : "mia-panel"
-            }
-            aria-labelledby="mia-image-panel-title"
-            onMouseEnter={focusMiaImagePanel}
-            onFocusCapture={focusMiaImagePanel}
-          >
-            <h2 id="mia-image-panel-title" className="panel-title">
-              Mia’s Created Image
-            </h2>
-
-            {imageUrl && (
-              <img src={imageUrl} alt="" className="story-generated-image" />
-            )}
-
-            <p className="keyboard-instructions">
-              Press{" "}
-              <span className="kbd" aria-hidden="true">
-                [
-              </span>{" "}
-              and{" "}
-              <span className="kbd" aria-hidden="true">
-                ]
-              </span>{" "}
-              to move through the image description. Press{" "}
-              <span className="kbd">Enter</span> to check a paragraph.
+              Below, Mia has created an image using the story. You can read the
+              prompt Mia used to create the image and the image description. But
+              watch out! One sneaky bias is hiding inside the image description.
+              Your challenge is to read each paragraph of the image description
+              and spot the biased part. Need help? Ask Alice, another AI agent,
+              for clues. Once you find the biased paragraph in the image
+              description, rephrase Mia’s image prompt to make the image fairer.
             </p>
 
-            <ol
-              className="story-paragraph-list"
-              aria-label="Mia's image description"
+            <div
+              className="instruction-buttons"
+              role="group"
+              aria-label="Navigation options"
             >
-              {imageDescriptionParagraphs.map((paragraph, index) => {
-                const paragraphText = getParagraphText(paragraph);
-
-                return (
-                  <li
-                    key={paragraph.index}
-                    ref={(element) => {
-                      paragraphRefs.current[index] = element;
-                    }}
-                    tabIndex={index === currentParagraphIndex ? 0 : -1}
-                    className={
-                      index === currentParagraphIndex
-                        ? "story-paragraph current-focused-panel"
-                        : "story-paragraph"
-                    }
-                    aria-label={`Image description paragraph ${index + 1} of ${
-                      imageDescriptionParagraphs.length
-                    }. ${paragraphText}. Press Enter to check this paragraph.`}
-                  >
-                    {paragraphText}
-                  </li>
-                );
-              })}
-            </ol>
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/story-reading`)
+                }
+              >
+                Back to Story Page
+              </button>
+              <button
+                type="button"
+                className="page-button"
+                onClick={() => setShowHelpGuidePanel(true)}
+              >
+                Help Guide
+              </button>
+              <button type="button" className="page-button">
+                Review Your Image Bias-Spotting Moves
+              </button>
+            </div>
           </section>
+
+          <div className="side-by-side-page">
+            <section
+              className={
+                currentFocusedImagePanel === "miaImagePanel"
+                  ? "mia-panel current-focused-panel"
+                  : "mia-panel"
+              }
+              aria-labelledby="mia-image-panel-title"
+              onMouseEnter={focusMiaImagePanel}
+              onFocusCapture={focusMiaImagePanel}
+            >
+              <h2 id="mia-image-panel-title" className="panel-title">
+                Mia’s Created Image
+              </h2>
+
+              {imageUrl && (
+                <>
+                  <img
+                    src={imageUrl}
+                    alt={imagePrompt.displayedPrompt || "Mia's created image"}
+                    className="story-generated-image"
+                  />
+
+                  {imagePrompt.displayedPrompt && (
+                    <p className="keyboard-instructions">
+                      <strong>Image prompt:</strong>{" "}
+                      {imagePrompt.displayedPrompt}
+                    </p>
+                  )}
+                </>
+              )}
+
+              <p className="keyboard-instructions">
+                Press{" "}
+                <span className="kbd" aria-hidden="true">
+                  [
+                </span>{" "}
+                and{" "}
+                <span className="kbd" aria-hidden="true">
+                  ]
+                </span>{" "}
+                to move through the image description paragraph by paragraph.
+                Spot a sneaky bias? Press <span className="kbd">Enter</span> to
+                check your guess. You can also mark a paragraph if something
+                feels unfair and review it later.
+              </p>
+
+              <ol
+                className="story-paragraph-list"
+                aria-label="Mia's image description"
+              >
+                {imageDescriptionParagraphs.map((paragraph, index) => {
+                  const paragraphText = getParagraphText(paragraph);
+
+                  return (
+                    <li
+                      key={paragraph.index}
+                      ref={(element) => {
+                        paragraphRefs.current[index] = element;
+                      }}
+                      tabIndex={index === currentParagraphIndex ? 0 : -1}
+                      className={
+                        index === currentParagraphIndex
+                          ? "story-paragraph current-focused-panel"
+                          : "story-paragraph"
+                      }
+                      aria-label={`Image description paragraph ${index + 1} of ${
+                        imageDescriptionParagraphs.length
+                      }. ${paragraphText}. Press Enter to check this paragraph.`}
+                    >
+                      {paragraphText}
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+            <ImageLeaderBoardPanel />
+            <ImageBiasCheckingPanel />
+          </div>
+          {showHelpGuidePanel && (
+            <ImageHelpGuidePanel onClose={closeHelpGuidePanel} />
+          )}
         </>
       )}
     </main>

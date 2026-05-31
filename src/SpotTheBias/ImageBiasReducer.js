@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const emptyImagePrompt = {
+  displayedPrompt: "",
+  originalPrompt: "",
+  rephrasedPrompt: "",
+  isRephrased: false,
+};
+
 const emptySelectedImageDescriptionParagraph = {
   index: null,
   originalImageDescriptionParagraph: "",
@@ -17,12 +24,11 @@ const makeImageDescriptionParagraphs = (paragraphs = []) =>
 
 const initialState = {
   imageUrl: "",
+  imagePrompt: emptyImagePrompt,
   imageQuestionsAndAnswers: [],
   imageDescriptionParagraphs: [],
   selectedImageBiasCategories: [],
   biasedImageDescriptionParagraphPlan: [],
-  biasedImageDescriptionParagraphIndices: [],
-  biasedImageDescriptionParagraphCount: 0,
   biasImageDescriptionCount: 0,
   selectedCheckingImageDescriptionParagraph:
     emptySelectedImageDescriptionParagraph,
@@ -46,34 +52,22 @@ const ImageBiasSlice = createSlice({
     },
 
     setImageDescriptionReading: (state, action) => {
-      state.imageUrl = action.payload.imageUrl || "";
-      const plan = action.payload.biasedImageDescriptionParagraphPlan || [];
+      const plan = action.payload?.biasedImageDescriptionParagraphPlan || [];
 
+      state.imageUrl = action.payload?.imageUrl || "";
+      state.imagePrompt = action.payload?.imagePrompt || emptyImagePrompt;
       state.imageQuestionsAndAnswers =
-        action.payload.imageQuestionsAndAnswers || [];
-
+        action.payload?.imageQuestionsAndAnswers || [];
       state.imageDescriptionParagraphs = makeImageDescriptionParagraphs(
-        action.payload.imageDescriptionParagraphs || [],
+        action.payload?.imageDescriptionParagraphs || [],
       );
-
-      state.biasedImageDescriptionParagraphPlan = plan;
-
-      state.biasedImageDescriptionParagraphIndices =
-        action.payload.biasedImageDescriptionParagraphIndices ||
-        plan.map((item) => item.imageDescriptionParagraphIndex);
-
-      state.biasedImageDescriptionParagraphCount =
-        action.payload.biasedImageDescriptionParagraphCount || plan.length;
-
       state.selectedImageBiasCategories =
-        action.payload.selectedImageBiasCategories || [];
-
+        action.payload?.selectedImageBiasCategories || [];
+      state.biasedImageDescriptionParagraphPlan = plan;
       state.biasImageDescriptionCount =
-        action.payload.biasImageDescriptionCount || plan.length;
-
+        action.payload?.biasImageDescriptionCount || plan.length;
       state.selectedCheckingImageDescriptionParagraph =
         emptySelectedImageDescriptionParagraph;
-
       state.detectedImageDescriptionBiasParagraph = {
         count: 0,
         imageDescriptionBiasItems: [],
@@ -109,11 +103,25 @@ const ImageBiasSlice = createSlice({
         (item) => item.index === action.payload.index,
       );
 
-      if (paragraph) {
-        paragraph.newFlag = true;
-        paragraph.newImageDescriptionParagraph =
-          action.payload.newImageDescriptionParagraph;
+      if (!paragraph) return;
+
+      paragraph.newFlag = true;
+      paragraph.newImageDescriptionParagraph =
+        action.payload.newImageDescriptionParagraph;
+
+      if (
+        state.selectedCheckingImageDescriptionParagraph.index ===
+        action.payload.index
+      ) {
+        state.selectedCheckingImageDescriptionParagraph = paragraph;
       }
+    },
+
+    updateImagePrompt: (state, action) => {
+      state.imagePrompt = {
+        ...state.imagePrompt,
+        ...action.payload,
+      };
     },
   },
 });
@@ -125,6 +133,7 @@ export const {
   addDetectedImageDescriptionBiasParagraph,
   addFlaggedImageDescriptionParagraph,
   updateNewImageDescriptionParagraph,
+  updateImagePrompt,
 } = ImageBiasSlice.actions;
 
 export default ImageBiasSlice.reducer;
