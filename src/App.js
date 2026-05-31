@@ -16,6 +16,7 @@ import StoryReadingPage from "./SpotTheBias/StoryReadingPage";
 import StoryReviewPage from "./SpotTheBias/StoryReviewPage";
 
 import ImageReadingPage from "./SpotTheBias/ImageReadingPage";
+import ImageReviewPageStory from "./SpotTheBias/ImageReviewPageStory";
 
 function App() {
   return (
@@ -59,6 +60,10 @@ function App() {
               <Route
                 path="/spot-the-bias/:storytopic/image-reading"
                 element={<ImageReadingPage />}
+              />
+              <Route
+                path="/spot-the-bias/:storytopic/image-review-page"
+                element={<ImageReviewPageStory />}
               />
             </Routes>
           </div>

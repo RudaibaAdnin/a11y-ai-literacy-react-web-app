@@ -164,6 +164,7 @@ const AgentAlicePanel = () => {
     const target = getTarget();
 
     if (!target) {
+      nextFocusRef.current = "status";
       setChatFlow([
         createTurn({
           message: "Great job! You already found all the biased paragraphs.",
@@ -372,7 +373,17 @@ const AgentAlicePanel = () => {
       <div role="region" aria-live="polite" aria-label="Alice clue chat">
         {chatFlow.map((turn, turnIndex) => (
           <div key={turnIndex} className="sara-chat-history-item">
-            {turn.message && <p className="clue-text">{turn.message}</p>}
+            {turn.message && (
+              <p
+                ref={statusRef}
+                tabIndex={-1}
+                className="clue-text"
+                role="status"
+                aria-live="polite"
+              >
+                {turn.message}
+              </p>
+            )}
 
             {turn.loading === "clue" && (
               <p

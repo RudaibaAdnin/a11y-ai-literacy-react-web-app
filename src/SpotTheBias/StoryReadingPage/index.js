@@ -60,6 +60,13 @@ const StoryReadingPage = () => {
     currentFocusedPanel,
   } = useSelector((state) => state.SpotTheBiasReducer);
 
+  const { imageUrl, imageDescriptionParagraphs } = useSelector(
+    (state) => state.ImageBiasReducer,
+  );
+
+  const hasCreatedStoryImage =
+    imageUrl || imageDescriptionParagraphs.length > 0;
+
   const moveToParagraph = useCallback((nextIndex) => {
     currentParagraphIndexRef.current = nextIndex;
     setCurrentParagraphIndex(nextIndex);
@@ -271,7 +278,9 @@ const StoryReadingPage = () => {
                   navigate(`/spot-the-bias/${storytopic}/image-reading`)
                 }
               >
-                Create Image of the Story
+                {hasCreatedStoryImage
+                  ? "Go to Story Image Page"
+                  : "Create Story Image"}
               </button>
 
               <button

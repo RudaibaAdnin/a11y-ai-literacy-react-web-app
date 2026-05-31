@@ -40,6 +40,8 @@ const initialState = {
     count: 0,
     flaggedImageDescriptionParagraphItems: [],
   },
+  followUpsHistoryAliceImage: [],
+  rephrasedPromptHistoryImage: [],
   currentFocusedImagePanel: "",
 };
 
@@ -76,6 +78,8 @@ const ImageBiasSlice = createSlice({
         count: 0,
         flaggedImageDescriptionParagraphItems: [],
       };
+      state.followUpsHistoryAliceImage = [];
+      state.rephrasedPromptHistoryImage = [];
       state.currentFocusedImagePanel = "";
     },
 
@@ -96,6 +100,28 @@ const ImageBiasSlice = createSlice({
         action.payload,
       );
       state.flaggedImageDescriptionParagraph.count += 1;
+    },
+
+    addFollowUpsHistoryAliceImage: (state, action) => {
+      if (state.followUpsHistoryAliceImage.length >= 2) return;
+
+      state.followUpsHistoryAliceImage.push({
+        followUpQuestionImage: action.payload.followUpQuestionImage,
+        followUpQuestionCategoryImage:
+          action.payload.followUpQuestionCategoryImage,
+        followUpReplyImage: action.payload.followUpReplyImage,
+      });
+    },
+
+    addRephrasedPromptHistoryImage: (state, action) => {
+      if (state.rephrasedPromptHistoryImage.length >= 2) return;
+
+      state.rephrasedPromptHistoryImage.push({
+        promptUsedForRephraseImage: action.payload.promptUsedForRephraseImage,
+        promptUsedForRephraseCategoryImage:
+          action.payload.promptUsedForRephraseCategoryImage,
+        rephrasedPromptImage: action.payload.rephrasedPromptImage,
+      });
     },
 
     updateNewImageDescriptionParagraph: (state, action) => {
@@ -132,6 +158,8 @@ export const {
   setSelectedCheckingImageDescriptionParagraph,
   addDetectedImageDescriptionBiasParagraph,
   addFlaggedImageDescriptionParagraph,
+  addFollowUpsHistoryAliceImage,
+  addRephrasedPromptHistoryImage,
   updateNewImageDescriptionParagraph,
   updateImagePrompt,
 } = ImageBiasSlice.actions;

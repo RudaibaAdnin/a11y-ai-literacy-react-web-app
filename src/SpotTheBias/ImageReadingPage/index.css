@@ -6,3 +6,20 @@
   align-items: center;
   display: flex;
 }
+
+.image-prompt {
+  font-size: 21px;
+  line-height: 1.4;
+  border: 0.5px solid #1d4289;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-style: oblique;
+}
+
+.rephrase-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}

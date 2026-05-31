@@ -15,6 +15,12 @@ const AgentAdamPanel = () => {
   const [loadingSummary, setLoadingSummary] = useState(false);
 
   const adamPanelRef = useRef(null);
+  const loadingDescriptionRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const loadingSummaryRef = useRef(null);
+  const summaryRef = useRef(null);
+  const lineComparisonRef = useRef(null);
+
   const currentFocusedPanel = useSelector(
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
@@ -31,67 +37,21 @@ const AgentAdamPanel = () => {
     (state) => state.SpotTheLieReducer.detectedImageHallucination,
   );
 
-  const focusAdamPanel = () => {
-    dispatch(setCurrentFocusedPanel("adamDescriptionPanel"));
-  };
+  useEffect(() => {
+    if (loadingDescription) loadingDescriptionRef.current?.focus();
+    else if (adamDescription.length > 0) descriptionRef.current?.focus();
+  }, [loadingDescription, adamDescription.length]);
 
-  const getCurrentHallucinationForAdam = () => {
-    if (selectedImageHallucinations.length === 0) return null;
+  useEffect(() => {
+    if (loadingSummary) loadingSummaryRef.current?.focus();
+    else if (differenceItems.length > 0) summaryRef.current?.focus();
+  }, [loadingSummary, differenceItems.length]);
 
-    const index =
-      detectedImageHallucination.count % selectedImageHallucinations.length;
-
-    return selectedImageHallucinations[index];
-  };
-
-  const generateNewDescription = async () => {
-    const imageHallucination = getCurrentHallucinationForAdam();
-    if (!imageHallucination) return;
-
-    setLoadingDescription(true);
-    setDifferenceItems([]);
-    setShowLineDifferences(false);
-
-    try {
-      const data = await client.generateAdamDescription(
-        selectedImageDescription,
-        imageHallucination,
-      );
-
-      setAdamDescription(data.newDescription || []);
-      setLoadingDescription(false);
-    } catch (error) {
-      console.error("Could not generate Adam description:", error);
+  useEffect(() => {
+    if (showLineDifferences) {
+      requestAnimationFrame(() => lineComparisonRef.current?.focus());
     }
-  };
-
-  const clearDescription = () => {
-    setAdamDescription([]);
-    setDifferenceItems([]);
-    setShowLineDifferences(false);
-  };
-
-  const generateSummaryOfDifferences = async () => {
-    setLoadingSummary(true);
-    setDifferenceItems([]);
-
-    try {
-      const data = await client.generateSummaryDifferences(
-        selectedImageDescription.join(" "),
-        adamDescription.join(" "),
-      );
-
-      const items = (data.summaryDifferences || "")
-        .split("\n")
-        .map((line) => line.replace(/^[-•]\s*/, "").trim())
-        .filter(Boolean);
-
-      setDifferenceItems(items);
-      setLoadingSummary(false);
-    } catch (error) {
-      console.error("Could not generate summary differences:", error);
-    }
-  };
+  }, [showLineDifferences]);
 
   useEffect(() => {
     const handleAdamPanelFocusKey = (event) => {
@@ -103,11 +63,72 @@ const AgentAdamPanel = () => {
     };
 
     window.addEventListener("keydown", handleAdamPanelFocusKey);
-
-    return () => {
-      window.removeEventListener("keydown", handleAdamPanelFocusKey);
-    };
+    return () => window.removeEventListener("keydown", handleAdamPanelFocusKey);
   }, [dispatch]);
+
+  const focusAdamPanel = () => {
+    dispatch(setCurrentFocusedPanel("adamDescriptionPanel"));
+  };
+
+  const getCurrentHallucinationForAdam = () => {
+    if (selectedImageHallucinations.length === 0) return null;
+
+    return selectedImageHallucinations[
+      detectedImageHallucination.count % selectedImageHallucinations.length
+    ];
+  };
+
+  const generateNewDescription = async () => {
+    const imageHallucination = getCurrentHallucinationForAdam();
+    if (!imageHallucination) return;
+
+    setAdamDescription([]);
+    setDifferenceItems([]);
+    setShowLineDifferences(false);
+    setLoadingDescription(true);
+
+    try {
+      const data = await client.generateAdamDescription(
+        selectedImageDescription,
+        imageHallucination,
+      );
+
+      setAdamDescription(data.newDescription || []);
+      setLoadingDescription(false);
+    } catch (error) {
+      console.error("Could not generate Adam description:", error);
+      setLoadingDescription(false);
+    }
+  };
+
+  const clearDescription = () => {
+    setAdamDescription([]);
+    setDifferenceItems([]);
+    setShowLineDifferences(false);
+  };
+
+  const generateSummaryOfDifferences = async () => {
+    setDifferenceItems([]);
+    setLoadingSummary(true);
+
+    try {
+      const data = await client.generateSummaryDifferences(
+        selectedImageDescription.join(" "),
+        adamDescription.join(" "),
+      );
+
+      setDifferenceItems(
+        (data.summaryDifferences || "")
+          .split("\n")
+          .map((line) => line.replace(/^[-•]\s*/, "").trim())
+          .filter(Boolean),
+      );
+    } catch (error) {
+      console.error("Could not generate summary differences:", error);
+    } finally {
+      setLoadingSummary(false);
+    }
+  };
 
   return (
     <section
@@ -152,14 +173,26 @@ const AgentAdamPanel = () => {
       </div>
 
       {loadingDescription && (
-        <p className="adam-description-text" role="status" aria-live="polite">
+        <p
+          ref={loadingDescriptionRef}
+          tabIndex={-1}
+          className="adam-description-text"
+          role="status"
+          aria-live="polite"
+        >
           Loading description...
         </p>
       )}
 
       {adamDescription.length > 0 && (
         <>
-          <p className="adam-description-text" role="status" aria-live="polite">
+          <p
+            ref={descriptionRef}
+            tabIndex={-1}
+            className="adam-description-text"
+            role="status"
+            aria-live="polite"
+          >
             {adamDescription.join(" ")}
           </p>
 
@@ -185,15 +218,27 @@ const AgentAdamPanel = () => {
       )}
 
       {loadingSummary && (
-        <p className="adam-difference-text" role="status" aria-live="polite">
+        <p
+          ref={loadingSummaryRef}
+          tabIndex={-1}
+          className="adam-difference-text"
+          role="status"
+          aria-live="polite"
+        >
           Loading summary...
         </p>
       )}
 
       {differenceItems.length > 0 && (
         <>
-          <p className="adam-difference-text" role="status" aria-live="polite">
-            <strong> Summary of differences </strong>
+          <p
+            ref={summaryRef}
+            tabIndex={-1}
+            className="adam-difference-text"
+            role="status"
+            aria-live="polite"
+          >
+            <strong>Summary of differences</strong>
           </p>
 
           <ul
@@ -211,15 +256,23 @@ const AgentAdamPanel = () => {
 
       {showLineDifferences && (
         <table className="adam-difference-table">
-          <caption className="table-caption" role="status" aria-live="polite">
+          <caption
+            ref={lineComparisonRef}
+            tabIndex={-1}
+            className="table-caption"
+            role="status"
+            aria-live="polite"
+          >
             Line-by-line comparison of Sara's and Adam's description
           </caption>
+
           <thead>
             <tr>
               <th scope="col">Sara's description</th>
               <th scope="col">Adam's description</th>
             </tr>
           </thead>
+
           <tbody>
             {selectedImageDescription.map((line, index) => (
               <tr key={index}>

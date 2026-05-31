@@ -113,7 +113,7 @@ const ImageBiasCheckingPanel = () => {
       setShowYesButton(false);
       setShowMarkButton(true);
       setFeedbackWithFocus(
-        `You have already detected all image biases. Do you want to mark paragraph ${paragraphNumber} and review it later?`,
+        `You have already detected all image bias. Do you want to mark paragraph ${paragraphNumber} and review it later?`,
       );
       return;
     }
@@ -185,7 +185,7 @@ const ImageBiasCheckingPanel = () => {
         biasedImageDescriptionParagraphPlan.length
         ? `Correct guess! Paragraph ${paragraphNumber} has ${getBiasName(
             matchedPlan.biasCategory,
-          )}. You detected all image biases.`
+          )}. You detected all image bias.`
         : `Correct guess! Paragraph ${paragraphNumber} has ${getBiasName(
             matchedPlan.biasCategory,
           )}.`,

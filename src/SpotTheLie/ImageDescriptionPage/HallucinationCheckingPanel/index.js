@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
@@ -10,10 +11,15 @@ import {
 
 const HallucinationCheckingPanel = () => {
   const dispatch = useDispatch();
-  const [feedback, setFeedback] = useState("");
+  const navigate = useNavigate();
+  const { imagecategory, imagename } = useParams();
 
-  // Accessibility change: stores the panel so focus can move here when it opens.
+  const [feedback, setFeedback] = useState("");
+  const [showReviewButton, setShowReviewButton] = useState(false);
+
   const panelRef = useRef(null);
+  const justOpenedPanelRef = useRef(false);
+  const feedbackRef = useRef(null);
 
   const selectedCheckingLine = useSelector(
     (state) => state.SpotTheLieReducer.selectedCheckingLine,
@@ -31,9 +37,6 @@ const HallucinationCheckingPanel = () => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
-  const justOpenedPanelRef = useRef(false);
-
-  // Accessibility change: when the panel opens, move keyboard focus to it.
   useEffect(() => {
     if (selectedCheckingLine) {
       justOpenedPanelRef.current = true;
@@ -42,11 +45,12 @@ const HallucinationCheckingPanel = () => {
     }
   }, [selectedCheckingLine, dispatch]);
 
-  /* this code closes the window when focus moves away */
   useEffect(() => {
-    if (!selectedCheckingLine) {
-      return;
-    }
+    if (feedback) feedbackRef.current?.focus();
+  }, [feedback]);
+
+  useEffect(() => {
+    if (!selectedCheckingLine) return;
 
     if (justOpenedPanelRef.current) {
       justOpenedPanelRef.current = false;
@@ -56,6 +60,7 @@ const HallucinationCheckingPanel = () => {
     if (currentFocusedPanel !== "hallucinationCheckingPanel") {
       dispatch(setSelectedCheckingLine(""));
       setFeedback("");
+      setShowReviewButton(false);
     }
   }, [currentFocusedPanel, selectedCheckingLine, dispatch]);
 
@@ -66,13 +71,22 @@ const HallucinationCheckingPanel = () => {
   const closeHallucinationDetectionCheckSideBar = () => {
     dispatch(setSelectedCheckingLine(""));
     setFeedback("");
+    setShowReviewButton(false);
+    dispatch(setCurrentFocusedPanel("saraImageDescriptionPanel"));
+  };
+
+  const goToReviewPage = () => {
+    navigate(`/spot-the-lie/${imagecategory}/${imagename}/review-page`);
   };
 
   const checkHallucinationDetection = () => {
     if (
       detectedImageHallucination.count === selectedImageHallucinations.length
     ) {
-      setFeedback("All hallucinations already detected.");
+      setFeedback(
+        "Great job! You have detected all lies. You can now review your detective moves.",
+      );
+      setShowReviewButton(true);
       return;
     }
 
@@ -82,6 +96,7 @@ const HallucinationCheckingPanel = () => {
 
     if (!matchedHallucinationLine) {
       setFeedback("Not correct. Try another line.");
+      setShowReviewButton(false);
       return;
     }
 
@@ -94,12 +109,14 @@ const HallucinationCheckingPanel = () => {
       const currentCount = detectedImageHallucination.count;
       const leftCount = selectedImageHallucinations.length - currentCount;
 
-      const lieReason = matchedHallucinationLine.cause
-        ? `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`
-        : "This is a lie.";
+      setShowReviewButton(leftCount === 0);
 
       setFeedback(
-        `Already detected. ${lieReason} You have detected ${currentCount} ${
+        `Already detected. ${
+          matchedHallucinationLine.cause
+            ? `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`
+            : "This is a lie."
+        } You have detected ${currentCount} ${
           currentCount === 1 ? "lie" : "lies"
         }. You need to detect ${leftCount} ${
           leftCount === 1 ? "more lie" : "more lies"
@@ -110,33 +127,29 @@ const HallucinationCheckingPanel = () => {
     }
 
     dispatch(addDetectedImageHallucination(matchedHallucinationLine));
+
     const nextCount = detectedImageHallucination.count + 1;
     const leftCount = selectedImageHallucinations.length - nextCount;
-
     const lieReason = matchedHallucinationLine.cause
       ? `This is a lie because ${matchedHallucinationLine.cause.toLowerCase()}`
       : "This is a lie.";
 
-    if (leftCount === 0) {
-      setFeedback(
-        `Correct guess! You have detected all ${nextCount} ${
-          nextCount === 1 ? "lie" : "lies"
-        }. ${lieReason}`,
-      );
-    } else {
-      setFeedback(
-        `Correct guess! You have detected ${nextCount} ${
-          nextCount === 1 ? "lie" : "lies"
-        }. ${lieReason} You need to detect ${leftCount} ${
-          leftCount === 1 ? "more lie" : "more lies"
-        }.`,
-      );
-    }
+    setShowReviewButton(leftCount === 0);
+
+    setFeedback(
+      leftCount === 0
+        ? `Correct guess! You have detected all ${nextCount} ${
+            nextCount === 1 ? "lie" : "lies"
+          }. ${lieReason}`
+        : `Correct guess! You have detected ${nextCount} ${
+            nextCount === 1 ? "lie" : "lies"
+          }. ${lieReason} You need to detect ${leftCount} ${
+            leftCount === 1 ? "more lie" : "more lies"
+          }.`,
+    );
   };
 
-  if (!selectedCheckingLine) {
-    return null;
-  }
+  if (!selectedCheckingLine) return null;
 
   return (
     <section
@@ -147,7 +160,6 @@ const HallucinationCheckingPanel = () => {
           ? "hallucination-check-sidebar-panel current-focused-panel"
           : "hallucination-check-sidebar-panel"
       }
-      // Accessibility change: label the section using the visible heading.
       role="dialog"
       aria-modal="false"
       aria-labelledby="lie-detection-title"
@@ -160,7 +172,6 @@ const HallucinationCheckingPanel = () => {
 
       <p
         className="selected-line-preview"
-        // Accessibility change: gives screen reader users context for the line.
         aria-label={`Selected line to check: ${selectedCheckingLine}`}
       >
         {selectedCheckingLine}
@@ -168,15 +179,13 @@ const HallucinationCheckingPanel = () => {
 
       <div
         className="hallucination-checking-buttons"
-        // Accessibility change: groups the Yes and Close buttons together.
         role="group"
-        aria-label="Lie detection choices: Yes or Close"
+        aria-label="Lie detection choices"
       >
         <button
           type="button"
           className="page-button"
           onClick={checkHallucinationDetection}
-          // Accessibility change: makes the Yes button action clearer.
           aria-label="Yes, confirm this line as a lie"
         >
           Yes
@@ -192,9 +201,28 @@ const HallucinationCheckingPanel = () => {
         </button>
       </div>
 
-      <p className="hallucination-feedback" role="status" aria-live="polite">
-        {feedback}
-      </p>
+      {feedback && (
+        <p
+          ref={feedbackRef}
+          tabIndex={-1}
+          className="hallucination-feedback"
+          role="status"
+          aria-live="polite"
+        >
+          {feedback}
+        </p>
+      )}
+
+      {showReviewButton && (
+        <button
+          type="button"
+          className="page-button"
+          onClick={goToReviewPage}
+          aria-label="Go to review page"
+        >
+          Review Your Detective Moves
+        </button>
+      )}
     </section>
   );
 };

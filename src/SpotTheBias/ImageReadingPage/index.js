@@ -14,6 +14,7 @@ import "./index.css";
 import ImageHelpGuidePanel from "./ImageHelpGuidePanel/index.js";
 import ImageBiasCheckingPanel from "./ImageBiasCheckingPanel/index.js";
 import ImageLeaderBoardPanel from "./ImageLeaderBoardPanel/index.js";
+import ImageAgentAlicePanel from "./ImageAgentAlicePanel/index.js";
 
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
@@ -212,7 +213,7 @@ const ImageReadingPage = () => {
           role="status"
           aria-live="polite"
         >
-          Loading the image. Mia is Creating your story image. This may take a
+          Loading the image. Mia is creating your story image. This may take a
           little time.
         </p>
       ) : (
@@ -251,6 +252,13 @@ const ImageReadingPage = () => {
               <button
                 type="button"
                 className="page-button"
+                onClick={() => setShowHelpGuidePanel(true)}
+              >
+                Help Guide
+              </button>
+              <button
+                type="button"
+                className="page-button"
                 onClick={() =>
                   navigate(`/spot-the-bias/${storytopic}/story-reading`)
                 }
@@ -260,11 +268,10 @@ const ImageReadingPage = () => {
               <button
                 type="button"
                 className="page-button"
-                onClick={() => setShowHelpGuidePanel(true)}
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/image-review-page`)
+                }
               >
-                Help Guide
-              </button>
-              <button type="button" className="page-button">
                 Review Your Image Bias-Spotting Moves
               </button>
             </div>
@@ -294,10 +301,18 @@ const ImageReadingPage = () => {
                   />
 
                   {imagePrompt.displayedPrompt && (
-                    <p className="keyboard-instructions">
-                      <strong>Image prompt:</strong>{" "}
-                      {imagePrompt.displayedPrompt}
-                    </p>
+                    <>
+                      <p className="image-prompt">
+                        <strong>Image prompt:</strong>{" "}
+                        {imagePrompt.displayedPrompt}
+                      </p>
+
+                      <div className="rephrase-button">
+                        <button type="button" className="page-button">
+                          Rephrase Image Prompt
+                        </button>
+                      </div>
+                    </>
                   )}
                 </>
               )}
@@ -349,6 +364,7 @@ const ImageReadingPage = () => {
             <ImageLeaderBoardPanel />
             <ImageBiasCheckingPanel />
           </div>
+          <ImageAgentAlicePanel />
           {showHelpGuidePanel && (
             <ImageHelpGuidePanel onClose={closeHelpGuidePanel} />
           )}

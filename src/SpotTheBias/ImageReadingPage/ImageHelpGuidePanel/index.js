@@ -24,6 +24,13 @@ const instructions = [
     description paragraph as possible image bias.
   </>,
   <>
+    Press equal key{" "}
+    <span className="kbd" aria-hidden="true">
+      =
+    </span>{" "}
+    key to go to Alice panel.
+  </>,
+  <>
     Press question mark{" "}
     <span className="kbd" aria-hidden="true">
       ?
