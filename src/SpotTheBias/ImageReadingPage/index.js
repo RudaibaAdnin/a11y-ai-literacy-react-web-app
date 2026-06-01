@@ -340,133 +340,129 @@ const ImageReadingPage = () => {
                 Mia’s Created Image
               </h2>
 
-              <section>
-                {imageUrl && (
-                  <>
-                    <img
-                      src={imageUrl}
-                      alt={imagePrompt.displayedPrompt || "Mia's created image"}
-                      className="story-generated-image"
-                    />
-                    <div className="rephrase-button">
-                      <button
-                        type="button"
-                        className="page-button"
-                        onClick={saveImage}
-                      >
-                        Save Image
-                      </button>
-                    </div>
+              {imageUrl && (
+                <>
+                  <img
+                    src={imageUrl}
+                    alt={imagePrompt.displayedPrompt || "Mia's created image"}
+                    className="story-generated-image"
+                  />
+                  <div className="rephrase-button">
+                    <button
+                      type="button"
+                      className="page-button"
+                      onClick={saveImage}
+                    >
+                      Save Image
+                    </button>
+                  </div>
 
-                    <h3 id="mia-image-panel-title" className="panel-title">
-                      Image Prompt Mia Used to Create the Image
-                    </h3>
+                  <h3 id="mia-image-panel-title" className="panel-title">
+                    Image Prompt Mia Used to Create the Image
+                  </h3>
 
-                    {imagePrompt.displayedPrompt && (
-                      <>
-                        <p className="image-prompt">
-                          <strong>Image prompt:</strong>{" "}
-                          {imagePrompt.displayedPrompt}
-                        </p>
-                        <p className="keyboard-instructions">
-                          Press the below Rephrase Image Prompt button to
-                          rewrite the image prompt.
-                        </p>
-                        <div className="rephrase-button">
-                          <button
-                            type="button"
-                            className="page-button"
-                            onClick={openImagePromptRephrasePanel}
-                          >
-                            Rewrite Image Prompt
-                          </button>
-                        </div>
-                        {imagePrompt.rephrasedPrompt && (
-                          <>
-                            <p className="image-prompt">
-                              <strong>Rewritten image prompt:</strong>{" "}
-                              {imagePrompt.rephrasedPrompt}
-                            </p>
-                            <p className="keyboard-instructions">
-                              Press the below Generate New Image button to
-                              create new image and description.
-                            </p>
-                            <div className="rephrase-button">
-                              <button type="button" className="page-button">
-                                Generate New Image
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </section>
-              <section>
-                <h3 id="mia-image-panel-title" className="panel-title">
-                  Image description
-                </h3>
-                <p className="keyboard-instructions">
-                  Press{" "}
-                  <span className="kbd" aria-hidden="true">
-                    [
-                  </span>{" "}
-                  and{" "}
-                  <span className="kbd" aria-hidden="true">
-                    ]
-                  </span>{" "}
-                  to move through the image description paragraph by paragraph.
-                  Spot a sneaky bias? Press <span className="kbd">Enter</span>{" "}
-                  to check your guess. You can also mark a paragraph if
-                  something feels unfair and review it later.
-                </p>
+                  {imagePrompt.displayedPrompt && (
+                    <>
+                      <p className="image-prompt">
+                        <strong>Image prompt:</strong>{" "}
+                        {imagePrompt.displayedPrompt}
+                      </p>
+                      <p className="keyboard-instructions">
+                        Press the below Rephrase Image Prompt button to rewrite
+                        the image prompt.
+                      </p>
+                      <div className="rephrase-button">
+                        <button
+                          type="button"
+                          className="page-button"
+                          onClick={openImagePromptRephrasePanel}
+                        >
+                          Rewrite Image Prompt
+                        </button>
+                      </div>
+                      {imagePrompt.rephrasedPrompt && (
+                        <>
+                          <p className="image-prompt">
+                            <strong>Rewritten image prompt:</strong>{" "}
+                            {imagePrompt.rephrasedPrompt}
+                          </p>
+                          <p className="keyboard-instructions">
+                            Press the below Generate New Image button to create
+                            new image and description.
+                          </p>
+                          <div className="rephrase-button">
+                            <button type="button" className="page-button">
+                              Generate New Image
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
 
-                <ol
-                  className="story-paragraph-list"
-                  aria-label="Mia's image description"
+              <h3 id="mia-image-panel-title" className="panel-title">
+                Image Dsescription
+              </h3>
+              <p className="keyboard-instructions">
+                Press{" "}
+                <span className="kbd" aria-hidden="true">
+                  [
+                </span>{" "}
+                and{" "}
+                <span className="kbd" aria-hidden="true">
+                  ]
+                </span>{" "}
+                to move through the image description paragraph by paragraph.
+                Spot a sneaky bias? Press <span className="kbd">Enter</span> to
+                check your guess. You can also mark a paragraph if something
+                feels unfair and review it later.
+              </p>
+
+              <ol
+                className="story-paragraph-list"
+                aria-label="Mia's image description"
+              >
+                {imageDescriptionParagraphs.map((paragraph, index) => {
+                  const paragraphText = getParagraphText(paragraph);
+
+                  return (
+                    <li
+                      key={paragraph.index}
+                      ref={(element) => {
+                        paragraphRefs.current[index] = element;
+                      }}
+                      tabIndex={index === currentParagraphIndex ? 0 : -1}
+                      className={
+                        index === currentParagraphIndex
+                          ? "story-paragraph current-focused-panel"
+                          : "story-paragraph"
+                      }
+                      aria-label={`Image description paragraph ${index + 1} of ${
+                        imageDescriptionParagraphs.length
+                      }. ${paragraphText}. Press Enter to check this paragraph.`}
+                      onFocus={() => focusImageDescriptionParagraph(index)}
+                      onClick={() => focusImageDescriptionParagraph(index)}
+                      onMouseEnter={() => focusImageDescriptionParagraph(index)}
+                    >
+                      {paragraphText}
+                    </li>
+                  );
+                })}
+              </ol>
+              <div className="rephrase-button">
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={saveImageDescription}
+                  disabled={imageDescriptionParagraphs.length === 0}
                 >
-                  {imageDescriptionParagraphs.map((paragraph, index) => {
-                    const paragraphText = getParagraphText(paragraph);
-
-                    return (
-                      <li
-                        key={paragraph.index}
-                        ref={(element) => {
-                          paragraphRefs.current[index] = element;
-                        }}
-                        tabIndex={index === currentParagraphIndex ? 0 : -1}
-                        className={
-                          index === currentParagraphIndex
-                            ? "story-paragraph current-focused-panel"
-                            : "story-paragraph"
-                        }
-                        aria-label={`Image description paragraph ${index + 1} of ${
-                          imageDescriptionParagraphs.length
-                        }. ${paragraphText}. Press Enter to check this paragraph.`}
-                        onFocus={() => focusImageDescriptionParagraph(index)}
-                        onClick={() => focusImageDescriptionParagraph(index)}
-                        onMouseEnter={() =>
-                          focusImageDescriptionParagraph(index)
-                        }
-                      >
-                        {paragraphText}
-                      </li>
-                    );
-                  })}
-                </ol>
-                <div className="rephrase-button">
-                  <button
-                    type="button"
-                    className="page-button"
-                    onClick={saveImageDescription}
-                    disabled={imageDescriptionParagraphs.length === 0}
-                  >
-                    Save Image Description
-                  </button>
-                </div>
-              </section>
+                  Save Image Description
+                </button>
+              </div>
             </section>
+
             <ImageLeaderBoardPanel />
             <ImageBiasCheckingPanel />
             {currentFocusedImagePanel === "imageCraftPromptRephrasePanel" && (
