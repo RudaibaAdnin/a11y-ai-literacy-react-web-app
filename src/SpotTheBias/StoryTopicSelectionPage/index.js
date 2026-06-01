@@ -6,13 +6,19 @@ import "./index.css";
 import { setStoryTopic } from "../SpotTheBiasReducer";
 import { setImageDescriptionReading } from "../ImageBiasReducer";
 
-const storyTopics = [
-  "Adventure and Travel",
-  "Science Fiction and Fantasy",
-  "Mystery and Suspense",
-  "Self-Discovery and Coming of Age",
-];
+// const storyTopics = [
+//   "Adventure and Travel",
+//   "Science Fiction and Fantasy",
+//   "Mystery and Suspense",
+//   "Self-Discovery and Coming of Age",
+// ];
 
+const storyTopics = [
+  "Adventure and Travel: A story about exploring new places.",
+  "Science Fiction and Fantasy: A story with future technology, magic, or imaginary worlds.",
+  "Mystery and Suspense: A story where characters solve a puzzle.",
+  "Self-Discovery and Coming of Age: A story about learning who you are or growing up.",
+];
 const StoryTopicSelectionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

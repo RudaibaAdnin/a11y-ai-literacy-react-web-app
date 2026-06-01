@@ -201,6 +201,7 @@ const ImageReviewPageStory = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
           <h1 id="image-review-title" className="page-title">
             Spot the Bias

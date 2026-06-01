@@ -16,6 +16,8 @@ import ImageBiasCheckingPanel from "./ImageBiasCheckingPanel/index.js";
 import ImageLeaderBoardPanel from "./ImageLeaderBoardPanel/index.js";
 import ImageAgentAlicePanel from "./ImageAgentAlicePanel/index.js";
 
+import ImageCraftPromptRephrase from "./ImageCraftPromptRephrase/index.js";
+
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
@@ -67,6 +69,11 @@ const ImageReadingPage = () => {
     setCurrentParagraphIndex(index);
     dispatch(setSelectedCheckingImageDescriptionParagraph(null));
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+  };
+
+  const openImagePromptRephrasePanel = () => {
+    dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+    dispatch(setCurrentFocusedImagePanel("imageCraftPromptRephrasePanel"));
   };
 
   const loadImageReading = useCallback(async () => {
@@ -189,6 +196,39 @@ const ImageReadingPage = () => {
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
   }, [dispatch]);
 
+  const downloadFile = (fileName, url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  };
+
+  const saveImage = () => {
+    if (!imageUrl) return;
+
+    const imageDownloadUrl = imageUrl.startsWith("data:")
+      ? imageUrl
+      : `data:image/png;base64,${imageUrl}`;
+
+    downloadFile("story-image.png", imageDownloadUrl);
+  };
+
+  const saveImageDescription = () => {
+    const descriptionText = imageDescriptionParagraphs
+      .map(
+        (paragraph, index) =>
+          `Paragraph ${index + 1}: ${getParagraphText(paragraph)}`,
+      )
+      .join("\n\n");
+
+    const blob = new Blob([descriptionText], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    downloadFile("image-description.txt", url);
+    URL.revokeObjectURL(url);
+  };
   return (
     <main className="story-reading-page" aria-labelledby="image-reading-title">
       <header className="header-style">
@@ -199,6 +239,7 @@ const ImageReadingPage = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
           <h1 id="image-reading-title" className="page-title">
             Spot the Bias
@@ -299,80 +340,138 @@ const ImageReadingPage = () => {
                 Mia’s Created Image
               </h2>
 
-              {imageUrl && (
-                <>
-                  <img
-                    src={imageUrl}
-                    alt={imagePrompt.displayedPrompt || "Mia's created image"}
-                    className="story-generated-image"
-                  />
+              <section>
+                {imageUrl && (
+                  <>
+                    <img
+                      src={imageUrl}
+                      alt={imagePrompt.displayedPrompt || "Mia's created image"}
+                      className="story-generated-image"
+                    />
+                    <div className="rephrase-button">
+                      <button
+                        type="button"
+                        className="page-button"
+                        onClick={saveImage}
+                      >
+                        Save Image
+                      </button>
+                    </div>
 
-                  {imagePrompt.displayedPrompt && (
-                    <>
-                      <p className="image-prompt">
-                        <strong>Image prompt:</strong>{" "}
-                        {imagePrompt.displayedPrompt}
-                      </p>
+                    <h3 id="mia-image-panel-title" className="panel-title">
+                      Image Prompt Mia Used to Create the Image
+                    </h3>
 
-                      <div className="rephrase-button">
-                        <button type="button" className="page-button">
-                          Rephrase Image Prompt
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+                    {imagePrompt.displayedPrompt && (
+                      <>
+                        <p className="image-prompt">
+                          <strong>Image prompt:</strong>{" "}
+                          {imagePrompt.displayedPrompt}
+                        </p>
+                        <p className="keyboard-instructions">
+                          Press the below Rephrase Image Prompt button to
+                          rewrite the image prompt.
+                        </p>
+                        <div className="rephrase-button">
+                          <button
+                            type="button"
+                            className="page-button"
+                            onClick={openImagePromptRephrasePanel}
+                          >
+                            Rewrite Image Prompt
+                          </button>
+                        </div>
+                        {imagePrompt.rephrasedPrompt && (
+                          <>
+                            <p className="image-prompt">
+                              <strong>Rewritten image prompt:</strong>{" "}
+                              {imagePrompt.rephrasedPrompt}
+                            </p>
+                            <p className="keyboard-instructions">
+                              Press the below Generate New Image button to
+                              create new image and description.
+                            </p>
+                            <div className="rephrase-button">
+                              <button type="button" className="page-button">
+                                Generate New Image
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </section>
+              <section>
+                <h3 id="mia-image-panel-title" className="panel-title">
+                  Image description
+                </h3>
+                <p className="keyboard-instructions">
+                  Press{" "}
+                  <span className="kbd" aria-hidden="true">
+                    [
+                  </span>{" "}
+                  and{" "}
+                  <span className="kbd" aria-hidden="true">
+                    ]
+                  </span>{" "}
+                  to move through the image description paragraph by paragraph.
+                  Spot a sneaky bias? Press <span className="kbd">Enter</span>{" "}
+                  to check your guess. You can also mark a paragraph if
+                  something feels unfair and review it later.
+                </p>
 
-              <p className="keyboard-instructions">
-                Press{" "}
-                <span className="kbd" aria-hidden="true">
-                  [
-                </span>{" "}
-                and{" "}
-                <span className="kbd" aria-hidden="true">
-                  ]
-                </span>{" "}
-                to move through the image description paragraph by paragraph.
-                Spot a sneaky bias? Press <span className="kbd">Enter</span> to
-                check your guess. You can also mark a paragraph if something
-                feels unfair and review it later.
-              </p>
+                <ol
+                  className="story-paragraph-list"
+                  aria-label="Mia's image description"
+                >
+                  {imageDescriptionParagraphs.map((paragraph, index) => {
+                    const paragraphText = getParagraphText(paragraph);
 
-              <ol
-                className="story-paragraph-list"
-                aria-label="Mia's image description"
-              >
-                {imageDescriptionParagraphs.map((paragraph, index) => {
-                  const paragraphText = getParagraphText(paragraph);
-
-                  return (
-                    <li
-                      key={paragraph.index}
-                      ref={(element) => {
-                        paragraphRefs.current[index] = element;
-                      }}
-                      tabIndex={index === currentParagraphIndex ? 0 : -1}
-                      className={
-                        index === currentParagraphIndex
-                          ? "story-paragraph current-focused-panel"
-                          : "story-paragraph"
-                      }
-                      aria-label={`Image description paragraph ${index + 1} of ${
-                        imageDescriptionParagraphs.length
-                      }. ${paragraphText}. Press Enter to check this paragraph.`}
-                      onFocus={() => focusImageDescriptionParagraph(index)}
-                      onClick={() => focusImageDescriptionParagraph(index)}
-                      onMouseEnter={() => focusImageDescriptionParagraph(index)}
-                    >
-                      {paragraphText}
-                    </li>
-                  );
-                })}
-              </ol>
+                    return (
+                      <li
+                        key={paragraph.index}
+                        ref={(element) => {
+                          paragraphRefs.current[index] = element;
+                        }}
+                        tabIndex={index === currentParagraphIndex ? 0 : -1}
+                        className={
+                          index === currentParagraphIndex
+                            ? "story-paragraph current-focused-panel"
+                            : "story-paragraph"
+                        }
+                        aria-label={`Image description paragraph ${index + 1} of ${
+                          imageDescriptionParagraphs.length
+                        }. ${paragraphText}. Press Enter to check this paragraph.`}
+                        onFocus={() => focusImageDescriptionParagraph(index)}
+                        onClick={() => focusImageDescriptionParagraph(index)}
+                        onMouseEnter={() =>
+                          focusImageDescriptionParagraph(index)
+                        }
+                      >
+                        {paragraphText}
+                      </li>
+                    );
+                  })}
+                </ol>
+                <div className="rephrase-button">
+                  <button
+                    type="button"
+                    className="page-button"
+                    onClick={saveImageDescription}
+                    disabled={imageDescriptionParagraphs.length === 0}
+                  >
+                    Save Image Description
+                  </button>
+                </div>
+              </section>
             </section>
             <ImageLeaderBoardPanel />
             <ImageBiasCheckingPanel />
+            {currentFocusedImagePanel === "imageCraftPromptRephrasePanel" && (
+              <ImageCraftPromptRephrase />
+            )}
           </div>
           <ImageAgentAlicePanel />
           {showHelpGuidePanel && (

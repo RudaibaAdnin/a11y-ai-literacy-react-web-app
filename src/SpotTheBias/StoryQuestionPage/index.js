@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoryQuestion } from "../SpotTheBiasReducer";
 import "./index.css";
@@ -9,7 +9,6 @@ import * as client from "./client.js";
 const StoryQuestionPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { storytopic } = useParams();
 
   const storyTopic = useSelector(
     (state) => state.SpotTheBiasReducer.storyTopic,
@@ -75,7 +74,7 @@ const StoryQuestionPage = () => {
 
     dispatch(setStoryQuestion(storyQuestionsAndAnswers));
 
-    navigate(`/spot-the-bias/${storytopic}/story-reading`);
+    navigate(`/spot-the-bias/${storyTopic}/story-reading`);
   };
 
   return (
