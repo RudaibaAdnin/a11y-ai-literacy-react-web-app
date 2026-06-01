@@ -62,6 +62,13 @@ const ImageReadingPage = () => {
     requestAnimationFrame(() => paragraphRefs.current[nextIndex]?.focus());
   }, []);
 
+  const focusImageDescriptionParagraph = (index) => {
+    currentParagraphIndexRef.current = index;
+    setCurrentParagraphIndex(index);
+    dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+    dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+  };
+
   const loadImageReading = useCallback(async () => {
     const selectedImageBiasCategory = getRandomImageBiasCategory();
 
@@ -354,6 +361,9 @@ const ImageReadingPage = () => {
                       aria-label={`Image description paragraph ${index + 1} of ${
                         imageDescriptionParagraphs.length
                       }. ${paragraphText}. Press Enter to check this paragraph.`}
+                      onFocus={() => focusImageDescriptionParagraph(index)}
+                      onClick={() => focusImageDescriptionParagraph(index)}
+                      onMouseEnter={() => focusImageDescriptionParagraph(index)}
                     >
                       {paragraphText}
                     </li>

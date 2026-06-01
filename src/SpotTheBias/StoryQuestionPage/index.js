@@ -91,6 +91,7 @@ const StoryQuestionPage = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
 
           <h1 id="story-question-page-title" className="page-title">
@@ -98,15 +99,15 @@ const StoryQuestionPage = () => {
           </h1>
         </div>
 
-        <nav className="page-nav" aria-label="Main menu navigation">
+        <nav className="page-nav" aria-label="Main Menu Navigation">
           <Link className="page-button" to="/spot-the-bias">
             Back to Menu
           </Link>
         </nav>
       </header>
 
-      <section aria-labelledby="activity-guide-title">
-        <h2 id="activity-guide-title" className="instruction-title">
+      <section aria-labelledby="creator-guide-title">
+        <h2 id="creator-guide-title" className="instruction-title">
           Creator Guide
         </h2>
 
@@ -119,7 +120,7 @@ const StoryQuestionPage = () => {
 
       <section
         className="story-question-part"
-        aria-labelledby="story-question-title"
+        aria-label="Story question and answer activity"
       >
         {isLoadingQuestions ? (
           <p
@@ -160,7 +161,7 @@ const StoryQuestionPage = () => {
                       </legend>
 
                       <div className="story-question-suggestion-list">
-                        {storyQuestionItem.storyQuestionSuggestions.map(
+                        {(storyQuestionItem.storyQuestionSuggestions || []).map(
                           (suggestion, suggestionIndex) => (
                             <label
                               key={suggestionIndex}

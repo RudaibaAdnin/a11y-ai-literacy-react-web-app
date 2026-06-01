@@ -38,12 +38,12 @@ const LeaderBoardPanel = () => {
 
       <p className="leaderboard-count-details">
         You have found {detectedStoryBias.count} out of{" "}
-        {biasedParagraphPlan.length} biased image description paragraphs.
+        {biasedParagraphPlan.length} biased story paragraphs.
       </p>
 
       <p className="leaderboard-count-details">
-        You marked {flaggedStoryParagraph.count} image description paragraphs to
-        review later.
+        You marked {flaggedStoryParagraph.count} story paragraphs to review
+        later.
       </p>
 
       {detectedItems.length > 0 && (
@@ -64,8 +64,8 @@ const LeaderBoardPanel = () => {
                   id={`detected-bias-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  {item.biasCategory.name} in Paragraph{" "}
-                  {item.paragraphIndex + 1}
+                  Paragraph {item.paragraphIndex + 1} shows{" "}
+                  {item.biasCategory.name}.
                 </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>

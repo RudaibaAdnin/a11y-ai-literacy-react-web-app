@@ -348,7 +348,7 @@ const ImageAgentAlicePanel = () => {
       </h2>
 
       <p className="keyboard-instructions">
-        Ask Alice for clues about sneaky image bias you have not found yet.
+        Ask Alice for clues about sneaky image bias.
       </p>
 
       <div
@@ -458,23 +458,33 @@ const ImageAgentAlicePanel = () => {
         ))}
 
         {canAskManualQuestion && (
-          <div className="manual-followup-question-pane">
-            <textarea
-              className="manual-followup-question-input"
-              value={manualQuestion}
-              onChange={(event) => setManualQuestion(event.target.value)}
-              aria-label="Type your own follow-up question for Alice"
-              placeholder="Type your own question for Alice..."
-            />
-
-            <button
-              type="button"
-              className="page-button"
-              onClick={askManualQuestion}
+          <>
+            <label
+              htmlFor="manual-alice-question"
+              className="manual-followup-question-label"
             >
-              Ask Alice
-            </button>
-          </div>
+              Type your own follow-up question for Alice:
+            </label>
+            <div className="manual-followup-question-pane">
+              <textarea
+                id="manual-alice-question"
+                className="manual-followup-question-input"
+                value={manualQuestion}
+                onChange={(event) => setManualQuestion(event.target.value)}
+                placeholder="Type your own question for Alice..."
+                rows={3}
+              />
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={askManualQuestion}
+                disabled={!manualQuestion.trim()}
+              >
+                Ask Alice
+              </button>
+            </div>
+          </>
         )}
       </div>
     </section>

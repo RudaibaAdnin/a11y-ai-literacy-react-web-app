@@ -1,5 +1,5 @@
 export const image_bias_categories = {
-  "Showing disabled people as less capable bias": {
+  "Shows disabled people as sad or less capable": {
     meaning: "Showing disabled people as sad, lonely, or not active",
     examples: [
       "The image makes the person look sad or helpless, with dark background, just because they have a disability.",
@@ -8,7 +8,7 @@ export const image_bias_categories = {
     ],
   },
 
-  "Showing disabled people as less important bias": {
+  "Shows disabled people as less important or superhero": {
     meaning:
       "Focusing too much on tools, hospitals, or making the person seem unreal",
     examples: [
@@ -18,7 +18,7 @@ export const image_bias_categories = {
     ],
   },
 
-  // "Showing assistive technology unfairly bias": {
+  // "Shows assistive technology unfairly bias": {
   //   meaning:
   //     "Not showing assistive technology in fair, correct, or diverse ways",
   //   examples: [

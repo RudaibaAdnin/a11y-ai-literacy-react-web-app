@@ -45,8 +45,8 @@ const ImageLeaderBoardPanel = () => {
       </p>
 
       <p className="leaderboard-count-details">
-        You marked {flaggedImageDescriptionParagraph.count} paragraphs to review
-        later.
+        You marked {flaggedImageDescriptionParagraph.count} image description
+        paragraphs to review later.
       </p>
 
       {detectedItems.length > 0 && (
@@ -67,8 +67,8 @@ const ImageLeaderBoardPanel = () => {
                   id={`detected-image-bias-${index + 1}`}
                   className="leaderboard-item-title"
                 >
-                  {item.biasCategory.name} in Paragraph{" "}
-                  {item.imageDescriptionParagraphIndex + 1}
+                  Paragraph {item.imageDescriptionParagraphIndex + 1}{" "}
+                  {item.biasCategory.name.toLowerCase()}
                 </p>
 
                 <p className="leaderboard-item-text">{item.paragraph}</p>

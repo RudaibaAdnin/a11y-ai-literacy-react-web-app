@@ -30,7 +30,7 @@ const ImageBiasCheckingPanel = () => {
     currentFocusedImagePanel,
   } = useSelector((state) => state.ImageBiasReducer);
 
-  const isPanelOpen = selectedCheckingImageDescriptionParagraph.index !== null;
+  const isPanelOpen = selectedCheckingImageDescriptionParagraph.index != null;
   const paragraphIndex = selectedCheckingImageDescriptionParagraph.index;
   const paragraphNumber = paragraphIndex + 1;
 
@@ -94,9 +94,9 @@ const ImageBiasCheckingPanel = () => {
     if (detectedItem) {
       setShowYesButton(false);
       setFeedbackWithFocus(
-        `You already detected paragraph ${paragraphNumber} as biased. This paragraph has ${getBiasName(
+        `You already detected paragraph ${paragraphNumber} as biased. This paragraph ${getBiasName(
           detectedItem.biasCategory,
-        )}.`,
+        ).toLowerCase()}.`,
       );
       return;
     }
@@ -113,7 +113,7 @@ const ImageBiasCheckingPanel = () => {
       setShowYesButton(false);
       setShowMarkButton(true);
       setFeedbackWithFocus(
-        `You have already detected all image bias. Do you want to mark paragraph ${paragraphNumber} and review it later?`,
+        `You have already detected the image bias. Do you want to mark paragraph ${paragraphNumber} and review it later?`,
       );
       return;
     }
@@ -183,10 +183,10 @@ const ImageBiasCheckingPanel = () => {
     setFeedbackWithFocus(
       detectedImageDescriptionBiasParagraph.count + 1 ===
         biasedImageDescriptionParagraphPlan.length
-        ? `Correct guess! Paragraph ${paragraphNumber} has ${getBiasName(
+        ? `Correct guess! Paragraph ${paragraphNumber} ${getBiasName(
             matchedPlan.biasCategory,
           )}. You detected all image bias.`
-        : `Correct guess! Paragraph ${paragraphNumber} has ${getBiasName(
+        : `Correct guess! Paragraph ${paragraphNumber} ${getBiasName(
             matchedPlan.biasCategory,
           )}.`,
     );

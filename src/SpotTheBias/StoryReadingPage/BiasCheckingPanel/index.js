@@ -34,10 +34,10 @@ const BiasCheckingPanel = () => {
     currentFocusedPanel,
   } = useSelector((state) => state.SpotTheBiasReducer);
 
-  const isPanelOpen = selectedCheckingParagraph.index !== null;
-  const paragraphIndex = selectedCheckingParagraph.index;
+  const isPanelOpen = selectedCheckingParagraph?.index != null;
+  const paragraphIndex = selectedCheckingParagraph?.index;
   const paragraphNumber = paragraphIndex + 1;
-  const isRephrased = selectedCheckingParagraph.rephrasedFlag === true;
+  const isRephrased = selectedCheckingParagraph?.rephrasedFlag === true;
 
   const detectedItem = detectedStoryBias.storyBiasItems.find(
     (item) => item.paragraphIndex === paragraphIndex,
@@ -234,121 +234,125 @@ const BiasCheckingPanel = () => {
   if (!isPanelOpen) return null;
 
   return (
-    <div className="bias-check-rephrase-sidebar-wrapper">
-      <section
-        ref={panelRef}
-        tabIndex={-1}
-        className={
-          currentFocusedPanel === "biasCheckingPanel"
-            ? "bias-check-rephrase-sidebar-panel current-focused-panel"
-            : "bias-check-rephrase-sidebar-panel"
-        }
-        role="dialog"
-        aria-modal="false"
-        aria-labelledby="bias-check-title"
-        onMouseEnter={() =>
-          dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
-        }
-        onFocusCapture={() =>
-          dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
-        }
-      >
-        <h2 id="bias-check-title" className="panel-title">
-          Bias Checking and Fixing Panel
-        </h2>
+    <section
+      ref={panelRef}
+      tabIndex={-1}
+      className={
+        currentFocusedPanel === "biasCheckingPanel"
+          ? "bias-check-rephrase-sidebar-wrapper current-focused-panel"
+          : "bias-check-rephrase-sidebar-wrapper"
+      }
+      role="dialog"
+      aria-labelledby="bias-check-title"
+      onMouseEnter={() => dispatch(setCurrentFocusedPanel("biasCheckingPanel"))}
+      onFocusCapture={() =>
+        dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
+      }
+    >
+      <h2 id="bias-check-title" className="panel-title">
+        Bias Checking and Fixing Panel
+      </h2>
 
-        {!isRephrased &&
-          !alreadyHandled &&
-          !allBiasesDetected &&
-          showYesButton && (
-            <>
-              <p ref={confirmRef} tabIndex={-1} className="bias-feedback">
-                Do you want to confirm paragraph {paragraphNumber} has bias?
-              </p>
-
-              <div
-                className="bias-checking-buttons"
-                role="group"
-                aria-label="Bias checking choices"
-              >
-                <button
-                  type="button"
-                  className="page-button"
-                  onClick={checkBias}
-                >
-                  Yes
-                </button>
-
-                <button
-                  type="button"
-                  className="page-button"
-                  onClick={closePanel}
-                >
-                  Close
-                </button>
-              </div>
-            </>
-          )}
-
-        <p
-          ref={feedbackRef}
-          tabIndex={-1}
-          className="bias-feedback"
-          role="status"
-          aria-live="polite"
-        >
-          {feedback}
-        </p>
-
-        {isRephrased && (
+      {!isRephrased &&
+        !alreadyHandled &&
+        !allBiasesDetected &&
+        showYesButton && (
           <>
-            <button
-              type="button"
-              className="page-button"
-              onClick={toggleOriginalText}
-              aria-expanded={showOriginalParagraph}
-            >
-              {showOriginalParagraph
-                ? "Hide previous paragraph text"
-                : "Read previous paragraph text"}
-            </button>
+            <p ref={confirmRef} tabIndex={-1} className="bias-feedback">
+              Do you want to confirm paragraph {paragraphNumber} has bias?
+            </p>
 
-            {showOriginalParagraph && (
-              <p
-                ref={originalParagraphRef}
-                tabIndex={-1}
-                className="story-paragraph-text"
+            <div
+              className="bias-checking-buttons"
+              role="group"
+              aria-label={`Confirm if paragraph ${paragraphNumber} has bias`}
+            >
+              <button
+                type="button"
+                className="page-button"
+                aria-label={`Yes, paragraph ${paragraphNumber} has bias`}
+                onClick={checkBias}
               >
-                Previous paragraph text:{" "}
-                {selectedCheckingParagraph.originalStoryParagraph}
-              </p>
-            )}
+                Yes
+              </button>
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={closePanel}
+                aria-label="Close bias checking panel"
+              >
+                Close
+              </button>
+            </div>
           </>
         )}
 
-        {!isRephrased && showMarkButton && (
-          <div
-            className="bias-checking-buttons"
-            role="group"
-            aria-label="Mark paragraph choices"
+      <p
+        ref={feedbackRef}
+        tabIndex={-1}
+        className="bias-feedback"
+        role="status"
+        aria-live="polite"
+      >
+        {feedback}
+      </p>
+
+      {isRephrased && (
+        <>
+          <button
+            type="button"
+            className="page-button"
+            onClick={toggleOriginalText}
+            aria-expanded={showOriginalParagraph}
+            aria-controls="previous-story-paragraph-text"
           >
-            <button
-              type="button"
-              className="page-button"
-              onClick={markParagraph}
+            {showOriginalParagraph
+              ? "Hide previous paragraph text"
+              : "Read previous paragraph text"}
+          </button>
+
+          {showOriginalParagraph && (
+            <p
+              id="previous-story-paragraph-text"
+              ref={originalParagraphRef}
+              tabIndex={-1}
+              className="story-paragraph-text"
             >
-              Mark this paragraph
-            </button>
+              Previous paragraph text:{" "}
+              {selectedCheckingParagraph.originalStoryParagraph}
+            </p>
+          )}
+        </>
+      )}
 
-            <button type="button" className="page-button" onClick={closePanel}>
-              Close
-            </button>
-          </div>
-        )}
-      </section>
+      {!isRephrased && showMarkButton && (
+        <div
+          className="bias-checking-buttons"
+          role="group"
+          aria-label="Mark paragraph choices"
+        >
+          <button
+            type="button"
+            className="page-button"
+            onClick={markParagraph}
+            aria-label={`Mark paragraph ${paragraphNumber} for later review`}
+          >
+            Mark this paragraph
+          </button>
 
+          <button
+            type="button"
+            className="page-button"
+            onClick={closePanel}
+            aria-label="Close bias checking panel"
+          >
+            Close
+          </button>
+        </div>
+      )}
       {showCraftPromptButton && <CraftPromptRephrasePanel />}
-    </div>
+    </section>
   );
 };
 

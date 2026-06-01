@@ -21,6 +21,10 @@ const pickRandom = (items, count) =>
 const getParagraphText = (paragraph) =>
   paragraph?.rephrasedStoryParagraph || "";
 
+const isInteractiveElement = (element) =>
+  ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"].includes(element.tagName) ||
+  element.isContentEditable;
+
 const getRandomBiasCategories = () => {
   const socialBiasNames = ["Gender bias", "Racial bias"];
   const disabilityBiasNames = ["Ableism bias", "Inspiration bias"];
@@ -123,12 +127,13 @@ const StoryReadingPage = () => {
     const handleStoryKeyDown = (event) => {
       if (
         storyParagraphs.length === 0 ||
-        !["[", "]", "Enter"].includes(event.key)
+        !["[", "]", "Enter"].includes(event.key) ||
+        isInteractiveElement(event.target)
       ) {
         return;
       }
 
-      if (event.key === "Enter" && selectedCheckingParagraph?.index !== null) {
+      if (event.key === "Enter" && selectedCheckingParagraph?.index != null) {
         return;
       }
 
@@ -190,9 +195,35 @@ const StoryReadingPage = () => {
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
 
+  const focusStoryParagraph = (index) => {
+    currentParagraphIndexRef.current = index;
+    setCurrentParagraphIndex(index);
+    dispatch(setSelectedCheckingParagraph(null));
+    dispatch(setCurrentFocusedPanel("miaPanel"));
+  };
+
   const closeHelpGuidePanel = () => {
     setShowHelpGuidePanel(false);
     dispatch(setCurrentFocusedPanel("miaPanel"));
+  };
+
+  const saveStoryAsTextFile = () => {
+    const storyText = storyParagraphs
+      .map((paragraph, index) => {
+        const paragraphText = getParagraphText(paragraph);
+        return `${paragraphText}`;
+      })
+      .join("\n\n");
+
+    const file = new Blob([storyText], { type: "text/plain" });
+    const fileUrl = URL.createObjectURL(file);
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "story.txt";
+    link.click();
+
+    URL.revokeObjectURL(fileUrl);
   };
 
   return (
@@ -205,6 +236,7 @@ const StoryReadingPage = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
           <h1 id="story-reading-title" className="page-title">
             Spot the Bias
@@ -226,7 +258,8 @@ const StoryReadingPage = () => {
           role="status"
           aria-live="polite"
         >
-          Loading the story. Mia is getting your story ready...
+          Loading the story. Mia is getting your story ready. This may take a
+          little time.
         </p>
       ) : (
         <>
@@ -238,15 +271,11 @@ const StoryReadingPage = () => {
                 ? "instruction-section-style current-focused-panel"
                 : "instruction-section-style"
             }
-            aria-labelledby="mission-guide-title"
+            aria-labelledby="creator-guide-title"
             onMouseEnter={focusMissionGuide}
             onFocusCapture={focusMissionGuide}
           >
-            <h2
-              id="mission-guide-title"
-              className="instruction-title"
-              tabIndex={0}
-            >
+            <h2 id="creator-guide-title" className="instruction-title">
               Creator Guide
             </h2>
 
@@ -344,12 +373,25 @@ const StoryReadingPage = () => {
                       aria-label={`Paragraph ${index + 1} of ${
                         storyParagraphs.length
                       }. ${paragraphText}. Press Enter to check this paragraph.`}
+                      onFocus={() => focusStoryParagraph(index)}
+                      onClick={() => focusStoryParagraph(index)}
+                      onMouseEnter={() => focusStoryParagraph(index)}
                     >
                       {paragraphText}
                     </li>
                   );
                 })}
               </ol>
+              <div className="save-story-button">
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={saveStoryAsTextFile}
+                  disabled={storyParagraphs.length === 0}
+                >
+                  Save Story
+                </button>
+              </div>
             </section>
 
             <LeaderBoardPanel />

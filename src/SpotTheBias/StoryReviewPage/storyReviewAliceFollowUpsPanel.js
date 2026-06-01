@@ -123,6 +123,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
             {followUpsHistoryAlice.map((item, index) => {
               const explanation = questionHelp[index];
               const isActive = activeHelpIndex === index;
+              const explanationId = `alice-question-${index}-explanation`;
 
               return (
                 <li key={index} className="lie-item">
@@ -144,6 +145,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
                       fetchWhyThisQuestionHelps(index, item.followUpQuestion)
                     }
                     aria-expanded={Boolean(explanation)}
+                    aria-controls={explanationId}
                   >
                     {explanation
                       ? "Hide Explanation"
@@ -152,6 +154,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
 
                   {explanation?.isLoading && (
                     <p
+                      id={explanationId}
                       ref={isActive ? loadingRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
@@ -164,6 +167,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
 
                   {explanation?.error && (
                     <p
+                      id={explanationId}
                       ref={isActive ? explanationRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
@@ -176,9 +180,11 @@ const StoryReviewAliceFollowUpsPanel = () => {
 
                   {explanation?.data && (
                     <div
+                      id={explanationId}
                       ref={isActive ? explanationRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
+                      role="status"
                       aria-live="polite"
                     >
                       <p>{explanation.data.explanation}</p>

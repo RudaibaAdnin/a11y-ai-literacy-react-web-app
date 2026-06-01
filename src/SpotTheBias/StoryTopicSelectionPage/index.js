@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "./index.css";
 
 import { setStoryTopic } from "../SpotTheBiasReducer";
@@ -49,6 +49,7 @@ const StoryTopicSelectionPage = () => {
       }),
     );
 
+    dispatch(setImageDescriptionReading({}));
     navigate("/spot-the-bias/customized-topic");
   };
 
@@ -65,6 +66,7 @@ const StoryTopicSelectionPage = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
 
           <h1 id="story-topic-selection-page-title" className="page-title">
@@ -72,15 +74,15 @@ const StoryTopicSelectionPage = () => {
           </h1>
         </div>
 
-        <nav className="page-nav" aria-label=" Back to Menu">
+        <nav className="page-nav" aria-label="Main Menu Navigation">
           <Link className="page-button" to="/spot-the-bias">
             Back to Menu
           </Link>
         </nav>
       </header>
 
-      <section aria-labelledby="activity-guide-title">
-        <h2 id="activity-guide-title" className="instruction-title">
+      <section aria-labelledby="creator-guide-title">
+        <h2 id="creator-guide-title" className="instruction-title">
           Creator Guide
         </h2>
 
@@ -92,13 +94,13 @@ const StoryTopicSelectionPage = () => {
         </p>
       </section>
 
-      <section aria-labelledby="story-topic-title">
+      <section aria-label="Story Topic Selection">
         <h2 id="story-topic-title" className="story-topic-title">
           First Step: Choose a topic from the list below or use your own fun
           story idea to begin.
         </h2>
 
-        <ul className="story-topic-list" aria-label="Story topic choices">
+        <ul className="story-topic-list" aria-label="Suggested story topics">
           {storyTopics.map((storyTopic) => (
             <li key={storyTopic}>
               <button
@@ -122,6 +124,7 @@ const StoryTopicSelectionPage = () => {
         <form
           className="custom-story-topic-form"
           onSubmit={submitCustomStoryTopic}
+          aria-labelledby="custom-story-topic-title"
         >
           <label htmlFor="custom-story-topic" className="custom-topic-label">
             What kind of story do you want to create today?
@@ -133,6 +136,7 @@ const StoryTopicSelectionPage = () => {
             value={customStoryTopic}
             onChange={(event) => setCustomStoryTopic(event.target.value)}
             placeholder="For example, a funny story about a robot at school"
+            rows={4}
           />
 
           <button type="submit" className="story-topic-button">

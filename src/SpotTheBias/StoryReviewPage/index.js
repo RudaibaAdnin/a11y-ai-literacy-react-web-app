@@ -137,10 +137,12 @@ const StoryReviewPage = () => {
   const renderExplanation = (key) => {
     const explanation = explanations[key];
     const isActive = activeExplanationKey === key;
+    const explanationId = `${key}-explanation`;
 
     if (explanation?.isLoading) {
       return (
         <p
+          id={explanationId}
           ref={isActive ? loadingRef : null}
           tabIndex={-1}
           className="bias-feedback"
@@ -155,6 +157,7 @@ const StoryReviewPage = () => {
     if (explanation?.error) {
       return (
         <p
+          id={explanationId}
           ref={isActive ? explanationRef : null}
           tabIndex={-1}
           className="bias-type-explanation"
@@ -169,6 +172,7 @@ const StoryReviewPage = () => {
     if (explanation?.data) {
       return (
         <div
+          id={explanationId}
           ref={isActive ? explanationRef : null}
           tabIndex={-1}
           className="bias-type-explanation"
@@ -205,6 +209,7 @@ const StoryReviewPage = () => {
             src="/images/spot-the-bias-avatar.png"
             className="title-image"
             alt=""
+            aria-hidden="true"
           />
           <h1 id="review-page-title" className="page-title">
             Spot the Bias
@@ -295,13 +300,14 @@ const StoryReviewPage = () => {
           ) : (
             <>
               <p className="keyboard-instructions">
-                Review the list of detected biases. Select Explain Bias Type
-                button to learn more and get helpful examples.
+                Review the list of your detected biases. Select Explain Bias
+                Type button to learn more and get helpful examples.
               </p>
               <ol className="bias-list" aria-label="Detected bias">
                 {detectedItems.map((item, index) => {
                   const key = `bias-${getIndex(item)}`;
                   const explanation = explanations[key];
+                  const explanationId = `${key}-explanation`;
 
                   return (
                     <li key={`detected-${index}`} className="bias-item">
@@ -322,6 +328,7 @@ const StoryReviewPage = () => {
                         className="page-button"
                         onClick={() => fetchExplanationBiasType(item)}
                         aria-expanded={Boolean(explanation)}
+                        aria-controls={explanationId}
                       >
                         {explanation ? "Hide Explanation" : "Explain Bias Type"}
                       </button>
@@ -348,6 +355,7 @@ const StoryReviewPage = () => {
                 {flaggedItems.map((item, index) => {
                   const key = `wrong-${getIndex(item)}`;
                   const explanation = explanations[key];
+                  const explanationId = `${key}-explanation`;
 
                   return (
                     <li key={`flagged-${index}`} className="bias-item">
@@ -362,6 +370,7 @@ const StoryReviewPage = () => {
                         className="page-button"
                         onClick={() => fetchExplanationIfAnythingWrong(item)}
                         aria-expanded={Boolean(explanation)}
+                        aria-controls={explanationId}
                       >
                         {explanation
                           ? "Hide Explanation"

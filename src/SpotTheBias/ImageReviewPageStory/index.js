@@ -317,9 +317,11 @@ const ImageReviewPageStory = () => {
                     <li key={`detected-image-${index}`} className="bias-item">
                       {item.biasCategory && (
                         <p>
-                          <strong>Bias type:</strong>{" "}
-                          {getBiasCategoryName(item.biasCategory)} in paragraph{" "}
-                          {getIndex(item) + 1}.
+                          <strong>Bias type:</strong> Paragraph{" "}
+                          {getIndex(item) + 1}{" "}
+                          {getBiasCategoryName(
+                            item.biasCategory,
+                          ).toLowerCase()}{" "}
                         </p>
                       )}
 

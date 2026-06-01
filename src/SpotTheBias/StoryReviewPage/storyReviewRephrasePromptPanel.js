@@ -122,10 +122,11 @@ const StoryReviewRephrasePromptPanel = () => {
             can help make a biased paragraph fairer.
           </p>
 
-          <ol className="question-list" aria-label="Rephrase prompts">
+          <ol className="question-list" aria-label="Rephrase paragraph prompts">
             {rephrasedParagraphHistory.map((item, index) => {
               const explanation = promptHelp[index];
               const isActive = activeHelpIndex === index;
+              const explanationId = `rephrase-paragraph-prompt-${index}-explanation`;
 
               return (
                 <li key={index} className="lie-item">
@@ -147,6 +148,7 @@ const StoryReviewRephrasePromptPanel = () => {
                       fetchHowThisPromptHelps(index, item.promptUsedForRephrase)
                     }
                     aria-expanded={Boolean(explanation)}
+                    aria-controls={explanationId}
                   >
                     {explanation
                       ? "Hide Explanation"
@@ -155,6 +157,7 @@ const StoryReviewRephrasePromptPanel = () => {
 
                   {explanation?.isLoading && (
                     <p
+                      id={explanationId}
                       ref={isActive ? loadingRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
@@ -168,6 +171,7 @@ const StoryReviewRephrasePromptPanel = () => {
 
                   {explanation?.error && (
                     <p
+                      id={explanationId}
                       ref={isActive ? explanationRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
@@ -179,14 +183,16 @@ const StoryReviewRephrasePromptPanel = () => {
                   )}
 
                   {explanation?.data && (
-                    <div
+                    <p
+                      id={explanationId}
                       ref={isActive ? explanationRef : null}
                       tabIndex={-1}
                       className="question-type-explanation"
+                      role="status"
                       aria-live="polite"
                     >
-                      <p>{explanation.data.explanation}</p>
-                    </div>
+                      {explanation.data.explanation}
+                    </p>
                   )}
                 </li>
               );

@@ -109,6 +109,11 @@
   outline-offset: 3px;
 }
 
+.manual-followup-question-label {
+  font-size: 21px;
+  margin-bottom: 20px;
+}
+
 .manual-followup-question-pane {
   display: flex;
   gap: 15px;

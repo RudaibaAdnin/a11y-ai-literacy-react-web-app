@@ -51,6 +51,7 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 15px;
+  margin-bottom: 20px;
 }
 
 .followup-loading {

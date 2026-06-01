@@ -25,7 +25,8 @@ const CraftPromptRephrasePanel = () => {
     (state) => state.SpotTheBiasReducer,
   );
 
-  const paragraph = selectedCheckingParagraph.originalStoryParagraph;
+  const paragraph = selectedCheckingParagraph?.originalStoryParagraph || "";
+  const paragraphNumber = selectedCheckingParagraph?.index + 1;
 
   useEffect(() => {
     if (nextFocusRef.current === "status") statusRef.current?.focus();
@@ -74,7 +75,7 @@ const CraftPromptRephrasePanel = () => {
       nextFocusRef.current = "status";
       updateLastTurn({
         loading: "",
-        loadedMessage: "Loaded prompt suggestions are below.",
+        loadedMessage: `Loaded prompt suggestions to rewrite story paragraph ${paragraphNumber}.`,
         options: (data.promptSuggestions || []).map((suggestion, index) => ({
           suggestion,
           category: data.promptSuggestionCategories?.[index] || "",
@@ -173,7 +174,8 @@ const CraftPromptRephrasePanel = () => {
   return (
     <div>
       <p className="keyboard-instructions">
-        Get prompt ideas, then choose one to rephrase this paragraph.
+        Get prompt suggestions to rewrite story paragraph {paragraphNumber},
+        then choose one. You can also write your own prompt.
       </p>
 
       <div
@@ -190,7 +192,7 @@ const CraftPromptRephrasePanel = () => {
         </button>
       </div>
 
-      <div role="region" aria-live="polite" aria-label="Craft prompt chat">
+      <div role="region" aria-label="Craft prompt to rewrite paragraph chat">
         {turns.map((turn, turnIndex) => (
           <div key={turnIndex} className="sara-chat-history-item">
             {turn.message && <p className="clue-text">{turn.message}</p>}
@@ -201,8 +203,10 @@ const CraftPromptRephrasePanel = () => {
                 tabIndex={-1}
                 className="keyboard-instructions"
                 role="status"
+                aria-live="polite"
               >
-                Loading prompt suggestions...
+                Loading prompt suggestions to rewrite story paragraph{" "}
+                {paragraphNumber}...
               </p>
             )}
 
@@ -211,6 +215,8 @@ const CraftPromptRephrasePanel = () => {
                 ref={statusRef}
                 tabIndex={-1}
                 className="keyboard-instructions"
+                role="status"
+                aria-live="polite"
               >
                 {turn.loadedMessage}
               </p>
@@ -246,8 +252,9 @@ const CraftPromptRephrasePanel = () => {
                 tabIndex={-1}
                 className="keyboard-instructions"
                 role="status"
+                aria-live="polite"
               >
-                Rephrasing paragraph...
+                Rephrasing paragraph {paragraphNumber}...
               </p>
             )}
 
@@ -257,6 +264,8 @@ const CraftPromptRephrasePanel = () => {
                   ref={replyRef}
                   tabIndex={-1}
                   className="followup-question-reply"
+                  role="status"
+                  aria-live="polite"
                 >
                   {turn.rephrasedParagraph}
                 </p>
@@ -282,6 +291,7 @@ const CraftPromptRephrasePanel = () => {
                       tabIndex={-1}
                       className="keyboard-instructions"
                       role="status"
+                      aria-live="polite"
                     >
                       Rephrase approved.
                     </p>
@@ -308,19 +318,27 @@ const CraftPromptRephrasePanel = () => {
           </div>
         ))}
 
+        <label
+          htmlFor="manual-rephrase-prompt"
+          className="manual-followup-question-label"
+        >
+          Type your own prompt to rewrite the paragraph:
+        </label>
         <div className="manual-followup-question-pane">
           <textarea
+            id="manual-rephrase-prompt"
             className="manual-followup-question-input"
             value={manualPrompt}
             onChange={(event) => setManualPrompt(event.target.value)}
-            aria-label="Type your own prompt to rephrase the paragraph"
-            placeholder="Type your own rephrase prompt..."
+            placeholder="Type your own prompt..."
+            rows={3}
           />
 
           <button
             type="button"
             className="page-button"
             onClick={() => rephraseParagraph(manualPrompt.trim())}
+            disabled={!manualPrompt.trim()}
           >
             Rephrase
           </button>

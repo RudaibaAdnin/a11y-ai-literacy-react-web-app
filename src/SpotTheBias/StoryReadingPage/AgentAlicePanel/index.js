@@ -352,14 +352,18 @@ const AgentAlicePanel = () => {
 
       <p className="keyboard-instructions">
         Select the button below to ask Alice for clues about sneaky biased
-        paragraphs you have not found yet. You can also ask Alice follow-up
-        questions.
+        paragraphs. You can also ask Alice follow-up questions. Press the equal
+        key{" "}
+        <span className="kbd" aria-hidden="true">
+          =
+        </span>{" "}
+        to jump to this panel.
       </p>
 
       <div
         className="sara-followupsection-buttons"
         role="group"
-        aria-label="Alice clue options"
+        aria-label="Alice chat actions"
       >
         <button type="button" className="page-button" onClick={getClues}>
           Get Clues
@@ -370,7 +374,7 @@ const AgentAlicePanel = () => {
         </button>
       </div>
 
-      <div role="region" aria-live="polite" aria-label="Alice clue chat">
+      <div role="region" aria-label="Alice clue chat messages">
         {chatFlow.map((turn, turnIndex) => (
           <div key={turnIndex} className="sara-chat-history-item">
             {turn.message && (
@@ -391,6 +395,7 @@ const AgentAlicePanel = () => {
                 tabIndex={-1}
                 className="keyboard-instructions"
                 role="status"
+                aria-live="polite"
               >
                 Loading clue and follow-up question suggestions from Alice...
               </p>
@@ -401,6 +406,8 @@ const AgentAlicePanel = () => {
                 ref={statusRef}
                 tabIndex={-1}
                 className="keyboard-instructions"
+                role="status"
+                aria-live="polite"
               >
                 {turn.loadedMessage}
               </p>
@@ -411,7 +418,7 @@ const AgentAlicePanel = () => {
             )}
 
             {turn.loading === "questions" && (
-              <p className="keyboard-instructions" role="status">
+              <p className="keyboard-instructions">
                 Loading follow-up question suggestions from Alice...
               </p>
             )}
@@ -445,6 +452,7 @@ const AgentAlicePanel = () => {
                 tabIndex={-1}
                 className="keyboard-instructions"
                 role="status"
+                aria-live="polite"
               >
                 Loading reply from Alice...
               </p>
@@ -455,6 +463,8 @@ const AgentAlicePanel = () => {
                 ref={replyRef}
                 tabIndex={-1}
                 className="followup-question-reply"
+                role="status"
+                aria-live="polite"
               >
                 {turn.reply}
               </p>
@@ -463,23 +473,33 @@ const AgentAlicePanel = () => {
         ))}
 
         {canAskManualQuestion && (
-          <div className="manual-followup-question-pane">
-            <textarea
-              className="manual-followup-question-input"
-              value={manualQuestion}
-              onChange={(event) => setManualQuestion(event.target.value)}
-              aria-label="Type your own follow-up question for Alice"
-              placeholder="Type your own question for Alice..."
-            />
-
-            <button
-              type="button"
-              className="page-button"
-              onClick={askManualQuestion}
+          <>
+            <label
+              htmlFor="manual-alice-question"
+              className="manual-followup-question-label"
             >
-              Ask Alice
-            </button>
-          </div>
+              Type your own follow-up question for Alice:
+            </label>
+            <div className="manual-followup-question-pane">
+              <textarea
+                id="manual-alice-question"
+                className="manual-followup-question-input"
+                value={manualQuestion}
+                onChange={(event) => setManualQuestion(event.target.value)}
+                placeholder="Type your own question for Alice..."
+                rows={3}
+              />
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={askManualQuestion}
+                disabled={!manualQuestion.trim()}
+              >
+                Ask Alice
+              </button>
+            </div>
+          </>
         )}
       </div>
     </section>

@@ -27,6 +27,13 @@ const helpGuideInstructions = [
     key to check the current line as a possible lie.
   </>,
   <>
+    Press question mark
+    <span className="kbd" aria-hidden="true">
+      ?
+    </span>{" "}
+    to open help guide panel.
+  </>,
+  <>
     Press equal key{" "}
     <span className="kbd" aria-label="equal key">
       =

@@ -28,7 +28,7 @@ const instructions = [
     <span className="kbd" aria-hidden="true">
       =
     </span>{" "}
-    key to go to Alice panel.
+    to go to Alice panel.
   </>,
   <>
     Press question mark
@@ -36,6 +36,10 @@ const instructions = [
       ?
     </span>{" "}
     to open help guide panel.
+  </>,
+  <>
+    Press the <span className="kbd">Escape</span> key to close the help guide
+    panel.
   </>,
 ];
 
@@ -74,7 +78,6 @@ const HelpGuidePanel = ({ onClose }) => {
       ref={panelRef}
       tabIndex={-1}
       role="dialog"
-      aria-modal="false"
       aria-labelledby="help-guide-title"
       className={
         currentFocusedPanel === "helpGuidePanel"
@@ -103,7 +106,12 @@ const HelpGuidePanel = ({ onClose }) => {
         ))}
       </ul>
 
-      <button type="button" className="page-button" onClick={onClose}>
+      <button
+        type="button"
+        className="page-button"
+        aria-label="Close help guide"
+        onClick={onClose}
+      >
         Close
       </button>
     </section>
