@@ -46,10 +46,14 @@ export const explainHowFollowUpQuestionHelpsDetectImage = async ({
 
 export const explainSuggestionsHelpsRephrasePromptImage = async ({
   rephrasedPromptImage,
+  displayedPromptImage,
 }) => {
   const response = await axios.post(
     explainImagePromptHelpsAPI,
-    { rephrasedPromptImage },
+    {
+      rephrasedPromptImage,
+      displayedPromptImage,
+    },
     { headers: { "Content-Type": "application/json" } },
   );
 

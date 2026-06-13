@@ -18,6 +18,9 @@ export const story_bias_categories = {
     ],
   },
 
+  //Treating someone unfairly because of their race like one smart or not smart.
+
+  //Thinking someone can or cannot do, like or behave something because they are a boy or a girl like
   // "Cultural bias": {
   //   meaning:
   //     "Making one culture seem normal and another culture seem strange or wrong.",

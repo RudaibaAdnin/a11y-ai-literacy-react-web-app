@@ -155,6 +155,7 @@ const ImageCraftPromptRephrase = () => {
 
     dispatch(
       addRephrasedPromptHistoryImage({
+        displayedPromptImage: imagePrompt.displayedPrompt,
         promptUsedForRephraseImage:
           turn.selectedSuggestions.join(" ") || rephrasedPrompt,
         promptUsedForRephraseCategoryImage:

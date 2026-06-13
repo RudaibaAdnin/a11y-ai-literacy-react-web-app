@@ -14,10 +14,10 @@ import { setImageDescriptionReading } from "../ImageBiasReducer";
 // ];
 
 const storyTopics = [
-  "Adventure and Travel: Story about exploring new places",
-  "Science Fiction and Fantasy: Story with future technology, magic, or imaginary worlds",
-  "Mystery and Suspense: Story where characters solve a puzzle",
-  "Self-Discovery and Coming of Age: Story about learning who you are or growing up",
+  "Adventure: Story about exploring new places",
+  "Fantasy: Story with magic or imaginary worlds",
+  "Mystery: Story where characters solve a mystery",
+  "Everyday Life: Story about daily activities",
 ];
 const StoryTopicSelectionPage = () => {
   const navigate = useNavigate();

@@ -117,6 +117,7 @@ const ImageBiasSlice = createSlice({
       if (state.rephrasedPromptHistoryImage.length >= 2) return;
 
       state.rephrasedPromptHistoryImage.push({
+        displayedPromptImage: action.payload.displayedPromptImage,
         promptUsedForRephraseImage: action.payload.promptUsedForRephraseImage,
         promptUsedForRephraseCategoryImage:
           action.payload.promptUsedForRephraseCategoryImage,

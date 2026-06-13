@@ -238,11 +238,11 @@ const StoryReviewPage = () => {
         </h2>
 
         <p className="page-instructions">
-          Great work! Now, it is time to review your bias-spotting moves. Below,
-          review each bias you spotted, the paragraphs you marked, follow-up
-          questions you asked Alice, and the prompts you used to rewrite and fix
-          a biased paragraph. You can select the explanation buttons to learn
-          more and get helpful examples.
+          Great work on spotting bias! Now, it is time to review your
+          bias-spotting moves. Below, review each bias you spotted, the
+          paragraphs you marked, follow-up questions you asked Alice, and the
+          prompts you used to rewrite and fix a biased paragraph. You can select
+          the explanation buttons to learn more and get helpful examples.
         </p>
 
         <p className="page-instructions">

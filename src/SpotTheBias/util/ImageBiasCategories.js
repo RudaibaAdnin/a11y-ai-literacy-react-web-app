@@ -1,5 +1,5 @@
 export const image_bias_categories = {
-  "Shows disabled people as sad or less capable": {
+  "Shows the disabled person as sad, lonely, or not active": {
     meaning: "Showing disabled people as sad, lonely, or not active",
     examples: [
       "The image makes the person look sad or helpless, with dark background, just because they have a disability.",
@@ -8,7 +8,7 @@ export const image_bias_categories = {
     ],
   },
 
-  "Shows disabled people as less important or superhero": {
+  "Focuses too much on tools, hospitals, or makes the person seem unreal": {
     meaning:
       "Focusing too much on tools, hospitals, or making the person seem unreal",
     examples: [

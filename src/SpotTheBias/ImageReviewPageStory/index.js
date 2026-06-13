@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentFocusedImagePanel } from "../ImageBiasReducer";
 import * as client from "./client.js";
 import ImageReviewAliceFollowUpsPanel from "./ImageReviewAliceFollowUpsPanel";
-// import ImageReviewRephrasePromptPanel from "./ImageReviewRephrasePromptPanel";
+import ImageReviewRephrasePromptPanel from "./ImageReviewRephrasePromptPanel";
 import "./index.css";
 
 const ImageReviewPageStory = () => {
@@ -238,10 +238,10 @@ const ImageReviewPageStory = () => {
         </h2>
 
         <p className="page-instructions">
-          Great work! Now, it is time to review your image bias-spotting moves.
-          Below, review each image bias you spotted, the paragraphs you marked,
-          follow-up questions you asked Alice, and the prompts you used to make
-          the image fairer.
+          Great work on spotting bias! Now, it is time to review your image
+          bias-spotting moves. Below, review each image bias you spotted, the
+          paragraphs you marked, follow-up questions you asked Alice, and the
+          prompts you used to make the image fairer.
         </p>
 
         <p className="page-instructions">
@@ -326,8 +326,9 @@ const ImageReviewPageStory = () => {
                         </p>
                       )}
 
-                      <p className="bias-item-text">{getParagraph(item)}</p>
-
+                      <p className="bias-item-text">
+                        <strong>Paragraph Text:</strong> {getParagraph(item)}
+                      </p>
                       <button
                         type="button"
                         className="page-button"
@@ -336,7 +337,6 @@ const ImageReviewPageStory = () => {
                       >
                         {explanation ? "Hide Explanation" : "Explain Bias Type"}
                       </button>
-
                       {renderExplanation(key)}
                     </li>
                   );
@@ -371,7 +371,9 @@ const ImageReviewPageStory = () => {
                         <strong>Marked paragraph {getIndex(item) + 1}</strong>
                       </p>
 
-                      <p className="bias-item-text">{getParagraph(item)}</p>
+                      <p className="bias-item-text">
+                        <strong>Paragraph Text:</strong> {getParagraph(item)}
+                      </p>
 
                       <button
                         type="button"
@@ -394,7 +396,7 @@ const ImageReviewPageStory = () => {
         </section>
 
         <ImageReviewAliceFollowUpsPanel />
-        {/* <ImageReviewRephrasePromptPanel /> */}
+        <ImageReviewRephrasePromptPanel />
       </div>
     </main>
   );
