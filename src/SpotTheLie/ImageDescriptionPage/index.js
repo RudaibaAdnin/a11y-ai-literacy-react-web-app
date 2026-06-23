@@ -264,10 +264,16 @@ const ImageDescriptionPage = () => {
               <>
                 <p className="keyboard-instructions">
                   Press the left square bracket key
-                  <span className="kbd">[</span> and the right square bracket
-                  key <span className="kbd">]</span> to read the image
-                  description line by line. Spot a sneaky lie? Press{" "}
-                  <span className="kbd">Enter</span> key to check your guess.
+                  <span className="kbd" aria-hidden="true">
+                    [
+                  </span>{" "}
+                  and the right square bracket key{" "}
+                  <span className="kbd" aria-hidden="true">
+                    ]
+                  </span>{" "}
+                  to read the image description line by line. Spot a sneaky lie?
+                  Press <span className="kbd">Enter</span> key to check your
+                  guess.
                 </p>
 
                 <ol

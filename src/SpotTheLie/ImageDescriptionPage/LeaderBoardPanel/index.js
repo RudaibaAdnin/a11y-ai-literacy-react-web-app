@@ -63,7 +63,6 @@ const LeaderBoardPanel = () => {
               <li
                 key={item.hallucinatedLine}
                 className="leaderboard-item"
-                // Accessibility change: connects each list item to its heading.
                 aria-labelledby={`detected-lie-${index + 1}`}
               >
                 <p
