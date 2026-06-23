@@ -62,6 +62,15 @@ const ImageDescriptionPage = () => {
 
   useEffect(() => {
     const handleGlobalKeyDown = (event) => {
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping) return;
+
       if (
         selectedImageDescription.length === 0 ||
         (event.key !== "[" && event.key !== "]")
@@ -87,6 +96,7 @@ const ImageDescriptionPage = () => {
           line: nextLine,
         }),
       );
+
       requestAnimationFrame(() => {
         imageDescriptionLineByLineArray.current[nextIndex]?.focus();
       });
@@ -193,7 +203,7 @@ const ImageDescriptionPage = () => {
           questions like a detective. You can also ask Adam, another AI agent,
           for a second description and compare both descriptions. But watch out!
           AI agents can make mistakes too, so use your detective brain. You can
-          use headings to move around the game page, or select the Help Guide
+          use headings to move around this game page, or select the Help Guide
           button below to open the help guide panel to learn more keyboard
           shortcuts you can use.
         </p>

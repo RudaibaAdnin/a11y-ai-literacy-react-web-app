@@ -94,7 +94,7 @@ const ImageReviewPage = () => {
 
   useEffect(() => {
     const handleDetectedLiesFocusKey = (event) => {
-      if (event.key !== "[") return;
+      if (event.key !== "/") return;
 
       event.preventDefault();
       dispatch(setCurrentFocusedPanel("reviewDetectedLiesPanel"));
@@ -149,17 +149,17 @@ const ImageReviewPage = () => {
           Great detective work! Now it is time to review your detective moves.
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
-          helpful examples. You can use headings to move around the review page.
-          Press the left square bracket key{" "}
-          <span className="kbd" aria-label="left square bracket key">
-            [
+          helpful examples. You can use headings to move around this review
+          page, or you can press slash key{" "}
+          <span className="kbd" aria-hidden="true">
+            /
           </span>{" "}
           to go to review the list of detected lies and press equal key{" "}
-          <span className="kbd" aria-label="equal key">
+          <span className="kbd" aria-hidden="true">
             =
           </span>{" "}
           to go to review the detective follow-up questions you asked Sara.
-          Press the below Back to Game Page button to go to the spot the lie
+          Press the Back to Game Page button below to go to the spot the lie
           game page with image description.
         </p>
 

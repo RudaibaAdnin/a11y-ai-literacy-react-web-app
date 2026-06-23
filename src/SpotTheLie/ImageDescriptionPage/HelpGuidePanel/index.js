@@ -7,24 +7,18 @@ import { setCurrentFocusedPanel } from "../../SpotTheLieReducer";
 const helpGuideInstructions = [
   <>
     Press left square bracket key{" "}
-    <span className="kbd" aria-label="left square bracket key">
+    <span className="kbd" aria-hidden="true">
       [
     </span>{" "}
-    to go to the previous line.
-  </>,
-  <>
-    Press right square bracket key{" "}
-    <span className="kbd" aria-label="right square bracket key">
+    to go to the previous line. Press right square bracket key{" "}
+    <span className="kbd" aria-hidden="true">
       ]
     </span>{" "}
     to go to the next line.
   </>,
   <>
-    Press{" "}
-    <span className="kbd" aria-label="Enter key">
-      Enter
-    </span>{" "}
-    key to check the current line as a possible lie.
+    Press <span className="kbd">Enter</span> key to check the current line as a
+    possible lie.
   </>,
   <>
     Press question mark
@@ -35,17 +29,17 @@ const helpGuideInstructions = [
   </>,
   <>
     Press equal key{" "}
-    <span className="kbd" aria-label="equal key">
+    <span className="kbd" aria-hidden="true">
       =
     </span>{" "}
-    to jump to Sara's detective follow-up question panel.
+    to go to Sara's detective follow-up question panel.
   </>,
   <>
     Press slash key{" "}
-    <span className="kbd" aria-label="slash key">
+    <span className="kbd" aria-hidden="true">
       /
     </span>{" "}
-    to jump to Adam's new AI image description panel.
+    to go to Adam's new AI image description panel.
   </>,
 ];
 

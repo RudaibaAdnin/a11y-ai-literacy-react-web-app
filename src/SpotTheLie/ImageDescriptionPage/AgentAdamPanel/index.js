@@ -55,7 +55,14 @@ const AgentAdamPanel = () => {
 
   useEffect(() => {
     const handleAdamPanelFocusKey = (event) => {
-      if (event.key !== "/") return;
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "/") return;
 
       event.preventDefault();
       dispatch(setCurrentFocusedPanel("adamDescriptionPanel"));
