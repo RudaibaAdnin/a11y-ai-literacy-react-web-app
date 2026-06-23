@@ -106,6 +106,10 @@ const ImageDescriptionPage = () => {
     dispatch(setCurrentFocusedPanel("saraImageDescriptionPanel"));
   };
 
+  const focusGoToReviewSection = () => {
+    dispatch(setCurrentFocusedPanel("goToReviewSection"));
+  };
+
   const openHelpGuidePanel = () => {
     setShowHelpGuidePanel(true);
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
@@ -188,10 +192,20 @@ const ImageDescriptionPage = () => {
           sneaky lies hiding inside it. Need help? You can ask Sara follow-up
           questions like a detective. You can also ask Adam, another AI agent,
           for a second description and compare both descriptions. But watch out!
-          AI agents can make mistakes too, so use your detective brain.
+          AI agents can make mistakes too, so use your detective brain. You can
+          use headings to move around the game page, or select the Help Guide
+          button below to open the help guide panel to learn more keyboard
+          shortcuts you can use.
         </p>
+        <button
+          type="button"
+          className="page-button"
+          onClick={openHelpGuidePanel}
+        >
+          Help Guide
+        </button>
 
-        <div
+        {/* <div
           className="instruction-buttons"
           // Accessibility change: groups the guide/review controls.
           role="group"
@@ -215,7 +229,7 @@ const ImageDescriptionPage = () => {
           >
             Review Your Detective Moves
           </button>
-        </div>
+        </div> */}
       </section>
 
       <div className="side-by-side-page">
@@ -282,6 +296,37 @@ const ImageDescriptionPage = () => {
         {showHelpGuidePanel && <HelpGuidePanel onClose={closeHelpGuidePanel} />}
       </div>
       <AgentAdamPanel />
+
+      <section
+        className={
+          currentFocusedPanel === "goToReviewSection"
+            ? "go-to-review-section current-focused-panel"
+            : "go-to-review-section"
+        }
+        aria-labelledby="go-to-review-title"
+        onMouseEnter={focusGoToReviewSection}
+        onFocusCapture={focusGoToReviewSection}
+      >
+        <h2 id="go-to-review-title" className="panel-title" tabIndex={0}>
+          Go to Review Page
+        </h2>
+
+        <p className="go-to-review-instructions">
+          Select the Review Your Detective Moves button to go to the review
+          page. There, you can look back at the lies you found and read what
+          kinds of AI lies they were.
+        </p>
+
+        <button
+          type="button"
+          className="page-button"
+          onClick={() =>
+            navigate(`/spot-the-lie/${imagecategory}/${imagename}/review-page`)
+          }
+        >
+          Review Your Detective Moves
+        </button>
+      </section>
     </main>
   );
 };

@@ -149,7 +149,8 @@ const ImageReviewPage = () => {
           Great detective work! Now it is time to review your detective moves.
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
-          helpful examples. Press the left square bracket key{" "}
+          helpful examples. You can use headings to move around the review page.
+          Press the left square bracket key{" "}
           <span className="kbd" aria-label="left square bracket key">
             [
           </span>{" "}
@@ -158,6 +159,8 @@ const ImageReviewPage = () => {
             =
           </span>{" "}
           to jump to review the detective follow-up questions you asked Sara.
+          Press the below Back to Game Page button to go to the spot the lie
+          game page with image description.
         </p>
 
         <button
@@ -300,6 +303,15 @@ const ImageReviewPage = () => {
         </section>
 
         <ReviewDetectiveFollowUpsPanel />
+        <button
+          type="button"
+          className="page-button"
+          onClick={() =>
+            navigate(`/spot-the-lie/${imagecategory}/${imagename}`)
+          }
+        >
+          Back to Game Page
+        </button>
       </div>
     </main>
   );

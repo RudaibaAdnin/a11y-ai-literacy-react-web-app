@@ -4,6 +4,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const imagePromptAPI = `${API_URL}/generate-image-prompt`;
 const imageDescriptionAPI = `${API_URL}/generate-image-description`;
+const rephrasedImageDescriptionAPI = `${API_URL}/generate-rephrased-image-description`;
 
 export const getImageGenerationPrompt = async (
   storyParagraphs,
@@ -31,6 +32,16 @@ export const getImageDescription = async (
       originalPrompt,
       selectedImageBiasCategories,
     },
+    { headers: { "Content-Type": "application/json" } },
+  );
+
+  return response.data;
+};
+
+export const getRephrasedImageDescription = async (rephrasedPrompt) => {
+  const response = await axios.post(
+    rephrasedImageDescriptionAPI,
+    { rephrasedPrompt },
     { headers: { "Content-Type": "application/json" } },
   );
 

@@ -10,16 +10,7 @@
   font-weight: 550;
   text-decoration: underline;
 }
-.page-button {
-  padding: 10px;
-  font-size: 21px;
-  font-weight: 500;
-  color: #1d4289;
-  background-color: #fff;
-  border: 1px solid #1d4289;
-  border-radius: 10px;
-  margin-top: 20px;
-}
+
 
 .page-button:hover,
 .page-button:focus-visible {
@@ -30,6 +21,18 @@
 } */
 
 /*specific to hallucination checking panel of the page*/
+
+.page-button {
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 500;
+  color: #1d4289;
+  background-color: #fff;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-right: 10px;
+}
 
 .hallucination-check-sidebar-panel {
   position: fixed;

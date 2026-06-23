@@ -8,6 +8,7 @@ body {
 .main-style {
   margin-left: 100px;
   margin-right: 100px;
+  margin-bottom: 100px;
 }
 .header-style {
   display: flex;
@@ -59,10 +60,18 @@ body {
   margin: 0;
   text-decoration: underline;
 }
+
+.go-to-review-title {
+  font-size: 24px;
+  color: #1d4289;
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 20px;
+}
 .page-instructions {
   font-size: 24px;
   line-height: 1.5;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   color: #1d4289;
 }
 
@@ -131,6 +140,18 @@ body {
   margin-bottom: 30px;
 }
 
+.go-to-review-section {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  padding: 30px;
+  border: 1px solid #1d4289;
+  border-radius: 10px;
+  background: #fff;
+  color: #1d4289;
+}
+
 .sara-panel {
   width: 650px;
   padding: 40px;
@@ -138,6 +159,7 @@ body {
   border-radius: 10px;
   background: #fff;
   color: #1d4289;
+  margin-top: 10px;
 }
 
 /*specific to image-description section of the page*/

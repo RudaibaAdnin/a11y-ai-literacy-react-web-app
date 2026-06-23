@@ -18,7 +18,6 @@ const HallucinationCheckingPanel = () => {
   const [showReviewButton, setShowReviewButton] = useState(false);
 
   const panelRef = useRef(null);
-  const justOpenedPanelRef = useRef(false);
   const feedbackRef = useRef(null);
 
   const selectedCheckingLine = useSelector(
@@ -37,9 +36,11 @@ const HallucinationCheckingPanel = () => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
+  //const justOpenedPanelRef = useRef(false);
+
   useEffect(() => {
     if (selectedCheckingLine) {
-      justOpenedPanelRef.current = true;
+      // justOpenedPanelRef.current = true;
       dispatch(setCurrentFocusedPanel("hallucinationCheckingPanel"));
       panelRef.current?.focus();
     }
@@ -49,20 +50,20 @@ const HallucinationCheckingPanel = () => {
     if (feedback) feedbackRef.current?.focus();
   }, [feedback]);
 
-  useEffect(() => {
-    if (!selectedCheckingLine) return;
+  // useEffect(() => {
+  //   if (!selectedCheckingLine) return;
 
-    if (justOpenedPanelRef.current) {
-      justOpenedPanelRef.current = false;
-      return;
-    }
+  //   if (justOpenedPanelRef.current) {
+  //     justOpenedPanelRef.current = false;
+  //     return;
+  //   }
 
-    if (currentFocusedPanel !== "hallucinationCheckingPanel") {
-      dispatch(setSelectedCheckingLine(""));
-      setFeedback("");
-      setShowReviewButton(false);
-    }
-  }, [currentFocusedPanel, selectedCheckingLine, dispatch]);
+  //   if (currentFocusedPanel !== "hallucinationCheckingPanel") {
+  //     dispatch(setSelectedCheckingLine(""));
+  //     setFeedback("");
+  //     setShowReviewButton(false);
+  //   }
+  // }, [currentFocusedPanel, selectedCheckingLine, dispatch]);
 
   const focusHallucinationCheckingPanel = () => {
     dispatch(setCurrentFocusedPanel("hallucinationCheckingPanel"));
@@ -149,6 +150,33 @@ const HallucinationCheckingPanel = () => {
     );
   };
 
+  const handleCheckingPanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      closeHallucinationDetectionCheckSideBar();
+      return;
+    }
+
+    if (
+      event.key === "[" ||
+      event.key === "]" ||
+      event.key === "/" ||
+      event.key === "?"
+    ) {
+      closeHallucinationDetectionCheckSideBar();
+    }
+  };
+
   if (!selectedCheckingLine) return null;
 
   return (
@@ -165,6 +193,7 @@ const HallucinationCheckingPanel = () => {
       aria-labelledby="lie-detection-title"
       onMouseEnter={focusHallucinationCheckingPanel}
       onFocusCapture={focusHallucinationCheckingPanel}
+      onKeyDown={handleCheckingPanelKeyDown}
     >
       <h2 id="lie-detection-title" className="hallucination-checking-title">
         Do you want to confirm this line as a lie?
@@ -177,29 +206,14 @@ const HallucinationCheckingPanel = () => {
         {selectedCheckingLine}
       </p>
 
-      <div
-        className="hallucination-checking-buttons"
-        role="group"
-        aria-label="Lie detection choices"
+      <button
+        type="button"
+        className="page-button"
+        onClick={checkHallucinationDetection}
+        aria-label="Yes, confirm this line as a lie"
       >
-        <button
-          type="button"
-          className="page-button"
-          onClick={checkHallucinationDetection}
-          aria-label="Yes, confirm this line as a lie"
-        >
-          Yes
-        </button>
-
-        <button
-          type="button"
-          className="page-button"
-          onClick={closeHallucinationDetectionCheckSideBar}
-          aria-label="Close lie detection check window"
-        >
-          Close
-        </button>
-      </div>
+        Yes
+      </button>
 
       {feedback && (
         <p
@@ -212,17 +226,25 @@ const HallucinationCheckingPanel = () => {
           {feedback}
         </p>
       )}
-
       {showReviewButton && (
         <button
           type="button"
           className="page-button"
           onClick={goToReviewPage}
-          aria-label="Go to review page"
+          aria-label="Go to review page to look back at the lies you found"
         >
           Review Your Detective Moves
         </button>
       )}
+
+      <button
+        type="button"
+        className="page-button"
+        onClick={closeHallucinationDetectionCheckSideBar}
+        aria-label="Close lie detection check window"
+      >
+        Close
+      </button>
     </section>
   );
 };

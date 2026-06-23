@@ -57,24 +57,24 @@ const HelpGuidePanel = ({ onClose }) => {
     (state) => state.SpotTheLieReducer.currentFocusedPanel,
   );
 
-  const justOpenedPanelRef = useRef(false);
+  //const justOpenedPanelRef = useRef(false);
 
   useEffect(() => {
-    justOpenedPanelRef.current = true;
+    //justOpenedPanelRef.current = true;
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
     panelRef.current?.focus();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (justOpenedPanelRef.current) {
-      justOpenedPanelRef.current = false;
-      return;
-    }
+  // useEffect(() => {
+  //   if (justOpenedPanelRef.current) {
+  //     justOpenedPanelRef.current = false;
+  //     return;
+  //   }
 
-    if (currentFocusedPanel !== "helpGuidePanel") {
-      onClose();
-    }
-  }, [currentFocusedPanel, onClose]);
+  //   if (currentFocusedPanel !== "helpGuidePanel") {
+  //     onClose();
+  //   }
+  // }, [currentFocusedPanel, onClose]);
 
   const focusHelpGuidePanel = () => {
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
@@ -82,6 +82,28 @@ const HelpGuidePanel = ({ onClose }) => {
 
   const closeHelpGuidePanel = () => {
     onClose();
+  };
+
+  const handleHelpGuidePanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      closeHelpGuidePanel();
+      return;
+    }
+
+    if (event.key === "[" || event.key === "]" || event.key === "/") {
+      closeHelpGuidePanel();
+    }
   };
 
   return (
@@ -99,16 +121,10 @@ const HelpGuidePanel = ({ onClose }) => {
       }
       onMouseEnter={focusHelpGuidePanel}
       onFocusCapture={focusHelpGuidePanel}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") {
-          event.preventDefault();
-          event.stopPropagation();
-          closeHelpGuidePanel();
-        }
-      }}
+      onKeyDown={handleHelpGuidePanelKeyDown}
     >
       <h2 id="help-guide-title" className="help-guide-title">
-        Help Guide with Keyboard Instructions
+        Help Guide with Keyboard Instructions You can Use
       </h2>
 
       <ul
