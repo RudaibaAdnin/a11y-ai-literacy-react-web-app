@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
 import { imageDescriptions } from "../../util/imageDescriptions.js";
+import { accurateImageDescriptions } from "../../util/accurateImageDescriptions.js";
+
 import {
   setCurrentFocusedPanel,
   addFollowUpsHistorySara,
@@ -19,6 +21,16 @@ const AgentSaraPanel = () => {
 
   // Gets the selected image description.
   const selectedImageDescription = imageDescriptions[imagename] || [];
+
+  const accurateImageDescription = accurateImageDescriptions[imagename] || [];
+
+  const getRandomImageDescriptionForSara = () => {
+    const descriptions = [selectedImageDescription, accurateImageDescription];
+
+    const randomIndex = Math.floor(Math.random() * descriptions.length);
+
+    return descriptions[randomIndex];
+  };
 
   const selectedImageHallucinations = useSelector(
     (state) => state.SpotTheLieReducer.selectedImageHallucinations,
@@ -116,7 +128,7 @@ const AgentSaraPanel = () => {
 
     try {
       const data = await client.getFollowupQuestionsForEntireDescription(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
       );
 
       if (shouldFocusQuestions) {
@@ -148,7 +160,7 @@ const AgentSaraPanel = () => {
     try {
       const data = await client.getFollowupQuestionsForCurrentLine(
         currentImageDescriptionLine,
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
       );
 
       if (shouldFocusQuestions) {
@@ -216,7 +228,7 @@ const AgentSaraPanel = () => {
 
     try {
       const clueData = await client.getClue(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), // selectedImageDescription,
         imageHallucinationLine,
       );
 
@@ -231,7 +243,7 @@ const AgentSaraPanel = () => {
       ]);
 
       const data = await client.getFollowupQuestionsForClue(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), // selectedImageDescription,
         imageHallucinationLine,
         clue,
       );
@@ -241,6 +253,7 @@ const AgentSaraPanel = () => {
       setIsLoadingFollowUpQuestions(false);
     } catch (error) {
       console.error("Could not get clue:", error);
+      setIsLoadingFollowUpQuestions(false);
     }
   };
 
@@ -264,7 +277,7 @@ const AgentSaraPanel = () => {
 
     try {
       const data = await client.getFollowUpReply(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), // selectedImageDescription,
         selectedFollowUpQuestion,
       );
 
@@ -302,7 +315,7 @@ const AgentSaraPanel = () => {
         await fetchFollowupQuestionsForCurrentLine(false);
       } else if (followUpQuestionModeRef.current === "clue") {
         const data = await client.getFollowupQuestionsForClue(
-          selectedImageDescription,
+          getRandomImageDescriptionForSara(), //selectedImageDescription,
           clueHallucinationLineRef.current,
           clueRef.current,
         );

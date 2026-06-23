@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
 import { imageDescriptions } from "../../util/imageDescriptions.js";
+import { accurateImageDescriptions } from "../../util/accurateImageDescriptions.js";
+
 import {
   setCurrentFocusedPanel,
   addFollowUpsHistorySara,
@@ -15,6 +17,16 @@ const AgentSaraPanel = () => {
   const dispatch = useDispatch();
 
   const selectedImageDescription = imageDescriptions[imagename] || [];
+
+  const accurateImageDescription = accurateImageDescriptions[imagename] || [];
+
+  const getRandomImageDescriptionForSara = () => {
+    const descriptions = [selectedImageDescription, accurateImageDescription];
+
+    const randomIndex = Math.floor(Math.random() * descriptions.length);
+
+    return descriptions[randomIndex];
+  };
 
   const selectedImageHallucinations = useSelector(
     (state) => state.SpotTheLieReducer.selectedImageHallucinations,
@@ -146,20 +158,22 @@ const AgentSaraPanel = () => {
     if (followUpQuestionModeRef.current === "currentLine") {
       return client.getFollowupQuestionsForCurrentLine(
         currentImageDescriptionLine,
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(),
+        //selectedImageDescription,
       );
     }
 
     if (followUpQuestionModeRef.current === "clue") {
       return client.getFollowupQuestionsForClue(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
         clueHallucinationLineRef.current,
         clueRef.current,
       );
     }
 
     return client.getFollowupQuestionsForEntireDescription(
-      selectedImageDescription,
+      //selectedImageDescription,
+      getRandomImageDescriptionForSara(),
     );
   };
 
@@ -254,7 +268,8 @@ const AgentSaraPanel = () => {
 
     try {
       const clueData = await client.getClue(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(),
+        //selectedImageDescription,
         imageHallucinationLine,
       );
 
@@ -339,7 +354,7 @@ const AgentSaraPanel = () => {
 
     try {
       const data = await client.getFollowUpReply(
-        selectedImageDescription,
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
         selectedFollowUpQuestion,
       );
 
