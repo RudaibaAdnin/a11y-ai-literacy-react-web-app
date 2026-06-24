@@ -289,8 +289,8 @@ const StoryReadingPage = () => {
             </p>
             <p className="page-instructions">
               You can use headings to move around this game page, or select the
-              Help Guide button below to open the help guide panel to learn more
-              keyboard shortcuts you can use.
+              <span className="kbd">Help Guide</span>button below to open the
+              help guide modal to learn more keyboard shortcuts you can use.
             </p>
 
             <button

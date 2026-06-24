@@ -423,7 +423,7 @@ const ImageAgentAlicePanel = () => {
                       className="followup-question-button"
                       onClick={() => askQuestion(turnIndex, option)}
                     >
-                      {option.question}
+                      <strong>{option.category}</strong>: {option.question}
                     </button>
                   </li>
                 ))}
@@ -431,7 +431,11 @@ const ImageAgentAlicePanel = () => {
             )}
 
             {turn.selectedQuestion && (
-              <p className="followup-question-text">{turn.selectedQuestion}</p>
+              <p className="followup-question-text">
+                {" "}
+                <strong>{turn.selectedQuestionCategory}:</strong>{" "}
+                {turn.selectedQuestion}
+              </p>
             )}
 
             {turn.loading === "reply" && (
@@ -484,6 +488,9 @@ const ImageAgentAlicePanel = () => {
                 Ask Alice
               </button>
             </div>
+            <button type="button" className="page-button" onClick={clearChat}>
+              Close Chat
+            </button>
           </>
         )}
       </div>

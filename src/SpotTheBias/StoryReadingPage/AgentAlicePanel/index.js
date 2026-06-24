@@ -503,6 +503,9 @@ const AgentAlicePanel = () => {
                 Ask Alice
               </button>
             </div>
+            <button type="button" className="page-button" onClick={clearChat}>
+              Close Chat
+            </button>
           </>
         )}
       </div>

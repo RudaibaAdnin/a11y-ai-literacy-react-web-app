@@ -42,11 +42,14 @@ const ImageReadingPage = () => {
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
   const [showHelpGuidePanel, setShowHelpGuidePanel] = useState(false);
+  const [showImagePromptRephrasePanel, setShowImagePromptRephrasePanel] =
+    useState(false);
 
   const currentParagraphIndexRef = useRef(0);
   const loadingRef = useRef(null);
   const guideRef = useRef(null);
   const paragraphRefs = useRef([]);
+  const imagePromptPanelRef = useRef(null);
 
   const { storyParagraphs } = useSelector((state) => state.SpotTheBiasReducer);
 
@@ -67,15 +70,20 @@ const ImageReadingPage = () => {
   const focusImageDescriptionParagraph = (index) => {
     currentParagraphIndexRef.current = index;
     setCurrentParagraphIndex(index);
-    dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+    //dispatch(setSelectedCheckingImageDescriptionParagraph(null));
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
   };
 
   const openImagePromptRephrasePanel = () => {
     dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+    setShowImagePromptRephrasePanel(true);
     dispatch(setCurrentFocusedImagePanel("imageCraftPromptRephrasePanel"));
   };
 
+  const closeImagePromptRephrasePanel = () => {
+    setShowImagePromptRephrasePanel(false);
+    dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
+  };
   const loadImageReading = useCallback(async () => {
     const selectedImageBiasCategory = getRandomImageBiasCategory();
 
@@ -129,24 +137,19 @@ const ImageReadingPage = () => {
   }, [isLoadingImage, imageDescriptionParagraphs.length]);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "?") {
-        event.preventDefault();
-        setShowHelpGuidePanel(true);
-        return;
-      }
+    const handleImageDescriptionKeyDown = (event) => {
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
 
       if (
-        showHelpGuidePanel ||
+        isTyping ||
         imageDescriptionParagraphs.length === 0 ||
-        !["[", "]", "Enter"].includes(event.key)
-      ) {
-        return;
-      }
-
-      if (
-        event.key === "Enter" &&
-        selectedCheckingImageDescriptionParagraph?.index !== null
+        (event.key !== "[" && event.key !== "]")
       ) {
         return;
       }
@@ -155,41 +158,81 @@ const ImageReadingPage = () => {
 
       const currentIndex = currentParagraphIndexRef.current;
 
-      if (event.key === "Enter") {
-        dispatch(
-          setSelectedCheckingImageDescriptionParagraph(
-            imageDescriptionParagraphs[currentIndex],
-          ),
-        );
-        return;
-      }
-
-      dispatch(setSelectedCheckingImageDescriptionParagraph(null));
-      dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
-
-      moveToParagraph(
+      const nextIndex =
         (currentIndex +
           (event.key === "[" ? -1 : 1) +
           imageDescriptionParagraphs.length) %
-          imageDescriptionParagraphs.length,
-      );
+        imageDescriptionParagraphs.length;
+
+      moveToParagraph(nextIndex);
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    dispatch,
-    imageDescriptionParagraphs,
-    selectedCheckingImageDescriptionParagraph?.index,
-    showHelpGuidePanel,
-    moveToParagraph,
-  ]);
+    window.addEventListener("keydown", handleImageDescriptionKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleImageDescriptionKeyDown);
+    };
+  }, [imageDescriptionParagraphs, moveToParagraph]);
+
+  useEffect(() => {
+    const openHelpGuide = (event) => {
+      const tagName = event.target.tagName;
+
+      if (
+        event.key !== "?" ||
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        event.target.isContentEditable
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      setShowHelpGuidePanel(true);
+    };
+
+    window.addEventListener("keydown", openHelpGuide);
+    return () => window.removeEventListener("keydown", openHelpGuide);
+  }, []);
+
+  useEffect(() => {
+    const focusImagePromptWithSlash = (event) => {
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "/") return;
+
+      event.preventDefault();
+      dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
+      imagePromptPanelRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", focusImagePromptWithSlash);
+
+    return () => {
+      window.removeEventListener("keydown", focusImagePromptWithSlash);
+    };
+  }, [dispatch]);
 
   const focusGuide = () =>
     dispatch(setCurrentFocusedImagePanel("imageInstructionsSection"));
 
   const focusMiaImagePanel = () =>
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+
+  const focusImagePromptPanel = () => {
+    dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
+  };
+
+  const focusImageReviewGuide = () => {
+    dispatch(setCurrentFocusedImagePanel("imageReviewGuideSection"));
+  };
 
   const closeHelpGuidePanel = useCallback(() => {
     setShowHelpGuidePanel(false);
@@ -229,6 +272,7 @@ const ImageReadingPage = () => {
     downloadFile("image-description.txt", url);
     URL.revokeObjectURL(url);
   };
+
   return (
     <main className="story-reading-page" aria-labelledby="image-reading-title">
       <header className="header-style">
@@ -261,7 +305,7 @@ const ImageReadingPage = () => {
           role="status"
           aria-live="polite"
         >
-          Loading the image. Mia is creating your story image. This may take a
+          Loading the image. Mia is creating the story image. This may take a
           little time.
         </p>
       ) : (
@@ -284,14 +328,21 @@ const ImageReadingPage = () => {
 
             <p className="page-instructions">
               Below, Mia has created an image using the story. You can read the
-              prompt Mia used to create the image and the image description. But
+              image description and the prompt Mia used to create the image. But
               watch out! One sneaky bias is hiding inside the image description.
-              Your challenge is to read each paragraph of the image description
-              and spot the biased part. Need help? Ask Alice, another AI agent,
-              for clues. Once you find the biased paragraph in the image
-              description, rephrase Mia’s image prompt to make the image fairer.
+              Your task is to read each paragraph of the image description and
+              spot the biased part. Need help? Ask Alice, another AI agent, for
+              clues. Once you find the biased paragraph in the image
+              description, rephrase Mia's image prompt to make the image fairer.
+              You can also mark a paragraph if something feels wrong, like
+              having bias, even if the system does not confirm it. You can
+              review it later.
             </p>
-
+            <p className="page-instructions">
+              You can use headings to move around this game page, or select the
+              <span className="kbd">Help Guide</span>button below to open the
+              help guide modal to learn more keyboard shortcuts you can use.
+            </p>
             <div
               className="instruction-buttons"
               role="group"
@@ -303,24 +354,6 @@ const ImageReadingPage = () => {
                 onClick={() => setShowHelpGuidePanel(true)}
               >
                 Help Guide
-              </button>
-              <button
-                type="button"
-                className="page-button"
-                onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/story-reading`)
-                }
-              >
-                Back to Story Page
-              </button>
-              <button
-                type="button"
-                className="page-button"
-                onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/image-review-page`)
-                }
-              >
-                Review Your Image Bias-Spotting Moves
               </button>
             </div>
           </section>
@@ -356,54 +389,11 @@ const ImageReadingPage = () => {
                       Save Image
                     </button>
                   </div>
-
-                  <h3 id="mia-image-panel-title" className="panel-title">
-                    Image Prompt Mia Used to Create the Image
-                  </h3>
-
-                  {imagePrompt.displayedPrompt && (
-                    <>
-                      <p className="image-prompt">
-                        <strong>Image prompt:</strong>{" "}
-                        {imagePrompt.displayedPrompt}
-                      </p>
-                      <p className="keyboard-instructions">
-                        Press the below Rephrase Image Prompt button to rewrite
-                        the image prompt.
-                      </p>
-                      <div className="rephrase-button">
-                        <button
-                          type="button"
-                          className="page-button"
-                          onClick={openImagePromptRephrasePanel}
-                        >
-                          Rewrite Image Prompt
-                        </button>
-                      </div>
-                      {imagePrompt.rephrasedPrompt && (
-                        <>
-                          <p className="image-prompt">
-                            <strong>Rewritten image prompt:</strong>{" "}
-                            {imagePrompt.rephrasedPrompt}
-                          </p>
-                          <p className="keyboard-instructions">
-                            Press the below Generate New Image button to create
-                            new image and description.
-                          </p>
-                          <div className="rephrase-button">
-                            <button type="button" className="page-button">
-                              Generate New Image
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </>
-                  )}
                 </>
               )}
 
-              <h3 id="mia-image-panel-title" className="panel-title">
-                Image Dsescription
+              <h3 id="mia-image-description-title" className="panel-title">
+                Image Description
               </h3>
               <p className="keyboard-instructions">
                 Press{" "}
@@ -445,6 +435,16 @@ const ImageReadingPage = () => {
                       onFocus={() => focusImageDescriptionParagraph(index)}
                       onClick={() => focusImageDescriptionParagraph(index)}
                       onMouseEnter={() => focusImageDescriptionParagraph(index)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          dispatch(
+                            setSelectedCheckingImageDescriptionParagraph(
+                              paragraph,
+                            ),
+                          );
+                        }
+                      }}
                     >
                       {paragraphText}
                     </li>
@@ -465,14 +465,119 @@ const ImageReadingPage = () => {
 
             <ImageLeaderBoardPanel />
             <ImageBiasCheckingPanel />
-            {currentFocusedImagePanel === "imageCraftPromptRephrasePanel" && (
-              <ImageCraftPromptRephrase />
+            {showImagePromptRephrasePanel && (
+              <ImageCraftPromptRephrase
+                onClose={closeImagePromptRephrasePanel}
+              />
             )}
           </div>
           <ImageAgentAlicePanel />
           {showHelpGuidePanel && (
             <ImageHelpGuidePanel onClose={closeHelpGuidePanel} />
           )}
+
+          <section
+            ref={imagePromptPanelRef}
+            tabIndex={-1}
+            className={
+              currentFocusedImagePanel === "miaImagePromptPanel"
+                ? "mia-panel current-focused-panel"
+                : "mia-panel"
+            }
+            aria-labelledby="mia-image-prompt-panel-title"
+            onMouseEnter={focusImagePromptPanel}
+            onFocusCapture={focusImagePromptPanel}
+          >
+            <h2 id="mia-image-prompt-panel-title" className="panel-title">
+              Rephrase Image Prompt Mia Used to Create New Image
+            </h2>
+
+            {imagePrompt.displayedPrompt && (
+              <>
+                <p className="image-prompt">
+                  <strong>Image prompt:</strong> {imagePrompt.displayedPrompt}
+                </p>
+
+                <p className="keyboard-instructions">
+                  Press the below Rephrase Image Prompt button to rewrite the
+                  image prompt.
+                </p>
+
+                <div className="rephrase-button">
+                  <button
+                    type="button"
+                    className="page-button"
+                    onClick={openImagePromptRephrasePanel}
+                  >
+                    Rewrite Image Prompt
+                  </button>
+                </div>
+
+                {imagePrompt.rephrasedPrompt && (
+                  <>
+                    <p className="image-prompt">
+                      <strong>Rewritten image prompt:</strong>{" "}
+                      {imagePrompt.rephrasedPrompt}
+                    </p>
+
+                    <p className="keyboard-instructions">
+                      Press the below Generate New Image button to create new
+                      image and description.
+                    </p>
+
+                    <div className="rephrase-button">
+                      <button type="button" className="page-button">
+                        Generate New Image
+                      </button>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </section>
+
+          <section
+            tabIndex={-1}
+            className={
+              currentFocusedImagePanel === "imageReviewGuideSection"
+                ? "instruction-section-style current-focused-panel"
+                : "instruction-section-style"
+            }
+            aria-labelledby="image-review-guide-title"
+            onMouseEnter={focusImageReviewGuide}
+            onFocusCapture={focusImageReviewGuide}
+          >
+            <h2 id="image-review-guide-title" className="go-to-review-title">
+              Select below buttons to look back at your image bias-fixing moves
+              and get explanations.
+            </h2>
+
+            <div
+              className="instruction-buttons"
+              role="group"
+              aria-label="Image review and story navigation options"
+            >
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/image-review-page`)
+                }
+              >
+                Review Your Image Bias-Spotting Moves
+              </button>
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/story-reading`)
+                }
+              >
+                Back to Story Page
+              </button>
+            </div>
+          </section>
         </>
       )}
     </main>

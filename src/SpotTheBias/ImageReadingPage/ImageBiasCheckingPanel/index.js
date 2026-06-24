@@ -193,6 +193,23 @@ const ImageBiasCheckingPanel = () => {
   };
 
   if (!isPanelOpen) return null;
+  const handleBiasCheckingPanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.tagName === "SELECT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (event.key === "[" || event.key === "]" || event.key === "=") {
+      event.preventDefault();
+      event.stopPropagation();
+      closePanel();
+    }
+  };
 
   return (
     <section
@@ -212,6 +229,7 @@ const ImageBiasCheckingPanel = () => {
       onFocusCapture={() =>
         dispatch(setCurrentFocusedImagePanel("imageBiasCheckingPanel"))
       }
+      onKeyDown={handleBiasCheckingPanelKeyDown}
     >
       <h2 id="image-bias-check-title" className="panel-title">
         Image Bias Checking Panel

@@ -25,7 +25,7 @@ const removeSuggestions = (text, suggestions) =>
     .replace(/\s+/g, " ")
     .trim();
 
-const ImageCraftPromptRephrase = () => {
+const ImageCraftPromptRephrase = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const feedbackRef = useRef(null);
@@ -68,7 +68,7 @@ const ImageCraftPromptRephrase = () => {
 
   const closePanel = () => {
     setTurns([]);
-    dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
+    onClose();
   };
 
   const updateTurn = (updates) => {
@@ -171,6 +171,29 @@ const ImageCraftPromptRephrase = () => {
 
   const turn = turns[0];
 
+  const handlePromptPanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.tagName === "SELECT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (
+      event.key === "[" ||
+      event.key === "]" ||
+      event.key === "?" ||
+      event.key === "/"
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      closePanel();
+    }
+  };
+
   return (
     <section
       className={
@@ -186,6 +209,7 @@ const ImageCraftPromptRephrase = () => {
       onFocusCapture={() =>
         dispatch(setCurrentFocusedImagePanel("imageCraftPromptRephrasePanel"))
       }
+      onKeyDown={handlePromptPanelKeyDown}
     >
       <h2 id="image-craft-prompt-title" className="panel-title">
         Rewrite the Image Prompt
@@ -314,6 +338,21 @@ const ImageCraftPromptRephrase = () => {
                   Prompt approved. The image prompt is now updated.
                 </p>
               )}
+              <button
+                type="button"
+                className="page-button"
+                onClick={getSuggestions}
+                disabled={turn?.loading === "suggestions"}
+              >
+                Regenerate Suggestions
+              </button>
+              <button
+                type="button"
+                className="page-button"
+                onClick={closePanel}
+              >
+                Close
+              </button>
             </>
           )}
         </div>

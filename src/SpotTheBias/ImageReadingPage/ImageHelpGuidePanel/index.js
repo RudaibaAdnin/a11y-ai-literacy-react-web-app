@@ -10,10 +10,8 @@ const instructions = [
     <span className="kbd" aria-hidden="true">
       [
     </span>{" "}
-    to go to the previous image description paragraph.
-  </>,
-  <>
-    Press right square bracket key{" "}
+    to go to the previous image description paragraph. Press right square
+    bracket key{" "}
     <span className="kbd" aria-hidden="true">
       ]
     </span>{" "}
@@ -42,26 +40,49 @@ const instructions = [
 const ImageHelpGuidePanel = ({ onClose }) => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
-  const justOpenedPanelRef = useRef(false);
+  //const justOpenedPanelRef = useRef(false);
 
   const currentFocusedImagePanel = useSelector(
     (state) => state.ImageBiasReducer.currentFocusedImagePanel,
   );
 
   useEffect(() => {
-    justOpenedPanelRef.current = true;
+    // justOpenedPanelRef.current = true;
     dispatch(setCurrentFocusedImagePanel("imageHelpGuidePanel"));
     panelRef.current?.focus();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (justOpenedPanelRef.current) {
-      justOpenedPanelRef.current = false;
-      return;
-    }
+  // useEffect(() => {
+  //   if (justOpenedPanelRef.current) {
+  //     justOpenedPanelRef.current = false;
+  //     return;
+  //   }
 
-    if (currentFocusedImagePanel !== "imageHelpGuidePanel") onClose();
-  }, [currentFocusedImagePanel, onClose]);
+  //   if (currentFocusedImagePanel !== "imageHelpGuidePanel") onClose();
+  // }, [currentFocusedImagePanel, onClose]);
+
+  const handleHelpGuideKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.tagName === "SELECT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (
+      event.key === "[" ||
+      event.key === "]" ||
+      event.key === "=" ||
+      event.key === "/"
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    }
+  };
 
   const focusPanel = () => {
     dispatch(setCurrentFocusedImagePanel("imageHelpGuidePanel"));
@@ -81,12 +102,7 @@ const ImageHelpGuidePanel = ({ onClose }) => {
       }
       onMouseEnter={focusPanel}
       onFocusCapture={focusPanel}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") {
-          event.preventDefault();
-          onClose();
-        }
-      }}
+      onKeyDown={handleHelpGuideKeyDown}
     >
       <h2 id="image-help-guide-title" className="help-guide-title">
         Help Guide with the List of Keyboard Instructions

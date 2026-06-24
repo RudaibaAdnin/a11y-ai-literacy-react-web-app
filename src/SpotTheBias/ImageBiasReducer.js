@@ -103,7 +103,7 @@ const ImageBiasSlice = createSlice({
     },
 
     addFollowUpsHistoryAliceImage: (state, action) => {
-      if (state.followUpsHistoryAliceImage.length >= 2) return;
+      if (state.followUpsHistoryAliceImage.length >= 5) return;
 
       state.followUpsHistoryAliceImage.push({
         followUpQuestionImage: action.payload.followUpQuestionImage,
@@ -114,7 +114,7 @@ const ImageBiasSlice = createSlice({
     },
 
     addRephrasedPromptHistoryImage: (state, action) => {
-      if (state.rephrasedPromptHistoryImage.length >= 2) return;
+      if (state.rephrasedPromptHistoryImage.length >= 3) return;
 
       state.rephrasedPromptHistoryImage.push({
         displayedPromptImage: action.payload.displayedPromptImage,

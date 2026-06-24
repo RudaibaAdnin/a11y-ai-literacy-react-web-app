@@ -238,10 +238,10 @@ const ImageReviewPageStory = () => {
         </h2>
 
         <p className="page-instructions">
-          Great work on spotting bias! Now, it is time to review your image
-          bias-spotting moves. Below, review each image bias you spotted, the
-          paragraphs you marked, follow-up questions you asked Alice, and the
-          prompts you used to make the image fairer.
+          Great work on spotting and fixing bias! Now, it is time to review your
+          image bias-fixing moves. Below, review each image bias you spotted,
+          the paragraphs you marked, follow-up questions you asked Alice, and
+          the prompts you used to guide Mia make the image fairer.
         </p>
 
         <p className="page-instructions">
@@ -249,17 +249,17 @@ const ImageReviewPageStory = () => {
           <span className="kbd" aria-hidden="true">
             [
           </span>{" "}
-          to jump to the list of detected image bias panel. Press the right
-          square bracket key{" "}
+          to go to the list of detected image bias panel. Press the right square
+          bracket key{" "}
           <span className="kbd" aria-hidden="true">
             ]
           </span>{" "}
-          to jump to review the list of follow-up questions you asked Alice.
-          Press equal key{" "}
+          to go to review the list of follow-up questions you asked Alice. Press
+          equal key{" "}
           <span className="kbd" aria-hidden="true">
             =
           </span>{" "}
-          to jump to review the prompts you used to make the image fairer.
+          to go to review the prompts you used to make the image fairer.
         </p>
 
         <button
@@ -397,6 +397,13 @@ const ImageReviewPageStory = () => {
 
         <ImageReviewAliceFollowUpsPanel />
         <ImageReviewRephrasePromptPanel />
+        <button
+          type="button"
+          className="page-button"
+          onClick={() => navigate(`/spot-the-bias/${storytopic}/image-reading`)}
+        >
+          Back to Image Page
+        </button>
       </div>
     </main>
   );

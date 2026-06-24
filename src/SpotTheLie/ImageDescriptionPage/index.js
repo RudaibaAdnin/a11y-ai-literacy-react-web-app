@@ -202,10 +202,12 @@ const ImageDescriptionPage = () => {
           sneaky lies hiding inside it. Need help? You can ask Sara follow-up
           questions like a detective. You can also ask Adam, another AI agent,
           for a second description and compare both descriptions. But watch out!
-          AI agents can make mistakes too, so use your detective brain. You can
-          use headings to move around this game page, or select the Help Guide
-          button below to open the help guide panel to learn more keyboard
-          shortcuts you can use.
+          AI agents can make mistakes too, so use your detective brain.{" "}
+        </p>
+        <p className="page-instructions">
+          You can use headings to move around this game page, or select the{" "}
+          <span className="kbd">Help Guide</span>button below to open the help
+          guide modal to learn more keyboard shortcuts you can use.
         </p>
         <button
           type="button"

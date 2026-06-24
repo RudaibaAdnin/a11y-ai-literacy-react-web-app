@@ -106,7 +106,7 @@ const ImageReviewRephrasePromptPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of Image Prompts You Rewrote with Mia to Fix the Image
+        List of Image Prompts You Approved to Fix the Image
       </h2>
 
       {rephrasedPromptHistoryImage.length === 0 ? (
@@ -114,8 +114,9 @@ const ImageReviewRephrasePromptPanel = () => {
       ) : (
         <>
           <p className="keyboard-instructions">
-            Review the image prompts you rewrote. Select Explain How This Prompt
-            Helps to learn how your prompt can help to make the image fairer.
+            Review the image prompts you approved. Select Explain How This
+            Prompt Helps to learn how your prompt can help to make the image
+            fairer.
           </p>
 
           <ol
