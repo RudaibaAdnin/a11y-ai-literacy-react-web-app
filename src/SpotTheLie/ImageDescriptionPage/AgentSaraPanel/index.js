@@ -120,6 +120,7 @@ const AgentSaraPanel = () => {
     message: "",
     options: [],
     selectedQuestion: "",
+    selectedQuestionCategory: "",
     reply: "",
     replyType: "",
     loading: "",
@@ -355,6 +356,7 @@ const AgentSaraPanel = () => {
 
     updateTurn(turnIndex, {
       selectedQuestion: selectedFollowUpQuestion,
+      selectedQuestionCategory: selectedFollowUpQuestionItem.category || "",
       options: [],
       loading: "reply",
     });
@@ -550,9 +552,9 @@ const AgentSaraPanel = () => {
                       type="button"
                       className="followup-question-button"
                       onClick={() => handleGetFollowUpReply(turnIndex, item)}
-                      aria-label={`${item.question}`}
+                      aria-label={`${item.category}: ${item.question}`}
                     >
-                      {item.question}
+                      <strong>{item.category}:</strong> {item.question}
                     </button>
                   </li>
                 ))}
@@ -562,6 +564,9 @@ const AgentSaraPanel = () => {
             {turn.selectedQuestion && (
               <>
                 <p className="followup-question-text">
+                  {turn.selectedQuestionCategory && (
+                    <strong>{turn.selectedQuestionCategory}: </strong>
+                  )}
                   {turn.selectedQuestion}
                 </p>
 

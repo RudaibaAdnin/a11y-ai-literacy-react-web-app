@@ -227,7 +227,8 @@ const ReviewDetectiveFollowUpsPanel = () => {
               return (
                 <li key={index} className="lie-item">
                   <p className="question-text">
-                    <strong>Detective question:</strong> {item.followUpQuestion}
+                    <strong>{item.followUpQuestionCategory}</strong> :{" "}
+                    {item.followUpQuestion}
                   </p>
 
                   <button
