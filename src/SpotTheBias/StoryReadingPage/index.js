@@ -274,7 +274,7 @@ const StoryReadingPage = () => {
             onFocusCapture={focusMissionGuide}
           >
             <h2 id="creator-guide-title" className="instruction-title">
-              Fairness Coach Guide
+              Coach Guide
             </h2>
 
             <p className="page-instructions">

@@ -108,7 +108,7 @@ const StoryQuestionPage = () => {
 
       <section aria-labelledby="creator-guide-title">
         <h2 id="creator-guide-title" className="instruction-title">
-          Fairness Coach Guide
+          Coach Guide
         </h2>
 
         <p className="page-instructions">
