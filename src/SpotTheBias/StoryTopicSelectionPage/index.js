@@ -93,21 +93,21 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="creator-guide-title">
         <h2 id="creator-guide-title" className="instruction-title">
-          Creator Guide
+          Fairness Coach Guide
         </h2>
 
         <p className="page-instructions">
-          Welcome, Story Creator! Get ready to team up with Mia, an AI agent, to
-          create a story and a matching image. But watch out! Mia might sneak in
-          biases into the story and image. Your challenge is to spot the biases,
-          fix the story and image, and make the final creation fairer.
+          Welcome, Fairness Coach! In this game, Mia, an AI agent, will create a
+          story and a story image. But watch out. Mia might sneak in biases into
+          the story and image. Your task is to spot the biases, guide Mia to fix
+          the story and image, and make the final creation fairer.
         </p>
       </section>
 
       <section aria-label="Story Topic Selection">
         <h2 id="story-topic-title" className="story-topic-title">
           First Step: Choose a topic from the list below or use your own fun
-          story idea to begin.
+          story idea to help Mia create a story.
         </h2>
 
         <ul className="story-topic-list" aria-label="Suggested story topics">
@@ -137,7 +137,7 @@ const StoryTopicSelectionPage = () => {
           aria-labelledby="custom-story-topic-title"
         >
           <label htmlFor="custom-story-topic" className="custom-topic-label">
-            What kind of story do you want to create today?
+            What kind of story do you want Mia to create today?
           </label>
 
           <textarea

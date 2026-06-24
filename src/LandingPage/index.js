@@ -12,15 +12,15 @@ const games = [
   {
     name: "Spot the Bias",
     description:
-      "Work with an AI agent to create a story and an image, then make your creation better by spotting and fixing biased parts.",
+      "Work as a fairness coach to find and fix sneaky biases in an AI-generated story and image",
     link: "/spot-the-bias",
   },
-  {
-    name: "Choose your Path",
-    description:
-      "A maze game on making decisions in different scenarios with AI tools.",
-    link: "/choose-your-path",
-  },
+  // {
+  //   name: "Choose your Path",
+  //   description:
+  //     "A maze game on making decisions in different scenarios with AI tools.",
+  //   link: "/choose-your-path",
+  // },
 ];
 
 const LandingPage = () => {

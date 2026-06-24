@@ -125,29 +125,25 @@ const StoryReadingPage = () => {
 
   useEffect(() => {
     const handleStoryKeyDown = (event) => {
-      if (
-        storyParagraphs.length === 0 ||
-        !["[", "]", "Enter"].includes(event.key) ||
-        isInteractiveElement(event.target)
-      ) {
-        return;
-      }
+      const activeElement = document.activeElement;
 
-      if (event.key === "Enter" && selectedCheckingParagraph?.index != null) {
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
+
+      if (
+        isTyping ||
+        storyParagraphs.length === 0 ||
+        (event.key !== "[" && event.key !== "]")
+      ) {
         return;
       }
 
       event.preventDefault();
 
       const currentIndex = currentParagraphIndexRef.current;
-
-      if (event.key === "Enter") {
-        dispatch(setSelectedCheckingParagraph(storyParagraphs[currentIndex]));
-        return;
-      }
-
-      dispatch(setSelectedCheckingParagraph(null));
-      dispatch(setCurrentFocusedPanel("miaPanel"));
 
       const nextIndex =
         (currentIndex + (event.key === "[" ? -1 : 1) + storyParagraphs.length) %
@@ -157,13 +153,11 @@ const StoryReadingPage = () => {
     };
 
     window.addEventListener("keydown", handleStoryKeyDown);
-    return () => window.removeEventListener("keydown", handleStoryKeyDown);
-  }, [
-    dispatch,
-    storyParagraphs,
-    selectedCheckingParagraph?.index,
-    moveToParagraph,
-  ]);
+
+    return () => {
+      window.removeEventListener("keydown", handleStoryKeyDown);
+    };
+  }, [storyParagraphs, moveToParagraph]);
 
   useEffect(() => {
     const openHelpGuide = (event) => {
@@ -198,8 +192,12 @@ const StoryReadingPage = () => {
   const focusStoryParagraph = (index) => {
     currentParagraphIndexRef.current = index;
     setCurrentParagraphIndex(index);
-    dispatch(setSelectedCheckingParagraph(null));
+    // dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
+  };
+
+  const focusReviewGuide = () => {
+    dispatch(setCurrentFocusedPanel("reviewGuideSection"));
   };
 
   const closeHelpGuidePanel = () => {
@@ -276,18 +274,34 @@ const StoryReadingPage = () => {
             onFocusCapture={focusMissionGuide}
           >
             <h2 id="creator-guide-title" className="instruction-title">
-              Creator Guide
+              Fairness Coach Guide
             </h2>
 
             <p className="page-instructions">
               Below, Mia has created the story using your ideas. But watch out!
-              Two sneaky biases are hiding in the story. Your challenge is to
-              read each paragraph and spot the biased parts. Need help? Ask
-              Alice, another AI agent, for clues. Once you find a biased
-              paragraph, ask Mia to rephrase it and make the story fairer.
+              Two sneaky biases are hiding inside the story. Your task is to
+              read each paragraph, spot the biased parts, and guide Mia to fix
+              them. Need help? Ask Alice, another AI agent, for clues. Once you
+              find a biased paragraph, guide Mia to rephrase it and make the
+              story fairer. You can also mark a paragraph if something feels
+              wrong, like having bias, even if the system does not confirm it.
+              You can review it later.
+            </p>
+            <p className="page-instructions">
+              You can use headings to move around this game page, or select the
+              Help Guide button below to open the help guide panel to learn more
+              keyboard shortcuts you can use.
             </p>
 
-            <div
+            <button
+              type="button"
+              className="page-button"
+              onClick={() => setShowHelpGuidePanel(true)}
+            >
+              Help Guide
+            </button>
+
+            {/* <div
               className="instruction-buttons"
               role="group"
               aria-label="Navigation options"
@@ -311,17 +325,7 @@ const StoryReadingPage = () => {
                   ? "Go to Story Image Page"
                   : "Create Story Image"}
               </button>
-
-              <button
-                type="button"
-                className="page-button"
-                onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/review-page`)
-                }
-              >
-                Review Your Story Bias-Spotting Moves
-              </button>
-            </div>
+            </div> */}
           </section>
 
           <div className="side-by-side-page">
@@ -376,6 +380,12 @@ const StoryReadingPage = () => {
                       onFocus={() => focusStoryParagraph(index)}
                       onClick={() => focusStoryParagraph(index)}
                       onMouseEnter={() => focusStoryParagraph(index)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          dispatch(setSelectedCheckingParagraph(paragraph));
+                        }
+                      }}
                     >
                       {paragraphText}
                     </li>
@@ -403,6 +413,51 @@ const StoryReadingPage = () => {
           {showHelpGuidePanel && (
             <HelpGuidePanel onClose={closeHelpGuidePanel} />
           )}
+
+          <section
+            tabIndex={-1}
+            className={
+              currentFocusedPanel === "reviewGuideSection"
+                ? "instruction-section-style current-focused-panel"
+                : "instruction-section-style"
+            }
+            aria-labelledby="review-guide-title"
+            onMouseEnter={focusReviewGuide}
+            onFocusCapture={focusReviewGuide}
+          >
+            <h2 id="review-guide-title" className="go-to-review-title">
+              Select below buttons to ask Mia to create story image and to look
+              back at your bias-fixing moves and get explanations.
+            </h2>
+
+            <div
+              className="instruction-buttons"
+              role="group"
+              aria-label="Story image and review options"
+            >
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/image-reading`)
+                }
+              >
+                {hasCreatedStoryImage
+                  ? "Go to Story Image Page"
+                  : "Create Story Image"}
+              </button>
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={() =>
+                  navigate(`/spot-the-bias/${storytopic}/review-page`)
+                }
+              >
+                Review Your Story Bias-Fixing Moves
+              </button>
+            </div>
+          </section>
         </>
       )}
     </main>

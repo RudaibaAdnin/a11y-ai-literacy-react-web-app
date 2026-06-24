@@ -231,6 +231,28 @@ const BiasCheckingPanel = () => {
     );
   };
 
+  const handleCheckingPanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      closePanel();
+      return;
+    }
+
+    if (event.key === "[" || event.key === "]" || event.key === "=") {
+      closePanel();
+    }
+  };
+
   if (!isPanelOpen) return null;
 
   return (
@@ -248,9 +270,10 @@ const BiasCheckingPanel = () => {
       onFocusCapture={() =>
         dispatch(setCurrentFocusedPanel("biasCheckingPanel"))
       }
+      onKeyDown={handleCheckingPanelKeyDown}
     >
       <h2 id="bias-check-title" className="panel-title">
-        Bias Checking and Fixing Panel
+        Bias Checking and Fixing Modal
       </h2>
 
       {!isRephrased &&
@@ -280,7 +303,7 @@ const BiasCheckingPanel = () => {
                 type="button"
                 className="page-button"
                 onClick={closePanel}
-                aria-label="Close bias checking panel"
+                aria-label="Close bias checking modal"
               >
                 Close
               </button>
@@ -345,13 +368,26 @@ const BiasCheckingPanel = () => {
             type="button"
             className="page-button"
             onClick={closePanel}
-            aria-label="Close bias checking panel"
+            aria-label="Close bias checking modal"
           >
             Close
           </button>
         </div>
       )}
-      {showCraftPromptButton && <CraftPromptRephrasePanel />}
+      {showCraftPromptButton && (
+        <>
+          <CraftPromptRephrasePanel />
+
+          <button
+            type="button"
+            className="page-button"
+            onClick={closePanel}
+            aria-label="Close bias checking modal"
+          >
+            Close
+          </button>
+        </>
+      )}
     </section>
   );
 };

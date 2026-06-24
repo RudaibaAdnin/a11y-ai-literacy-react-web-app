@@ -186,10 +186,10 @@ const CraftPromptRephrasePanel = () => {
         <button type="button" className="page-button" onClick={getSuggestions}>
           Get Prompt Suggestions
         </button>
-
+        {/* 
         <button type="button" className="page-button" onClick={closePanel}>
           Close
-        </button>
+        </button> */}
       </div>
 
       <div role="region" aria-label="Craft prompt to rewrite paragraph chat">
@@ -302,16 +302,16 @@ const CraftPromptRephrasePanel = () => {
                     className="page-button"
                     onClick={getSuggestions}
                   >
-                    Get Prompt Suggestions
+                    Regenerate Prompt Suggestions
                   </button>
-
+                  {/* 
                   <button
                     type="button"
                     className="page-button"
                     onClick={closePanel}
                   >
                     Close
-                  </button>
+                  </button> */}
                 </div>
               </>
             )}

@@ -117,6 +117,7 @@
   border-radius: 10px;
   background: #fff;
   color: #1d4289;
+  margin-top: 10px;
 }
 
 .story-paragraph-list {
@@ -149,4 +150,9 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+}
+
+.go-to-review-title {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }

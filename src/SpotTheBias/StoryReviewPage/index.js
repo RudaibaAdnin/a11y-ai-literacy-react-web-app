@@ -47,7 +47,15 @@ const StoryReviewPage = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key !== "[") return;
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "[") return;
 
       event.preventDefault();
       dispatch(setCurrentFocusedPanel("reviewDetectedBiasPanel"));
@@ -238,8 +246,8 @@ const StoryReviewPage = () => {
         </h2>
 
         <p className="page-instructions">
-          Great work on spotting bias! Now, it is time to review your
-          bias-spotting moves. Below, review each bias you spotted, the
+          Great work on spotting and fixing sneaky biases! Now, it is time to
+          review your bias-fixing work. Below, review each bias you spotted, the
           paragraphs you marked, follow-up questions you asked Alice, and the
           prompts you used to rewrite and fix a biased paragraph. You can select
           the explanation buttons to learn more and get helpful examples.
@@ -250,13 +258,13 @@ const StoryReviewPage = () => {
           <span className="kbd" aria-hidden="true">
             [
           </span>{" "}
-          to jump to the list of detected bias panel. Press the right square
+          to go to the list of detected bias panel. Press the right square
           bracket key{" "}
           <span className="kbd" aria-hidden="true">
             ]
           </span>{" "}
-          to jump to review the list of follow-up questions you asked Alice
-          panel. Press equal key{" "}
+          to go to review the list of follow-up questions you asked Alice panel.
+          Press equal key{" "}
           <span className="kbd" aria-hidden="true">
             =
           </span>{" "}
@@ -387,6 +395,13 @@ const StoryReviewPage = () => {
         </section>
         <StoryReviewAliceFollowUpsPanel />
         <StoryReviewRephrasePromptPanel />
+        <button
+          type="button"
+          className="page-button"
+          onClick={() => navigate(`/spot-the-bias/${storytopic}/story-reading`)}
+        >
+          Back to Story Page
+        </button>
       </div>
     </main>
   );

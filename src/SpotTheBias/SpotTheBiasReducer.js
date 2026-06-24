@@ -113,7 +113,7 @@ const SpotTheBiasSlice = createSlice({
     },
 
     addFollowUpsHistoryAlice: (state, action) => {
-      if (state.followUpsHistoryAlice.length >= 2) return;
+      if (state.followUpsHistoryAlice.length >= 5) return;
 
       state.followUpsHistoryAlice.push({
         followUpQuestion: action.payload.followUpQuestion,
@@ -123,7 +123,7 @@ const SpotTheBiasSlice = createSlice({
     },
 
     addRephrasedParagraphHistory: (state, action) => {
-      if (state.rephrasedParagraphHistory.length >= 2) return;
+      if (state.rephrasedParagraphHistory.length >= 5) return;
 
       state.rephrasedParagraphHistory.push({
         promptUsedForRephrase: action.payload.promptUsedForRephrase,

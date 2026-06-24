@@ -10,10 +10,7 @@ const instructions = [
     <span className="kbd" aria-hidden="true">
       [
     </span>{" "}
-    to go to the previous paragraph.
-  </>,
-  <>
-    Press right square bracket key
+    to go to the previous paragraph. Press right square bracket key
     <span className="kbd" aria-hidden="true">
       ]
     </span>
@@ -38,39 +35,63 @@ const instructions = [
     to open help guide panel.
   </>,
   <>
-    Press the <span className="kbd">Escape</span> key to close the help guide
-    panel.
+    Press <span className="kbd">Escape</span> key to close the help guide panel.
   </>,
 ];
 
 const HelpGuidePanel = ({ onClose }) => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
-  const justOpenedPanelRef = useRef(false);
+  // const justOpenedPanelRef = useRef(false);
 
   const currentFocusedPanel = useSelector(
     (state) => state.SpotTheBiasReducer.currentFocusedPanel,
   );
 
   useEffect(() => {
-    justOpenedPanelRef.current = true;
+    // justOpenedPanelRef.current = true;
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
     panelRef.current?.focus();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (justOpenedPanelRef.current) {
-      justOpenedPanelRef.current = false;
-      return;
-    }
+  // useEffect(() => {
+  //   if (justOpenedPanelRef.current) {
+  //     justOpenedPanelRef.current = false;
+  //     return;
+  //   }
 
-    if (currentFocusedPanel !== "helpGuidePanel") {
-      onClose();
-    }
-  }, [currentFocusedPanel, onClose]);
+  //   if (currentFocusedPanel !== "helpGuidePanel") {
+  //     onClose();
+  //   }
+  // }, [currentFocusedPanel, onClose]);
 
   const focusPanel = () => {
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
+  };
+
+  const handleHelpGuidePanelKeyDown = (event) => {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+      activeElement?.tagName === "TEXTAREA" ||
+      activeElement?.tagName === "INPUT" ||
+      activeElement?.tagName === "SELECT" ||
+      activeElement?.isContentEditable;
+
+    if (isTyping) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+      return;
+    }
+
+    if (event.key === "[" || event.key === "]" || event.key === "=") {
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    }
   };
 
   return (
@@ -86,12 +107,7 @@ const HelpGuidePanel = ({ onClose }) => {
       }
       onMouseEnter={focusPanel}
       onFocusCapture={focusPanel}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") {
-          event.preventDefault();
-          onClose();
-        }
-      }}
+      onKeyDown={handleHelpGuidePanelKeyDown}
     >
       <h2 id="help-guide-title" className="help-guide-title">
         Help Guide with the List of Keyboard Instructions

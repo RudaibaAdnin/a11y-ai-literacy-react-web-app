@@ -108,13 +108,13 @@ const StoryQuestionPage = () => {
 
       <section aria-labelledby="creator-guide-title">
         <h2 id="creator-guide-title" className="instruction-title">
-          Creator Guide
+          Fairness Coach Guide
         </h2>
 
         <p className="page-instructions">
-          Ready to create a story and an image {topicText}? Answer three fun
-          questions. For each question, select one of the two suggestions or
-          write your own answer.
+          Now, guide Mia to create a story and an image {topicText}. Answer
+          three fun questions. For each question, select one of the two
+          suggestions or write your own answer.
         </p>
       </section>
 
@@ -256,7 +256,7 @@ const StoryQuestionPage = () => {
                 className="page-button"
                 onClick={createStory}
               >
-                Create Story
+                Ask Mia to Create Story
               </button>
 
               <button

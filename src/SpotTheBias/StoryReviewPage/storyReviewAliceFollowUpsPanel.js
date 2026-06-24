@@ -30,17 +30,38 @@ const StoryReviewAliceFollowUpsPanel = () => {
     });
   }, [activeExplanation]);
 
+  // useEffect(() => {
+  //   const handleFollowUpsFocusKey = (event) => {
+  //     if (event.key !== "]") return;
+
+  //     event.preventDefault();
+  //     dispatch(setCurrentFocusedPanel("reviewAliceFollowUpsPanel"));
+  //     followUpsPanelRef.current?.focus();
+  //   };
+
+  //   window.addEventListener("keydown", handleFollowUpsFocusKey);
+  //   return () => window.removeEventListener("keydown", handleFollowUpsFocusKey);
+  // }, [dispatch]);
+
   useEffect(() => {
-    const handleFollowUpsFocusKey = (event) => {
-      if (event.key !== "]") return;
+    const handleKeyDown = (event) => {
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "]") return;
 
       event.preventDefault();
       dispatch(setCurrentFocusedPanel("reviewAliceFollowUpsPanel"));
       followUpsPanelRef.current?.focus();
     };
 
-    window.addEventListener("keydown", handleFollowUpsFocusKey);
-    return () => window.removeEventListener("keydown", handleFollowUpsFocusKey);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
 
   const focusReviewFollowUpsPanel = () => {

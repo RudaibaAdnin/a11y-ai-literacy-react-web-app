@@ -30,18 +30,39 @@ const StoryReviewRephrasePromptPanel = () => {
     });
   }, [activeExplanation]);
 
+  // useEffect(() => {
+  //   const handleRephrasePromptFocusKey = (event) => {
+  //     if (event.key !== "=") return;
+
+  //     event.preventDefault();
+  //     dispatch(setCurrentFocusedPanel("reviewRephrasePromptPanel"));
+  //     panelRef.current?.focus();
+  //   };
+
+  //   window.addEventListener("keydown", handleRephrasePromptFocusKey);
+  //   return () =>
+  //     window.removeEventListener("keydown", handleRephrasePromptFocusKey);
+  // }, [dispatch]);
+
   useEffect(() => {
-    const handleRephrasePromptFocusKey = (event) => {
-      if (event.key !== "=") return;
+    const handleKeyDown = (event) => {
+      const activeElement = document.activeElement;
+
+      const isTyping =
+        activeElement?.tagName === "TEXTAREA" ||
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.isContentEditable;
+
+      if (isTyping || event.key !== "=") return;
 
       event.preventDefault();
       dispatch(setCurrentFocusedPanel("reviewRephrasePromptPanel"));
       panelRef.current?.focus();
     };
 
-    window.addEventListener("keydown", handleRephrasePromptFocusKey);
-    return () =>
-      window.removeEventListener("keydown", handleRephrasePromptFocusKey);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
 
   const focusPanel = () => {
