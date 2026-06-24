@@ -12,7 +12,7 @@ const games = [
   {
     name: "Spot the Bias",
     description:
-      "Work as a fairness coach to find and fix sneaky biases in an AI-generated story and image",
+      "Work as a fairness coach to find and fix sneaky biases in AI-generated stories and images",
     link: "/spot-the-bias",
   },
   // {
