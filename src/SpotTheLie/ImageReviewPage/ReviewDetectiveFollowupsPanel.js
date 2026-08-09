@@ -201,10 +201,12 @@ const ReviewDetectiveFollowUpsPanel = () => {
       </h2>
 
       {followUpsHistorySara.length === 0 ? (
-        <p className="question-empty">No follow-up questions asked yet.</p>
+        <p className="question-empty" tabIndex={0}>
+          No follow-up questions asked yet.
+        </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             Look back at the detective questions you asked Sara and Sara's
             replies. For each detective question, select Explain How This
             Question Helps or Explain How to Improve This Question to learn
@@ -214,6 +216,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
           <ol
             className="question-list"
             aria-label="Detective follow-up questions"
+            tabIndex={0}
           >
             {followUpsHistorySara.map((item, index) => {
               const questionExplanation = questionHelp[index];
@@ -333,7 +336,7 @@ const ReviewDetectiveFollowUpsPanel = () => {
                   <div className="reply-sara">
                     {item.followUpReply ? (
                       <>
-                        <p className="question-reply-text">
+                        <p className="question-reply-text" tabIndex={0}>
                           <strong>Sara's reply:</strong> {item.followUpReply}
                         </p>
 

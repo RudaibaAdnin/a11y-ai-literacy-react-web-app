@@ -41,16 +41,18 @@ const LeaderBoardPanel = () => {
         Detective Score Board
       </h2>
 
-      <p className="leaderboard-count-details">
+      <p className="leaderboard-count-details" tabIndex={0}>
         You have found {detectedImageHallucination.count} out of{" "}
         {selectedImageHallucinations.length} lies.
       </p>
 
       {detectedItems.length === 0 ? (
-        <p className="leaderboard-empty">No lies detected yet.</p>
+        <p className="leaderboard-empty" tabIndex={0}>
+          No lies detected yet.
+        </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             List of lies you have found. Review each one to learn why it is a
             lie and what type of lie it is.
           </p>
@@ -64,6 +66,7 @@ const LeaderBoardPanel = () => {
                 key={item.hallucinatedLine}
                 className="leaderboard-item"
                 aria-labelledby={`detected-lie-${index + 1}`}
+                tabIndex={0}
               >
                 <p
                   id={`detected-lie-${index + 1}`}

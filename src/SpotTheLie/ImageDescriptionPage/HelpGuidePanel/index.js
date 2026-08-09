@@ -117,7 +117,7 @@ const HelpGuidePanel = ({ onClose }) => {
       onFocusCapture={focusHelpGuidePanel}
       onKeyDown={handleHelpGuidePanelKeyDown}
     >
-      <h2 id="help-guide-title" className="help-guide-title">
+      <h2 id="help-guide-title" className="help-guide-title" tabIndex={0}>
         Help Guide with Keyboard Instructions You can Use
       </h2>
 
@@ -125,6 +125,7 @@ const HelpGuidePanel = ({ onClose }) => {
         id="help-guide-list"
         className="help-guide-list"
         aria-label="Keyboard shortcuts for the Spot the Lie game"
+        tabIndex={0}
       >
         {helpGuideInstructions.map((instruction, index) => (
           <li key={index}>{instruction}</li>

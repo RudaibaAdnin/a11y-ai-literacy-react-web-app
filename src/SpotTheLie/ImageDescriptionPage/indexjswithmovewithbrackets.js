@@ -196,7 +196,7 @@ const ImageDescriptionPage = () => {
           Mission Guide
         </h2>
 
-        <p className="page-instructions" tabIndex={0}>
+        <p className="page-instructions">
           Below, an AI agent named Sara has described the image for you. Your
           detective mission is simple: read Sara's description and find three
           sneaky lies hiding inside it. Need help? You can ask Sara follow-up
@@ -204,7 +204,7 @@ const ImageDescriptionPage = () => {
           for a second description and compare both descriptions. But watch out!
           AI agents can make mistakes too, so use your detective brain.{" "}
         </p>
-        <p className="page-instructions" tabIndex={0}>
+        <p className="page-instructions">
           You can use headings to move around this game page, or select the{" "}
           <span className="kbd">Help Guide</span>button below to open the help
           guide modal to learn more keyboard shortcuts you can use.
@@ -216,6 +216,32 @@ const ImageDescriptionPage = () => {
         >
           Help Guide
         </button>
+
+        {/* <div
+          className="instruction-buttons"
+          // Accessibility change: groups the guide/review controls.
+          role="group"
+          aria-label="Navigation options"
+        >
+          <button
+            type="button"
+            className="page-button"
+            onClick={openHelpGuidePanel}
+          >
+            Help Guide
+          </button>
+          <button
+            type="button"
+            className="page-button"
+            onClick={() =>
+              navigate(
+                `/spot-the-lie/${imagecategory}/${imagename}/review-page`,
+              )
+            }
+          >
+            Review Your Detective Moves
+          </button>
+        </div> */}
       </section>
 
       <div className="side-by-side-page">
@@ -235,12 +261,11 @@ const ImageDescriptionPage = () => {
             </h2>
 
             {selectedImageDescription.length === 0 ? (
-              <p tabIndex={0}>No description available for this image yet.</p>
+              <p>No description available for this image yet.</p>
             ) : (
               <>
-                <p className="keyboard-instructions" tabIndex={0}>
-                  Each line of the image description is a button. You can press
-                  the left square bracket key
+                <p className="keyboard-instructions">
+                  Press the left square bracket key
                   <span className="kbd" aria-hidden="true">
                     [
                   </span>{" "}
@@ -248,7 +273,7 @@ const ImageDescriptionPage = () => {
                   <span className="kbd" aria-hidden="true">
                     ]
                   </span>{" "}
-                  to move around description line by line. Spot a sneaky lie?
+                  to read the image description line by line. Spot a sneaky lie?
                   Press <span className="kbd">Enter</span> key to check your
                   guess.
                 </p>
@@ -258,23 +283,24 @@ const ImageDescriptionPage = () => {
                   aria-label="Image description"
                 >
                   {selectedImageDescription.map((line, i) => (
-                    <li key={i} className="image-description-line">
-                      <button
-                        type="button"
-                        ref={(element) => {
-                          imageDescriptionLineByLineArray.current[i] = element;
-                        }}
-                        className="image-description-line-button"
-                        // aria-label={`Line ${i + 1} of ${
-                        //   selectedImageDescription.length
-                        // }. ${line}.`}
-                        aria-label={`Description line ${i + 1}`}
-                        onClick={() => {
+                    <li
+                      key={i}
+                      ref={(element) => {
+                        imageDescriptionLineByLineArray.current[i] = element;
+                      }}
+                      tabIndex={i === currentImageDescriptionLineIndex ? 0 : -1}
+                      className="image-description-line"
+                      aria-label={`Line ${i + 1} of ${
+                        selectedImageDescription.length
+                      }. ${line}. Press Enter to check this line.`}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
                           dispatch(setSelectedCheckingLine(line));
-                        }}
-                      >
-                        {line}
-                      </button>
+                        }
+                      }}
+                    >
+                      {line}
                     </li>
                   ))}
                 </ol>
@@ -303,10 +329,10 @@ const ImageDescriptionPage = () => {
           Go to Review Page
         </h2>
 
-        <p className="go-to-review-instructions" tabIndex={0}>
-          Select Review Your Detective Moves button to go to the review page.
-          There, you can look back at the lies you found and read what kinds of
-          AI lies they were.
+        <p className="go-to-review-instructions">
+          Select the Review Your Detective Moves button to go to the review
+          page. There, you can look back at the lies you found and read what
+          kinds of AI lies they were.
         </p>
 
         <button

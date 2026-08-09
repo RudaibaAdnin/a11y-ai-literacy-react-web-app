@@ -441,7 +441,7 @@ const AgentSaraPanel = () => {
         Ask Detective Follow-up Questions
       </h2>
 
-      <p className="keyboard-instructions">
+      <p className="keyboard-instructions" tabIndex={0}>
         Select the buttons below to ask Sara detective questions.
       </p>
 

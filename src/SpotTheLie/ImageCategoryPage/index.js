@@ -56,7 +56,7 @@ const ImageCategoryPage = () => {
           Mission Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Welcome, Detective! In this game, your mission is to spot AI lies. You
           will read image descriptions from an AI agent called Sara. But watch
           out! Each description has three sneaky lies hiding inside. Your

@@ -145,7 +145,7 @@ const ImageReviewPage = () => {
           Review Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Great detective work! Now it is time to review your detective moves.
           Look back at each lie you found and the detective questions you asked
           Sara. You can select the explanation buttons to learn more and get
@@ -191,22 +191,24 @@ const ImageReviewPage = () => {
             List of Detected Lies
           </h2>
 
-          <p className="lie-count-details">
+          <p className="lie-count-details" tabIndex={0}>
             You found {detectedImageHallucination.count} out of{" "}
             {selectedImageHallucinations.length} lies.
           </p>
 
           {detectedItems.length === 0 ? (
-            <p className="lie-empty">No lies detected yet.</p>
+            <p className="lie-empty" tabIndex={0}>
+              No lies detected yet.
+            </p>
           ) : (
             <>
-              <p className="keyboard-instructions">
+              <p className="keyboard-instructions" tabIndex={0}>
                 Look back at the lies you found in Sara's image description.
                 Select the Explain this lie type button to learn more about each
                 lie.
               </p>
 
-              <ol className="lie-list" aria-label="Detected lies">
+              <ol className="lie-list" aria-label="Detected lies" tabIndex={0}>
                 {detectedItems.map((item, index) => {
                   const explanation =
                     lieTypeExplanations[item.hallucinatedLine];

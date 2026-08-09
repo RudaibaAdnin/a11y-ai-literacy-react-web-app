@@ -154,7 +154,7 @@ const AgentAdamPanel = () => {
         Adam: Generate New AI Image Description
       </h2>
 
-      <p className="keyboard-instructions">
+      <p className="keyboard-instructions" tabIndex={0}>
         Ask Adam for a new description of the same image with Generate New
         Description button. Then, select Generate Summary of Differences or
         Compare Line by Line buttons to compare Adam's description with Sara's
