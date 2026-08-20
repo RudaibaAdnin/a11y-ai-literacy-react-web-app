@@ -265,10 +265,9 @@ const ImageDescriptionPage = () => {
                           imageDescriptionLineByLineArray.current[i] = element;
                         }}
                         className="image-description-line-button"
-                        // aria-label={`Line ${i + 1} of ${
-                        //   selectedImageDescription.length
-                        // }. ${line}.`}
-                        aria-label={`Description line ${i + 1}`}
+                        aria-label={`Line ${i + 1} of ${
+                          selectedImageDescription.length
+                        }. ${line}.`}
                         onClick={() => {
                           dispatch(setSelectedCheckingLine(line));
                         }}
