@@ -19,9 +19,6 @@ const ImageReviewPage = () => {
   const [activeExplanationLine, setActiveExplanationLine] = useState(null);
   const [lieTypeExplanations, setLieTypeExplanations] = useState({});
 
-  // NEW: Controls whether undetected lies are shown or hidden
-  const [showOtherLies, setShowOtherLies] = useState(false);
-
   const {
     currentFocusedPanel,
     selectedImageHallucinations,
@@ -29,14 +26,6 @@ const ImageReviewPage = () => {
   } = useSelector((state) => state.SpotTheLieReducer);
 
   const detectedItems = detectedImageHallucination.imageHallucinationItems;
-
-  // NEW: Find only the lies that the user did not already detect
-  const otherLies = selectedImageHallucinations.filter(
-    (lie) =>
-      !detectedItems.some(
-        (detectedLie) => detectedLie.hallucinatedLine === lie.hallucinatedLine,
-      ),
-  );
 
   const focusReviewGuidePanel = () => {
     dispatch(setCurrentFocusedPanel("reviewGuidePanel"));
@@ -313,147 +302,9 @@ const ImageReviewPage = () => {
               </ol>
             </>
           )}
-
-          {/* NEW:
-              Toggle button.
-              If there are undetected lies, the button switches
-              between Show and Hide.
-          */}
-          {otherLies.length > 0 && (
-            <button
-              type="button"
-              className="page-button"
-              onClick={() => setShowOtherLies((previous) => !previous)}
-              aria-expanded={showOtherLies}
-            >
-              {showOtherLies
-                ? detectedItems.length === 0
-                  ? `Hide All ${otherLies.length} Lies`
-                  : `Hide Other ${otherLies.length} ${
-                      otherLies.length === 1 ? "Lie" : "Lies"
-                    }`
-                : detectedItems.length === 0
-                  ? `Show All ${otherLies.length} Lies`
-                  : `Show Other ${otherLies.length} ${
-                      otherLies.length === 1 ? "Lie" : "Lies"
-                    }`}
-            </button>
-          )}
-
-          {/* NEW:
-              Undetected lies appear only after the Show button is pressed.
-          */}
-          {showOtherLies && otherLies.length > 0 && (
-            <>
-              {/* NEW: Introductory line before the revealed lies */}
-              <p className="keyboard-instructions" tabIndex={0}>
-                Below are the revealed lies.
-              </p>
-
-              <ol className="lie-list" aria-label="Revealed lies" tabIndex={0}>
-                {otherLies.map((item, index) => {
-                  const explanation =
-                    lieTypeExplanations[item.hallucinatedLine];
-
-                  const isActive =
-                    activeExplanationLine === item.hallucinatedLine;
-
-                  return (
-                    <li key={item.hallucinatedLine} className="lie-item">
-                      <p className="lie-item-title">
-                        Lie {detectedItems.length + index + 1}:
-                      </p>
-
-                      <p className="lie-item-text">
-                        The sentence{" "}
-                        <span className="hallucinated-line-text">
-                          {item.hallucinatedLine
-                            .replace(/\.$/, "")
-                            .toLowerCase()}
-                        </span>{" "}
-                        has a lie because {item.cause.toLowerCase()}
-                      </p>
-
-                      <p>
-                        <strong>Type of lie:</strong> {item.type}
-                      </p>
-
-                      <button
-                        type="button"
-                        className="page-button"
-                        onClick={() =>
-                          fetchExplanationExamplesLieType(
-                            item.hallucinatedLine,
-                            item.accurateLine,
-                            item.type,
-                          )
-                        }
-                        aria-expanded={Boolean(explanation)}
-                        aria-label={
-                          explanation
-                            ? `Hide explanation for lie ${
-                                detectedItems.length + index + 1
-                              }`
-                            : `Explain lie type for lie ${
-                                detectedItems.length + index + 1
-                              }`
-                        }
-                      >
-                        {explanation
-                          ? "Hide Explanation"
-                          : "Explain this Lie Type"}
-                      </button>
-
-                      {explanation?.isLoading && (
-                        <p
-                          ref={isActive ? loadingRef : null}
-                          tabIndex={-1}
-                          className="lie-type-explanation"
-                          role="status"
-                          aria-live="polite"
-                        >
-                          Loading explanation...
-                        </p>
-                      )}
-
-                      {explanation?.error && (
-                        <p
-                          ref={isActive ? explanationRef : null}
-                          tabIndex={-1}
-                          className="lie-type-explanation"
-                          role="status"
-                          aria-live="polite"
-                        >
-                          {explanation.error}
-                        </p>
-                      )}
-
-                      {explanation?.data && (
-                        <div
-                          ref={isActive ? explanationRef : null}
-                          tabIndex={-1}
-                          className="lie-type-explanation"
-                          aria-live="polite"
-                        >
-                          <p>{explanation.data.explanation}</p>
-
-                          <p>
-                            <strong>Example:</strong> {explanation.data.example}
-                          </p>
-
-                          <p>{explanation.data.exampleExplanation}</p>
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
-            </>
-          )}
         </section>
 
         <ReviewDetectiveFollowUpsPanel />
-
         <button
           type="button"
           className="page-button"

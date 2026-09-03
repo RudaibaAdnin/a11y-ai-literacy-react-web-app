@@ -106,7 +106,7 @@
 .followup-question-reply {
   padding: 10px;
   font-size: 21px;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffff;
   background-color: #1d4289;
   border: 1px solid #1d4289;
@@ -118,7 +118,7 @@
 .clue-text {
   padding: 10px;
   font-size: 21px;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffff;
   background-color: #1d4289;
   border: 1px solid #1d4289;
@@ -183,4 +183,76 @@
   border-left: 2px solid #1d4289;
   border-radius: 10px;
   padding: 10px;
+}
+
+.page-button-ask-current-line {
+  color: #065210;
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 600;
+  background-color: #fff;
+  border: 1px solid #065210;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.page-button-ask-entire-description {
+  color: #5d3754;
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 600;
+  background-color: #fff;
+  border: 1px solid #5d3754;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.page-button-ask-current-line:hover,
+.page-button-ask-current-line:focus-visible {
+  color: #fff;
+  background: #065210;
+  border-color: #065210;
+  outline: 2px solid #065210;
+  outline-offset: 3px;
+}
+
+.page-button-ask-entire-description:hover,
+.page-button-ask-entire-description:focus-visible {
+  color: #fff;
+  background: #5d3754;
+  border-color: #5d3754;
+  outline: 2px solid #5d3754;
+  outline-offset: 3px;
+}
+
+.page-button-get-clues {
+  color: #860113;
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 600;
+  background-color: #fff;
+  border: 1px solid #860113;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.page-button-get-clues:hover,
+.page-button-get-clues:focus-visible {
+  color: #fff;
+  background: #860113;
+  border-color: #860113;
+  outline: 2px solid #860113;
+  outline-offset: 3px;
+}
+
+.reply-feedback {
+  padding: 10px;
+  font-size: 21px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #860113;
+  border: 1px solid #860113;
+  border-radius: 10px;
+  margin-top: 8px;
+  text-align: left;
 }

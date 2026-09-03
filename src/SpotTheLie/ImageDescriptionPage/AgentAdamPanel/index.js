@@ -206,7 +206,7 @@ const AgentAdamPanel = () => {
           <div className="adam-description-buttons">
             <button
               type="button"
-              className="page-button"
+              className="page-button-summary"
               onClick={generateSummaryOfDifferences}
             >
               Generate Summary of Differences
@@ -214,7 +214,7 @@ const AgentAdamPanel = () => {
 
             <button
               type="button"
-              className="page-button"
+              className="page-button-line-by-line"
               onClick={() => setShowLineDifferences(true)}
               aria-expanded={showLineDifferences}
             >

@@ -17,11 +17,14 @@ const AgentSaraPanel = () => {
   const dispatch = useDispatch();
 
   const selectedImageDescription = imageDescriptions[imagename] || [];
+
   const accurateImageDescription = accurateImageDescriptions[imagename] || [];
 
   const getRandomImageDescriptionForSara = () => {
     const descriptions = [selectedImageDescription, accurateImageDescription];
+
     const randomIndex = Math.floor(Math.random() * descriptions.length);
+
     return descriptions[randomIndex];
   };
 
@@ -139,19 +142,6 @@ const AgentSaraPanel = () => {
       type: data.followUpQuestionType || "",
     }));
 
-  // NEW: Hard-coded feedback based on the reply type from the backend
-  const getReplyFeedback = (replyType) => {
-    if (replyType === "irrelevance") {
-      return "Do you notice anything wrong in this reply? This reply is irrelevant because it does not answer the main question. The answer is not useful for what you asked.";
-    }
-
-    if (replyType === "misfocus") {
-      return "Do you notice anything wrong in this reply? This reply is misfocused because it talks about a different detail without answering the main point of your question.";
-    }
-
-    return "";
-  };
-
   const findFirstMissingHallucinationLine = () => {
     const detectedLines =
       detectedImageHallucination.imageHallucinationItems.map(
@@ -177,18 +167,20 @@ const AgentSaraPanel = () => {
       return client.getFollowupQuestionsForCurrentLine(
         currentImageDescriptionLine,
         getRandomImageDescriptionForSara(),
+        //selectedImageDescription,
       );
     }
 
     if (followUpQuestionModeRef.current === "clue") {
       return client.getFollowupQuestionsForClue(
-        getRandomImageDescriptionForSara(),
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
         clueHallucinationLineRef.current,
         clueRef.current,
       );
     }
 
     return client.getFollowupQuestionsForEntireDescription(
+      //selectedImageDescription,
       getRandomImageDescriptionForSara(),
     );
   };
@@ -285,6 +277,7 @@ const AgentSaraPanel = () => {
     try {
       const clueData = await client.getClue(
         getRandomImageDescriptionForSara(),
+        //selectedImageDescription,
         imageHallucinationLine,
       );
 
@@ -336,13 +329,11 @@ const AgentSaraPanel = () => {
 
       setChatFlow((previousFlow) => {
         const copy = [...previousFlow];
-
         copy[copy.length - 1] = {
           ...copy[copy.length - 1],
           options: formatFollowUpQuestions(data),
           loading: "",
         };
-
         return copy;
       });
     } catch (error) {
@@ -372,7 +363,7 @@ const AgentSaraPanel = () => {
 
     try {
       const data = await client.getFollowUpReply(
-        getRandomImageDescriptionForSara(),
+        getRandomImageDescriptionForSara(), //selectedImageDescription,
         selectedFollowUpQuestion,
       );
 
@@ -412,7 +403,6 @@ const AgentSaraPanel = () => {
 
   const handleManualFollowUpQuestion = () => {
     const question = manualFollowUpQuestion.trim();
-
     if (!question || chatFlow.length === 0) return;
 
     setChatFlow((previousFlow) => [
@@ -513,7 +503,6 @@ const AgentSaraPanel = () => {
                 {turn.message}
               </p>
             )}
-
             {turn.type === "currentLine" &&
               turn.line &&
               turn.loading === "questions" && (
@@ -523,6 +512,11 @@ const AgentSaraPanel = () => {
                 </p>
               )}
 
+            {/* {turn.type === "currentLine" && turn.line && turn.loading !== "questions" && (
+  <p className="selected-line-preview">
+    Selected line: {turn.line}
+  </p>
+)} */}
             {turn.type === "clue" && turn.clue && (
               <p
                 ref={clueTextRef}
@@ -581,27 +575,18 @@ const AgentSaraPanel = () => {
                     Loading reply from Sara...
                   </p>
                 ) : (
-                  <>
-                    <p
-                      ref={
-                        turnIndex === replyTurnIndexRef.current
-                          ? latestReplyRef
-                          : null
-                      }
-                      tabIndex={-1}
-                      className="followup-question-reply"
-                      aria-label={`Reply: ${turn.reply}`}
-                    >
-                      {turn.reply}
-                    </p>
-
-                    {/* NEW: Feedback bubble only for irrelevant/misfocused replies */}
-                    {getReplyFeedback(turn.replyType) && (
-                      <p className="reply-feedback" tabIndex={0} role="status">
-                        {getReplyFeedback(turn.replyType)}
-                      </p>
-                    )}
-                  </>
+                  <p
+                    ref={
+                      turnIndex === replyTurnIndexRef.current
+                        ? latestReplyRef
+                        : null
+                    }
+                    tabIndex={-1}
+                    className="followup-question-reply"
+                    aria-label={`Reply: ${turn.reply}`}
+                  >
+                    {turn.reply}
+                  </p>
                 )}
               </>
             )}

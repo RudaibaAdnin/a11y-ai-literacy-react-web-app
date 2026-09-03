@@ -352,17 +352,6 @@ const AgentSaraPanel = () => {
     nextFocusRef.current = null;
   };
 
-  const getReplyFeedback = (replyType) => {
-    if (replyType === "irrelevance") {
-      return "Do you notice anything wrong in this reply? This reply is irrelevant because it does not answer the main question.";
-    }
-
-    if (replyType === "misfocus") {
-      return "Do you notice anything wrong in this reply? This reply is misfocused because it focuses on a different detail instead of the main point.";
-    }
-
-    return "";
-  };
   return (
     <section
       className={
@@ -437,23 +426,15 @@ const AgentSaraPanel = () => {
                     Loading reply from Sara...
                   </p>
                 ) : (
-                  <>
-                    <p
-                      ref={
-                        index === chatHistory.length - 1 ? latestReplyRef : null
-                      }
-                      tabIndex={-1}
-                      className="followup-question-reply"
-                    >
-                      {item.reply}
-                    </p>
-
-                    {getReplyFeedback(item.replyType) && (
-                      <p className="reply-feedback" tabIndex={0} role="status">
-                        {getReplyFeedback(item.replyType)}
-                      </p>
-                    )}
-                  </>
+                  <p
+                    ref={
+                      index === chatHistory.length - 1 ? latestReplyRef : null
+                    }
+                    tabIndex={-1}
+                    className="followup-question-reply"
+                  >
+                    {item.reply}
+                  </p>
                 )}
               </>
             )}
