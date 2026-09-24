@@ -295,7 +295,7 @@ const StoryReviewPage = () => {
           onFocusCapture={focusDetectedBiasPanel}
         >
           <h2 id="detected-bias-title" className="panel-title" tabIndex={0}>
-            List of Detected Bias
+            List of detected bias in the story paragraphs made by AI
           </h2>
 
           {/* <p className="bias-count-details">

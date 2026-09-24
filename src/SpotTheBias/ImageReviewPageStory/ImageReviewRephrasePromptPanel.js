@@ -106,7 +106,7 @@ const ImageReviewRephrasePromptPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of Image Prompts You Approved to Fix the Image
+        List of image prompts you approved to fix the image
       </h2>
 
       {rephrasedPromptHistoryImage.length === 0 ? (

@@ -297,7 +297,7 @@ const ImageReviewPageStory = () => {
             className="panel-title"
             tabIndex={0}
           >
-            List of Detected Image Bias
+            List of detected image bias in the image description made by AI
           </h2>
 
           {detectedItems.length === 0 ? (
@@ -348,7 +348,7 @@ const ImageReviewPageStory = () => {
           )}
 
           <h2 className="panel-title" tabIndex={0}>
-            List of Marked Paragraphs
+            List of marked paragraphs in the image descriptions made by AI
           </h2>
 
           {flaggedItems.length === 0 ? (

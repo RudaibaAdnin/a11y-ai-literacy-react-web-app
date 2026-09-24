@@ -322,9 +322,12 @@ const StoryReadingPage = () => {
               </h2>
 
               <p className="keyboard-instructions">
-                You can move through the story paragraph by paragraph. Each
-                paragraph is a button. You can also press the left square
-                bracket key{" "}
+                You can move through the story below paragraph by paragraph.
+                Each paragraph is a button. Spot a sneaky bias? Press{" "}
+                <span className="kbd">Enter</span> to check your guess and
+                rephrase the paragraph. You can also mark a paragraph if
+                something feels unfair and review it later. You can also press
+                the left square bracket key{" "}
                 <span className="kbd" aria-hidden="true">
                   [
                 </span>{" "}
@@ -332,10 +335,7 @@ const StoryReadingPage = () => {
                 <span className="kbd" aria-hidden="true">
                   ]
                 </span>{" "}
-                to move paragraph by paragraph. Spot a sneaky bias? Press{" "}
-                <span className="kbd">Enter</span> to check your guess and
-                rephrase the paragraph. You can also mark a paragraph if
-                something feels unfair and review it later.
+                to move paragraph by paragraph.
               </p>
 
               <ol className="story-paragraph-list" aria-label="Mia's story">

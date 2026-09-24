@@ -105,7 +105,8 @@ const ImageReviewAliceFollowUpsPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of Image Bias-Spotting Follow-up Questions You Asked Alice
+        List of follow-up questions you asked Alice to spot bias in the image
+        made by AI
       </h2>
 
       {followUpsHistoryAliceImage.length === 0 ? (

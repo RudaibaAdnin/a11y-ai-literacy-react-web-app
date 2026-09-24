@@ -114,7 +114,8 @@ const StoryReviewAliceFollowUpsPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of Bias-Spotting Follow-up Questions You Asked Alice
+        List of follow-up questions you asked Alice to spot bias in the story
+        paragraphs made by AI
       </h2>
 
       {followUpsHistoryAlice.length === 0 ? (

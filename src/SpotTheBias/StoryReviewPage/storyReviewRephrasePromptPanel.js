@@ -128,7 +128,8 @@ const StoryReviewRephrasePromptPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of Bias-Fixing Prompts You Approved to Rewrite Biased Paragraphs
+        List of prompts you approved to rewrite biased paragraphs in the story
+        made by AI
       </h2>
 
       {rephrasedParagraphHistory.length === 0 ? (

@@ -211,7 +211,7 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
       }
       onKeyDown={handlePromptPanelKeyDown}
     >
-      <h2 id="image-craft-prompt-title" className="panel-title">
+      <h2 id="image-craft-prompt-title" className="panel-title" tabIndex={0}>
         Rewrite the Image Prompt
       </h2>
 
@@ -298,6 +298,7 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
               <label
                 htmlFor="image-rephrase-prompt"
                 className="manual-followup-question-label"
+                tabIndex={0}
               >
                 Type or edit your rewritten image prompt:
               </label>

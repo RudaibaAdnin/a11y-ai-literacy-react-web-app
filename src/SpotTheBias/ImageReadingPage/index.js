@@ -45,6 +45,12 @@ const ImageReadingPage = () => {
   const [showImagePromptRephrasePanel, setShowImagePromptRephrasePanel] =
     useState(false);
 
+  const [newImageReading, setNewImageReading] = useState({
+    imageUrl: "",
+    description: "",
+    loading: false,
+  });
+
   const currentParagraphIndexRef = useRef(0);
   const loadingRef = useRef(null);
   const guideRef = useRef(null);
@@ -84,6 +90,7 @@ const ImageReadingPage = () => {
     setShowImagePromptRephrasePanel(false);
     dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
   };
+
   const loadImageReading = useCallback(async () => {
     const selectedImageBiasCategory = getRandomImageBiasCategory();
 
@@ -273,6 +280,54 @@ const ImageReadingPage = () => {
     URL.revokeObjectURL(url);
   };
 
+  const saveNewImage = () => {
+    if (newImageReading.imageUrl) {
+      downloadFile("new-story-image.png", newImageReading.imageUrl);
+    }
+  };
+
+  const saveNewImageDescription = () => {
+    if (!newImageReading.description) return;
+
+    const blob = new Blob([newImageReading.description], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    downloadFile("new-image-description.txt", url);
+    URL.revokeObjectURL(url);
+  };
+
+  const generateNewImage = async () => {
+    if (!imagePrompt.rephrasedPrompt) return;
+
+    setNewImageReading({
+      imageUrl: "",
+      description: "",
+      loading: true,
+    });
+
+    try {
+      const response = await client.getRephrasedImageDescription(
+        imagePrompt.rephrasedPrompt,
+      );
+
+      setNewImageReading({
+        imageUrl: response.imageBase64 || "",
+        description: (response.imageDescriptionParagraphs || []).join(" "),
+        loading: false,
+      });
+    } catch (error) {
+      console.error("Could not generate new image:", error);
+
+      setNewImageReading({
+        imageUrl: "",
+        description: "Sorry, the new image could not be generated.",
+        loading: false,
+      });
+    }
+  };
+
   return (
     <main className="story-reading-page" aria-labelledby="image-reading-title">
       <header className="header-style">
@@ -306,7 +361,7 @@ const ImageReadingPage = () => {
           aria-live="polite"
         >
           Loading the image. Mia is creating the story image. This may take a
-          little time.
+          little time. Please wait.
         </p>
       ) : (
         <>
@@ -408,8 +463,11 @@ const ImageReadingPage = () => {
                 Image Description
               </h3>
               <p className="keyboard-instructions" tabIndex={0}>
-                You can move through the image description paragraph by
-                paragraph. Each paragraph is a button. Press{" "}
+                You can move through the image description below paragraph by
+                paragraph. Each paragraph is a button. Spot a sneaky bias? Press{" "}
+                <span className="kbd">Enter</span> to check your guess. You can
+                also mark a paragraph if something feels unfair and review it
+                later. You can also press{" "}
                 <span className="kbd" aria-hidden="true">
                   [
                 </span>{" "}
@@ -418,9 +476,8 @@ const ImageReadingPage = () => {
                   ]
                 </span>{" "}
                 to move through the image description paragraph by paragraph.
-                Spot a sneaky bias? Press <span className="kbd">Enter</span> to
-                check your guess. You can also mark a paragraph if something
-                feels unfair and review it later.
+                You can save the image as PNG file and image description as Text
+                file.
               </p>
 
               <ol
@@ -465,6 +522,7 @@ const ImageReadingPage = () => {
                   );
                 })}
               </ol>
+
               <div className="rephrase-button">
                 <button
                   type="button"
@@ -479,13 +537,16 @@ const ImageReadingPage = () => {
 
             <ImageLeaderBoardPanel />
             <ImageBiasCheckingPanel />
+
             {showImagePromptRephrasePanel && (
               <ImageCraftPromptRephrase
                 onClose={closeImagePromptRephrasePanel}
               />
             )}
           </div>
+
           <ImageAgentAlicePanel />
+
           {showHelpGuidePanel && (
             <ImageHelpGuidePanel onClose={closeHelpGuidePanel} />
           )}
@@ -544,10 +605,63 @@ const ImageReadingPage = () => {
                     </p>
 
                     <div className="rephrase-button">
-                      <button type="button" className="page-button">
-                        Generate New Image
+                      <button
+                        type="button"
+                        className="page-button"
+                        onClick={generateNewImage}
+                        disabled={newImageReading.loading}
+                      >
+                        {newImageReading.loading
+                          ? "Generating New Image..."
+                          : "Generate New Image"}
                       </button>
                     </div>
+
+                    {newImageReading.imageUrl && (
+                      <>
+                        <h2 className="panel-title" tabIndex={0}>
+                          Created New Image and Image Description
+                        </h2>
+                        <img
+                          src={newImageReading.imageUrl}
+                          alt={imagePrompt.rephrasedPrompt}
+                          className="story-generated-image"
+                        />
+
+                        <div className="rephrase-button">
+                          <button
+                            type="button"
+                            className="page-button"
+                            onClick={saveNewImage}
+                          >
+                            Save New Image
+                          </button>
+                        </div>
+
+                        <p className="leaderboard-item-text" tabIndex={0}>
+                          <strong>New image description:</strong>{" "}
+                          {newImageReading.description}
+                        </p>
+
+                        <div className="rephrase-button">
+                          <button
+                            type="button"
+                            className="page-button"
+                            onClick={saveNewImageDescription}
+                          >
+                            Save New Image Description as Text File
+                          </button>
+                        </div>
+                      </>
+                    )}
+
+                    {!newImageReading.imageUrl &&
+                      newImageReading.description &&
+                      !newImageReading.loading && (
+                        <p className="keyboard-instructions" role="alert">
+                          {newImageReading.description}
+                        </p>
+                      )}
                   </>
                 )}
               </>
