@@ -110,10 +110,12 @@ const ImageReviewRephrasePromptPanel = () => {
       </h2>
 
       {rephrasedPromptHistoryImage.length === 0 ? (
-        <p className="question-empty">No image prompt rewrites yet.</p>
+        <p className="question-empty" tabIndex={0}>
+          No image prompt rewrites yet.
+        </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             Review the image prompts you approved. Select Explain How This
             Prompt Helps to learn how your prompt can help to make the image
             fairer.
@@ -129,7 +131,7 @@ const ImageReviewRephrasePromptPanel = () => {
 
               return (
                 <li key={index} className="lie-item">
-                  <p className="question-text">
+                  <p className="question-text" tabIndex={0}>
                     <strong>Original prompt:</strong>{" "}
                     {item.displayedPromptImage}
                   </p>
@@ -144,7 +146,7 @@ const ImageReviewRephrasePromptPanel = () => {
                     {item.promptUsedForRephraseCategoryImage}
                   </p> */}
 
-                  <p>
+                  <p tabIndex={0}>
                     <strong>Rewritten prompt:</strong>{" "}
                     {item.rephrasedPromptImage}
                   </p>
@@ -191,16 +193,16 @@ const ImageReviewRephrasePromptPanel = () => {
                       className="question-type-explanation"
                       aria-live="polite"
                     >
-                      <p>{explanation.data.explanation}</p>
+                      <p tabIndex={0}>{explanation.data.explanation}</p>
 
                       {explanation.data.example && (
-                        <p>
+                        <p tabIndex={0}>
                           <strong>Another Example:</strong>{" "}
                           {explanation.data.example}
                         </p>
                       )}
                       {explanation.data.originalPromptLimitation && (
-                        <p>
+                        <p tabIndex={0}>
                           <strong>
                             What could be missing in the original prompt:
                           </strong>{" "}

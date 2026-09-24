@@ -38,20 +38,22 @@ const ImageLeaderBoardPanel = () => {
         Score Board
       </h2>
 
-      <p className="leaderboard-count-details">
+      <p className="leaderboard-count-details" tabIndex={0}>
         You have found {detectedImageDescriptionBiasParagraph.count} out of{" "}
         {biasedImageDescriptionParagraphPlan.length} biased image description
         paragraphs.
       </p>
 
-      <p className="leaderboard-count-details">
+      <p className="leaderboard-count-details" tabIndex={0}>
         You marked {flaggedImageDescriptionParagraph.count} image description
         paragraphs to review later.
       </p>
 
       {detectedItems.length > 0 && (
         <>
-          <h3 className="leaderboard-section-title">List of Spotted Biases</h3>
+          <h3 className="leaderboard-section-title" tabIndex={0}>
+            List of Spotted Biases
+          </h3>
 
           <ol
             className="leaderboard-list"
@@ -66,12 +68,16 @@ const ImageLeaderBoardPanel = () => {
                 <p
                   id={`detected-image-bias-${index + 1}`}
                   className="leaderboard-item-title"
+                  tabIndex={0}
                 >
                   Paragraph {item.imageDescriptionParagraphIndex + 1}{" "}
                   {item.biasCategory.name.toLowerCase()}
                 </p>
 
-                <p className="leaderboard-item-text">{item.paragraph}</p>
+                <p className="leaderboard-item-text" tabIndex={0}>
+                  Paragraph {item.imageDescriptionParagraphIndex + 1}:{" "}
+                  {item.paragraph}
+                </p>
               </li>
             ))}
           </ol>
@@ -80,7 +86,7 @@ const ImageLeaderBoardPanel = () => {
 
       {flaggedItems.length > 0 && (
         <>
-          <h3 className="leaderboard-section-title">
+          <h3 className="leaderboard-section-title" tabIndex={0}>
             List of Marked Paragraphs
           </h3>
 
@@ -97,6 +103,7 @@ const ImageLeaderBoardPanel = () => {
                 <p
                   id={`marked-image-paragraph-${index + 1}`}
                   className="leaderboard-item-title"
+                  tabIndex={0}
                 >
                   Marked Paragraph {item.imageDescriptionParagraphIndex + 1}
                 </p>
@@ -109,7 +116,9 @@ const ImageLeaderBoardPanel = () => {
       )}
 
       {detectedItems.length === 0 && flaggedItems.length === 0 && (
-        <p className="leaderboard-empty">No paragraphs found or marked yet.</p>
+        <p className="leaderboard-empty" tabIndex={0}>
+          No paragraphs found or marked yet.
+        </p>
       )}
     </section>
   );

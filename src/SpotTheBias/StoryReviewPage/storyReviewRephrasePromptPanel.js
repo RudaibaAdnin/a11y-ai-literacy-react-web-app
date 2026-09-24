@@ -132,12 +132,12 @@ const StoryReviewRephrasePromptPanel = () => {
       </h2>
 
       {rephrasedParagraphHistory.length === 0 ? (
-        <p className="question-empty">
+        <p className="question-empty" tabIndex={0}>
           No prompts used yet to rewrite and fix biased paragraphs.
         </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             Review the prompts you used to rewrite and fix biased paragraphs.
             Select Explain How This Prompt Helps button to learn how each prompt
             can help make a biased paragraph fairer.
@@ -151,13 +151,13 @@ const StoryReviewRephrasePromptPanel = () => {
 
               return (
                 <li key={index} className="lie-item">
-                  <p className="question-text">
+                  <p className="question-text" tabIndex={0}>
                     <strong>Prompt:</strong>{" "}
                     {item.promptUsedForRephraseCategory}
                     {": "} {item.promptUsedForRephrase}
                   </p>
 
-                  <p className="question-reply-text">
+                  <p className="question-reply-text" tabIndex={0}>
                     <strong>Rephrased paragraph:</strong>{" "}
                     {item.rephrasedParagraph}
                   </p>

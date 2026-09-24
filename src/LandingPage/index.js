@@ -6,14 +6,14 @@ const games = [
   {
     name: "Spot the Lie",
     description:
-      "Work as a detective to find sneaky lies hiding inside AI-generated image descriptions.",
+      "Work as a detective to find sneaky lies hiding inside image descriptions made by AI.",
     link: "/spot-the-lie",
   },
   {
-    name: "Spot the Bias",
+    name: "Bias Buster",
     description:
-      "Work as a fairness coach to find and fix sneaky biases in AI-generated stories and images",
-    link: "/spot-the-bias",
+      "Work as a fairness coach to find and fix sneaky biases in stories and images made by AI.",
+    link: "/bias-buster",
   },
   // {
   //   name: "Choose your Path",

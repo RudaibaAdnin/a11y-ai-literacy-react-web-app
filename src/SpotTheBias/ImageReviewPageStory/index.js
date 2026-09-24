@@ -203,13 +203,13 @@ const ImageReviewPageStory = () => {
             alt=""
             aria-hidden="true"
           />
-          <h1 id="image-review-title" className="page-title">
-            Spot the Bias
+          <h1 id="image-review-title" className="page-title" tabIndex={0}>
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Image review page navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster">
             Back to Menu
           </Link>
         </nav>
@@ -237,14 +237,14 @@ const ImageReviewPageStory = () => {
           Review Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Great work on spotting and fixing bias! Now, it is time to review your
           image bias-fixing moves. Below, review each image bias you spotted,
           the paragraphs you marked, follow-up questions you asked Alice, and
           the prompts you used to guide Mia make the image fairer.
         </p>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Press the left square bracket key{" "}
           <span className="kbd" aria-hidden="true">
             [
@@ -265,7 +265,7 @@ const ImageReviewPageStory = () => {
         <button
           type="button"
           className="page-button"
-          onClick={() => navigate(`/spot-the-bias/${storytopic}/image-reading`)}
+          onClick={() => navigate(`/bias-buster/${storytopic}/image-reading`)}
         >
           Back to Image Page
         </button>
@@ -301,10 +301,12 @@ const ImageReviewPageStory = () => {
           </h2>
 
           {detectedItems.length === 0 ? (
-            <p className="bias-empty">No image bias detected yet.</p>
+            <p className="bias-empty" tabIndex={0}>
+              No image bias detected yet.
+            </p>
           ) : (
             <>
-              <p className="keyboard-instructions">
+              <p className="keyboard-instructions" tabIndex={0}>
                 Review the list of detected image biases. Select Explain Bias
                 Type button to learn more and get helpful examples.
               </p>
@@ -317,7 +319,7 @@ const ImageReviewPageStory = () => {
                   return (
                     <li key={`detected-image-${index}`} className="bias-item">
                       {item.biasCategory && (
-                        <p>
+                        <p tabIndex={0}>
                           <strong>Bias type:</strong> Paragraph{" "}
                           {getIndex(item) + 1}{" "}
                           {getBiasCategoryName(
@@ -326,7 +328,7 @@ const ImageReviewPageStory = () => {
                         </p>
                       )}
 
-                      <p className="bias-item-text">
+                      <p className="bias-item-text" tabIndex={0}>
                         <strong>Paragraph Text:</strong> {getParagraph(item)}
                       </p>
                       <button
@@ -345,13 +347,17 @@ const ImageReviewPageStory = () => {
             </>
           )}
 
-          <h2 className="panel-title">List of Marked Paragraphs</h2>
+          <h2 className="panel-title" tabIndex={0}>
+            List of Marked Paragraphs
+          </h2>
 
           {flaggedItems.length === 0 ? (
-            <p className="bias-empty">No paragraphs marked yet.</p>
+            <p className="bias-empty" tabIndex={0}>
+              No paragraphs marked yet.
+            </p>
           ) : (
             <>
-              <p className="keyboard-instructions">
+              <p className="keyboard-instructions" tabIndex={0}>
                 Review the list of marked image description paragraphs. Select
                 Explain if Anything Wrong button to learn if any bias exists in
                 a marked paragraph.
@@ -367,11 +373,11 @@ const ImageReviewPageStory = () => {
 
                   return (
                     <li key={`flagged-image-${index}`} className="bias-item">
-                      <p className="bias-item-title">
+                      <p className="bias-item-title" tabIndex={0}>
                         <strong>Marked paragraph {getIndex(item) + 1}</strong>
                       </p>
 
-                      <p className="bias-item-text">
+                      <p className="bias-item-text" tabIndex={0}>
                         <strong>Paragraph Text:</strong> {getParagraph(item)}
                       </p>
 
@@ -400,7 +406,7 @@ const ImageReviewPageStory = () => {
         <button
           type="button"
           className="page-button"
-          onClick={() => navigate(`/spot-the-bias/${storytopic}/image-reading`)}
+          onClick={() => navigate(`/bias-buster/${storytopic}/image-reading`)}
         >
           Back to Image Page
         </button>

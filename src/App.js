@@ -18,6 +18,9 @@ import StoryReviewPage from "./SpotTheBias/StoryReviewPage";
 import ImageReadingPage from "./SpotTheBias/ImageReadingPage";
 import ImageReviewPageStory from "./SpotTheBias/ImageReviewPageStory";
 
+import BiasOptionSelectionPage from "./SpotTheBias/BiasOptionSelectionPage";
+import BiasBusterLandingPage from "./SpotTheBias/BiasBusterLandingPage";
+
 function App() {
   return (
     <div>
@@ -41,28 +44,35 @@ function App() {
               />
 
               <Route
-                path="/spot-the-bias"
+                path="/bias-buster/teacher-guide"
+                element={<BiasOptionSelectionPage />}
+              />
+
+              <Route path="/bias-buster" element={<BiasBusterLandingPage />} />
+
+              <Route
+                path="/bias-buster/story-topic-selection"
                 element={<StoryTopicSelectionPage />}
               />
               <Route
-                path="/spot-the-bias/:storytopic"
+                path="/bias-buster/:storytopic"
                 element={<StoryQuestionPage />}
               />
               <Route
-                path="/spot-the-bias/:storytopic/story-reading"
+                path="/bias-buster/:storytopic/story-reading"
                 element={<StoryReadingPage />}
               />
               <Route
-                path="/spot-the-bias/:storytopic/review-page"
+                path="/bias-buster/:storytopic/review-page"
                 element={<StoryReviewPage />}
               />
 
               <Route
-                path="/spot-the-bias/:storytopic/image-reading"
+                path="/bias-buster/:storytopic/image-reading"
                 element={<ImageReadingPage />}
               />
               <Route
-                path="/spot-the-bias/:storytopic/image-review-page"
+                path="/bias-buster/:storytopic/image-review-page"
                 element={<ImageReviewPageStory />}
               />
             </Routes>

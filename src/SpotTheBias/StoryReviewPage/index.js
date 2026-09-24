@@ -219,13 +219,13 @@ const StoryReviewPage = () => {
             alt=""
             aria-hidden="true"
           />
-          <h1 id="review-page-title" className="page-title">
-            Spot the Bias
+          <h1 id="review-page-title" className="page-title" tabIndex={0}>
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Review page navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster">
             Back to Menu
           </Link>
         </nav>
@@ -245,7 +245,7 @@ const StoryReviewPage = () => {
           Review Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Great work on spotting and fixing sneaky biases! Now, it is time to
           review your bias-fixing work. Below, review each bias you spotted, the
           paragraphs you marked, follow-up questions you asked Alice, and the
@@ -253,7 +253,7 @@ const StoryReviewPage = () => {
           the explanation buttons to learn more and get helpful examples.
         </p>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Press the left square bracket key{" "}
           <span className="kbd" aria-hidden="true">
             [
@@ -275,7 +275,7 @@ const StoryReviewPage = () => {
         <button
           type="button"
           className="page-button"
-          onClick={() => navigate(`/spot-the-bias/${storytopic}/story-reading`)}
+          onClick={() => navigate(`/bias-buster/${storytopic}/story-reading`)}
         >
           Back to Story Page
         </button>
@@ -304,10 +304,12 @@ const StoryReviewPage = () => {
           </p> */}
 
           {detectedItems.length === 0 ? (
-            <p className="bias-empty">No bias detected yet.</p>
+            <p className="bias-empty" tabIndex={0}>
+              No bias detected yet.
+            </p>
           ) : (
             <>
-              <p className="keyboard-instructions">
+              <p className="keyboard-instructions" tabIndex={0}>
                 Review the list of your detected biases. Select Explain Bias
                 Type button to learn more and get helpful examples.
               </p>
@@ -322,14 +324,16 @@ const StoryReviewPage = () => {
                       {/* <p className="bias-item-title">Bias {index + 1}</p> */}
 
                       {item.biasCategory && (
-                        <p>
+                        <p tabIndex={0}>
                           <strong>Bias type:</strong>{" "}
                           {getBiasCategoryName(item.biasCategory)} in paragraph{" "}
                           {getIndex(item) + 1}.
                         </p>
                       )}
 
-                      <p className="bias-item-text">{getParagraph(item)}</p>
+                      <p className="bias-item-text" tabIndex={0}>
+                        {getParagraph(item)}
+                      </p>
 
                       <button
                         type="button"
@@ -349,13 +353,17 @@ const StoryReviewPage = () => {
             </>
           )}
 
-          <h2 className="panel-title">List of Marked Paragraphs</h2>
+          <h2 className="panel-title" tabIndex={0}>
+            List of Marked Paragraphs
+          </h2>
 
           {flaggedItems.length === 0 ? (
-            <p className="bias-empty">No paragraphs marked yet.</p>
+            <p className="bias-empty" tabIndex={0}>
+              No paragraphs marked yet.
+            </p>
           ) : (
             <>
-              <p className="keyboard-instructions">
+              <p className="keyboard-instructions" tabIndex={0}>
                 Review the list of marked paragraphs. Select Explain if Anything
                 Wrong button to learn if any bias exists in a marked paragraph.
               </p>
@@ -367,7 +375,7 @@ const StoryReviewPage = () => {
 
                   return (
                     <li key={`flagged-${index}`} className="bias-item">
-                      <p className="bias-item-title">
+                      <p className="bias-item-title" tabIndex={0}>
                         <strong>Marked paragraph {getIndex(item) + 1}</strong>
                       </p>
 
@@ -398,7 +406,7 @@ const StoryReviewPage = () => {
         <button
           type="button"
           className="page-button"
-          onClick={() => navigate(`/spot-the-bias/${storytopic}/story-reading`)}
+          onClick={() => navigate(`/bias-buster/${storytopic}/story-reading`)}
         >
           Back to Story Page
         </button>

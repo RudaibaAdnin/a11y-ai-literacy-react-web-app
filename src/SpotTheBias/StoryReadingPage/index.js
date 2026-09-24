@@ -236,13 +236,13 @@ const StoryReadingPage = () => {
             alt=""
             aria-hidden="true"
           />
-          <h1 id="story-reading-title" className="page-title">
-            Spot the Bias
+          <h1 id="story-reading-title" className="page-title" tabIndex={0}>
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Main menu navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster">
             Back to Menu
           </Link>
         </nav>
@@ -273,11 +273,15 @@ const StoryReadingPage = () => {
             onMouseEnter={focusMissionGuide}
             onFocusCapture={focusMissionGuide}
           >
-            <h2 id="creator-guide-title" className="instruction-title">
+            <h2
+              id="creator-guide-title"
+              className="instruction-title"
+              tabIndex={0}
+            >
               Coach Guide
             </h2>
 
-            <p className="page-instructions">
+            <p className="page-instructions" tabIndex={0}>
               Below, Mia has created the story using your ideas. But watch out!
               Two sneaky biases are hiding inside the story. Your task is to
               read each paragraph, spot the biased parts, and guide Mia to fix
@@ -285,9 +289,9 @@ const StoryReadingPage = () => {
               find a biased paragraph, guide Mia to rephrase it and make the
               story fairer. You can also mark a paragraph if something feels
               wrong, like having bias, even if the system does not confirm it.
-              You can review it later.
+              You can review it later. You can save the story as a text file.
             </p>
-            <p className="page-instructions">
+            <p className="page-instructions" tabIndex={0}>
               You can use headings to move around this game page, or select the
               <span className="kbd">Help Guide</span>button below to open the
               help guide modal to learn more keyboard shortcuts you can use.
@@ -300,32 +304,6 @@ const StoryReadingPage = () => {
             >
               Help Guide
             </button>
-
-            {/* <div
-              className="instruction-buttons"
-              role="group"
-              aria-label="Navigation options"
-            >
-              <button
-                type="button"
-                className="page-button"
-                onClick={() => setShowHelpGuidePanel(true)}
-              >
-                Help Guide
-              </button>
-
-              <button
-                type="button"
-                className="page-button"
-                onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/image-reading`)
-                }
-              >
-                {hasCreatedStoryImage
-                  ? "Go to Story Image Page"
-                  : "Create Story Image"}
-              </button>
-            </div> */}
           </section>
 
           <div className="side-by-side-page">
@@ -339,12 +317,14 @@ const StoryReadingPage = () => {
               onMouseEnter={focusMiaPanel}
               onFocusCapture={focusMiaPanel}
             >
-              <h2 id="mia-panel-title" className="panel-title">
+              <h2 id="mia-panel-title" className="panel-title" tabIndex={0}>
                 Mia’s Created Story
               </h2>
 
               <p className="keyboard-instructions">
-                Press the left square bracket key{" "}
+                You can move through the story paragraph by paragraph. Each
+                paragraph is a button. You can also press the left square
+                bracket key{" "}
                 <span className="kbd" aria-hidden="true">
                   [
                 </span>{" "}
@@ -352,10 +332,10 @@ const StoryReadingPage = () => {
                 <span className="kbd" aria-hidden="true">
                   ]
                 </span>{" "}
-                to move through the story paragraph by paragraph. Spot a sneaky
-                bias? Press <span className="kbd">Enter</span> to check your
-                guess and rephrase the paragraph. You can also mark a paragraph
-                if something feels unfair and review it later.
+                to move paragraph by paragraph. Spot a sneaky bias? Press{" "}
+                <span className="kbd">Enter</span> to check your guess and
+                rephrase the paragraph. You can also mark a paragraph if
+                something feels unfair and review it later.
               </p>
 
               <ol className="story-paragraph-list" aria-label="Mia's story">
@@ -363,31 +343,30 @@ const StoryReadingPage = () => {
                   const paragraphText = getParagraphText(paragraph);
 
                   return (
-                    <li
-                      key={paragraph.index}
-                      ref={(element) => {
-                        storyParagraphRefs.current[index] = element;
-                      }}
-                      tabIndex={index === currentParagraphIndex ? 0 : -1}
-                      className={
-                        index === currentParagraphIndex
-                          ? "story-paragraph current-focused-panel"
-                          : "story-paragraph"
-                      }
-                      aria-label={`Paragraph ${index + 1} of ${
-                        storyParagraphs.length
-                      }. ${paragraphText}. Press Enter to check this paragraph.`}
-                      onFocus={() => focusStoryParagraph(index)}
-                      onClick={() => focusStoryParagraph(index)}
-                      onMouseEnter={() => focusStoryParagraph(index)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          dispatch(setSelectedCheckingParagraph(paragraph));
+                    <li key={paragraph.index}>
+                      <button
+                        type="button"
+                        ref={(element) => {
+                          storyParagraphRefs.current[index] = element;
+                        }}
+                        tabIndex={index === currentParagraphIndex ? 0 : -1}
+                        className={
+                          index === currentParagraphIndex
+                            ? "story-paragraph current-focused-panel"
+                            : "story-paragraph"
                         }
-                      }}
-                    >
-                      {paragraphText}
+                        aria-label={`Paragraph ${index + 1} of ${
+                          storyParagraphs.length
+                        }. ${paragraphText}. Press Enter to check this paragraph.`}
+                        onFocus={() => focusStoryParagraph(index)}
+                        onClick={() => {
+                          focusStoryParagraph(index);
+                          dispatch(setSelectedCheckingParagraph(paragraph));
+                        }}
+                        onMouseEnter={() => focusStoryParagraph(index)}
+                      >
+                        {paragraphText}
+                      </button>
                     </li>
                   );
                 })}
@@ -399,7 +378,7 @@ const StoryReadingPage = () => {
                   onClick={saveStoryAsTextFile}
                   disabled={storyParagraphs.length === 0}
                 >
-                  Save Story
+                  Save Story as Text File
                 </button>
               </div>
             </section>
@@ -425,9 +404,13 @@ const StoryReadingPage = () => {
             onMouseEnter={focusReviewGuide}
             onFocusCapture={focusReviewGuide}
           >
-            <h2 id="review-guide-title" className="go-to-review-title">
-              Select below buttons to ask Mia to create story image and to look
-              back at your bias-fixing moves and get explanations.
+            <h2
+              id="review-guide-title"
+              className="go-to-review-title"
+              tabIndex={0}
+            >
+              Select below buttons to ask Mia to create story image and to
+              review your bias-fixing moves and get explanations.
             </h2>
 
             <div
@@ -439,7 +422,7 @@ const StoryReadingPage = () => {
                 type="button"
                 className="page-button"
                 onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/image-reading`)
+                  navigate(`/bias-buster/${storytopic}/image-reading`)
                 }
               >
                 {hasCreatedStoryImage
@@ -451,7 +434,7 @@ const StoryReadingPage = () => {
                 type="button"
                 className="page-button"
                 onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/review-page`)
+                  navigate(`/bias-buster/${storytopic}/review-page`)
                 }
               >
                 Review Your Story Bias-Fixing Moves

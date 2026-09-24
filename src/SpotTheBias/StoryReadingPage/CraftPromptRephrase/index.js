@@ -40,6 +40,7 @@ const CraftPromptRephrasePanel = () => {
     loadedMessage: "",
     options: [],
     selectedPrompt: "",
+    selectedPromptCategory: "",
     rephrasedParagraph: "",
     approved: false,
     message: "",
@@ -107,7 +108,11 @@ const CraftPromptRephrasePanel = () => {
 
     setTurns((flow) => [
       ...flow.map((turn) => ({ ...turn, options: [] })),
-      createTurn({ selectedPrompt: prompt, loading: "rephrase" }),
+      createTurn({
+        selectedPrompt: prompt,
+        selectedPromptCategory: category,
+        loading: "rephrase",
+      }),
     ]);
 
     try {
@@ -116,21 +121,19 @@ const CraftPromptRephrasePanel = () => {
         prompt,
         category,
       });
+
       const rephrasedParagraph = data.rephrasedParagraph || "";
 
-      dispatch(
-        addRephrasedParagraphHistory({
-          promptUsedForRephrase: prompt,
-          promptUsedForRephraseCategory: category,
-          rephrasedParagraph,
-        }),
-      );
-
       nextFocusRef.current = "reply";
+
       setTurns((flow) =>
         flow.map((turn, index) =>
           index === turnIndex
-            ? { ...turn, rephrasedParagraph, loading: "" }
+            ? {
+                ...turn,
+                rephrasedParagraph,
+                loading: "",
+              }
             : turn,
         ),
       );
@@ -155,10 +158,20 @@ const CraftPromptRephrasePanel = () => {
   const approveRephrase = (turnIndex, rephrasedParagraph) => {
     nextFocusRef.current = "approved";
 
+    const approvedTurn = turns[turnIndex];
+
     dispatch(
       addRephrasedParagraph({
         paragraphIndex: selectedCheckingParagraph.index,
         rephrasedStoryParagraph: rephrasedParagraph,
+      }),
+    );
+
+    dispatch(
+      addRephrasedParagraphHistory({
+        promptUsedForRephrase: approvedTurn.selectedPrompt,
+        promptUsedForRephraseCategory: approvedTurn.selectedPromptCategory,
+        rephrasedParagraph,
       }),
     );
 
@@ -173,7 +186,7 @@ const CraftPromptRephrasePanel = () => {
 
   return (
     <div>
-      <p className="keyboard-instructions">
+      <p className="keyboard-instructions" tabIndex={0}>
         Get prompt suggestions to rewrite story paragraph {paragraphNumber},
         then choose one. You can also write your own prompt.
       </p>
@@ -304,6 +317,7 @@ const CraftPromptRephrasePanel = () => {
                   >
                     Regenerate Prompt Suggestions
                   </button>
+
                   {/* 
                   <button
                     type="button"
@@ -321,9 +335,11 @@ const CraftPromptRephrasePanel = () => {
         <label
           htmlFor="manual-rephrase-prompt"
           className="manual-followup-question-label"
+          tabIndex={0}
         >
           Type your own prompt to rewrite the paragraph:
         </label>
+
         <div className="manual-followup-question-pane">
           <textarea
             id="manual-rephrase-prompt"

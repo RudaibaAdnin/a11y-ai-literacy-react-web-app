@@ -43,6 +43,7 @@ const initialState = {
   followUpsHistoryAliceImage: [],
   rephrasedPromptHistoryImage: [],
   currentFocusedImagePanel: "",
+  imageBiasOption: "Treating Disability as Something Bad",
 };
 
 const ImageBiasSlice = createSlice({
@@ -51,6 +52,9 @@ const ImageBiasSlice = createSlice({
   reducers: {
     setCurrentFocusedImagePanel: (state, action) => {
       state.currentFocusedImagePanel = action.payload;
+    },
+    setImageBiasOption: (state, action) => {
+      state.imageBiasOption = action.payload;
     },
 
     setImageDescriptionReading: (state, action) => {
@@ -154,6 +158,7 @@ const ImageBiasSlice = createSlice({
 });
 
 export const {
+  setImageBiasOption,
   setCurrentFocusedImagePanel,
   setImageDescriptionReading,
   setSelectedCheckingImageDescriptionParagraph,

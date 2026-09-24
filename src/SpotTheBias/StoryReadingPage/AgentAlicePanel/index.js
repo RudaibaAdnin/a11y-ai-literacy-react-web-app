@@ -350,7 +350,7 @@ const AgentAlicePanel = () => {
         Ask Alice for Clues
       </h2>
 
-      <p className="keyboard-instructions">
+      <p className="keyboard-instructions" tabIndex={0}>
         Select the button below to ask Alice for clues about sneaky biased
         paragraphs. You can also ask Alice follow-up questions. Press the equal
         key{" "}
@@ -481,6 +481,7 @@ const AgentAlicePanel = () => {
             <label
               htmlFor="manual-alice-question"
               className="manual-followup-question-label"
+              tabIndex={0}
             >
               Type your own follow-up question for Alice:
             </label>

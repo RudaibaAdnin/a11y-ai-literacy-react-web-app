@@ -347,8 +347,8 @@ const ImageAgentAlicePanel = () => {
         Ask Alice for Image Clues
       </h2>
 
-      <p className="keyboard-instructions">
-        Ask Alice for clues about sneaky image bias.
+      <p className="keyboard-instructions" tabIndex={0}>
+        Press below button to ask Alice for clues about sneaky image bias.
       </p>
 
       <div

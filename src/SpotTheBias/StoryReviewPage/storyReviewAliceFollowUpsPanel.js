@@ -30,19 +30,6 @@ const StoryReviewAliceFollowUpsPanel = () => {
     });
   }, [activeExplanation]);
 
-  // useEffect(() => {
-  //   const handleFollowUpsFocusKey = (event) => {
-  //     if (event.key !== "]") return;
-
-  //     event.preventDefault();
-  //     dispatch(setCurrentFocusedPanel("reviewAliceFollowUpsPanel"));
-  //     followUpsPanelRef.current?.focus();
-  //   };
-
-  //   window.addEventListener("keydown", handleFollowUpsFocusKey);
-  //   return () => window.removeEventListener("keydown", handleFollowUpsFocusKey);
-  // }, [dispatch]);
-
   useEffect(() => {
     const handleKeyDown = (event) => {
       const activeElement = document.activeElement;
@@ -131,10 +118,12 @@ const StoryReviewAliceFollowUpsPanel = () => {
       </h2>
 
       {followUpsHistoryAlice.length === 0 ? (
-        <p className="question-empty">No follow-up questions asked yet.</p>
+        <p className="question-empty" tabIndex={0}>
+          No follow-up questions asked yet.
+        </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             Review the follow-up questions you asked Alice. Select Explain How
             This Question Helps button to learn how the question can help detect
             bias.
@@ -148,12 +137,12 @@ const StoryReviewAliceFollowUpsPanel = () => {
 
               return (
                 <li key={index} className="lie-item">
-                  <p className="question-text">
+                  <p className="question-text" tabIndex={0}>
                     <strong>Question:</strong> {item.followUpQuestion}
                   </p>
 
                   {item.followUpQuestionCategory && (
-                    <p>
+                    <p tabIndex={0}>
                       <strong>Question type:</strong>{" "}
                       {item.followUpQuestionCategory}
                     </p>
@@ -208,10 +197,10 @@ const StoryReviewAliceFollowUpsPanel = () => {
                       role="status"
                       aria-live="polite"
                     >
-                      <p>{explanation.data.explanation}</p>
+                      <p tabIndex={0}>{explanation.data.explanation}</p>
 
                       {explanation.data.example && (
-                        <p>
+                        <p tabIndex={0}>
                           <strong>Another Example:</strong>{" "}
                           {explanation.data.example}
                         </p>
@@ -220,7 +209,7 @@ const StoryReviewAliceFollowUpsPanel = () => {
                   )}
 
                   {item.followUpReply && (
-                    <p className="question-reply-text">
+                    <p className="question-reply-text" tabIndex={0}>
                       <strong>Alice's reply:</strong> {item.followUpReply}
                     </p>
                   )}

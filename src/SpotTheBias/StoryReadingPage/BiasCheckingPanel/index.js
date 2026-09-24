@@ -272,7 +272,7 @@ const BiasCheckingPanel = () => {
       }
       onKeyDown={handleCheckingPanelKeyDown}
     >
-      <h2 id="bias-check-title" className="panel-title">
+      <h2 id="bias-check-title" className="panel-title" tabIndex={0}>
         Bias Checking and Fixing Modal
       </h2>
 

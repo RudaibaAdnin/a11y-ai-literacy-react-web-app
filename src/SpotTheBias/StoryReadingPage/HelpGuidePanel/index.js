@@ -54,17 +54,6 @@ const HelpGuidePanel = ({ onClose }) => {
     panelRef.current?.focus();
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (justOpenedPanelRef.current) {
-  //     justOpenedPanelRef.current = false;
-  //     return;
-  //   }
-
-  //   if (currentFocusedPanel !== "helpGuidePanel") {
-  //     onClose();
-  //   }
-  // }, [currentFocusedPanel, onClose]);
-
   const focusPanel = () => {
     dispatch(setCurrentFocusedPanel("helpGuidePanel"));
   };
@@ -109,7 +98,7 @@ const HelpGuidePanel = ({ onClose }) => {
       onFocusCapture={focusPanel}
       onKeyDown={handleHelpGuidePanelKeyDown}
     >
-      <h2 id="help-guide-title" className="help-guide-title">
+      <h2 id="help-guide-title" className="help-guide-title" tabIndex={0}>
         Help Guide with the List of Keyboard Instructions
       </h2>
 
@@ -118,7 +107,9 @@ const HelpGuidePanel = ({ onClose }) => {
         aria-label="Keyboard shortcuts for reading Mia's story"
       >
         {instructions.map((instruction, index) => (
-          <li key={index}>{instruction}</li>
+          <li key={index} tabIndex={0}>
+            {instruction}
+          </li>
         ))}
       </ul>
 

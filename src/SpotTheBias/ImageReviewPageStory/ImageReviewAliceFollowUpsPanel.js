@@ -109,10 +109,12 @@ const ImageReviewAliceFollowUpsPanel = () => {
       </h2>
 
       {followUpsHistoryAliceImage.length === 0 ? (
-        <p className="question-empty">No follow-up questions asked yet.</p>
+        <p className="question-empty" tabIndex={0}>
+          No follow-up questions asked yet.
+        </p>
       ) : (
         <>
-          <p className="keyboard-instructions">
+          <p className="keyboard-instructions" tabIndex={0}>
             Review the follow-up questions you asked Alice. Select Explain How
             This Question Helps button to learn how the question can help detect
             image bias.
@@ -128,12 +130,12 @@ const ImageReviewAliceFollowUpsPanel = () => {
 
               return (
                 <li key={index} className="lie-item">
-                  <p className="question-text">
+                  <p className="question-text" tabIndex={0}>
                     <strong>Question:</strong> {item.followUpQuestionImage}
                   </p>
 
                   {item.followUpQuestionCategoryImage && (
-                    <p>
+                    <p tabIndex={0}>
                       <strong>Question type:</strong>{" "}
                       {item.followUpQuestionCategoryImage}
                     </p>
@@ -198,7 +200,7 @@ const ImageReviewAliceFollowUpsPanel = () => {
                   )}
 
                   {item.followUpReplyImage && (
-                    <p className="question-reply-text">
+                    <p className="question-reply-text" tabIndex={0}>
                       <strong>Alice's reply:</strong> {item.followUpReplyImage}
                     </p>
                   )}

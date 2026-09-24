@@ -29,6 +29,10 @@ const initialState = {
   followUpsHistoryAlice: [],
   rephrasedParagraphHistory: [],
   currentFocusedPanel: "",
+  storyBiasOptions: {
+    disabilityBias: "Treating Disability as Something Bad",
+    identityBias: "Gender Bias",
+  },
 };
 
 const SpotTheBiasSlice = createSlice({
@@ -37,6 +41,10 @@ const SpotTheBiasSlice = createSlice({
   reducers: {
     setCurrentFocusedPanel: (state, action) => {
       state.currentFocusedPanel = action.payload;
+    },
+
+    setStoryBiasOptions: (state, action) => {
+      state.storyBiasOptions = action.payload;
     },
 
     setStoryTopic: (state, action) => {
@@ -136,6 +144,7 @@ const SpotTheBiasSlice = createSlice({
 });
 
 export const {
+  setStoryBiasOptions,
   setStoryTopic,
   setStoryQuestion,
   setStoryReading,

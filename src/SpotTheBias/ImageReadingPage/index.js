@@ -285,13 +285,13 @@ const ImageReadingPage = () => {
             alt=""
             aria-hidden="true"
           />
-          <h1 id="image-reading-title" className="page-title">
-            Spot the Bias
+          <h1 id="image-reading-title" className="page-title" tabIndex={0}>
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Main menu navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster">
             Back to Menu
           </Link>
         </nav>
@@ -322,11 +322,15 @@ const ImageReadingPage = () => {
             onMouseEnter={focusGuide}
             onFocusCapture={focusGuide}
           >
-            <h2 id="image-guide-title" className="instruction-title">
+            <h2
+              id="image-guide-title"
+              className="instruction-title"
+              tabIndex={0}
+            >
               Creator Guide
             </h2>
 
-            <p className="page-instructions">
+            <p className="page-instructions" tabIndex={0}>
               Below, Mia has created an image using the story. You can read the
               image description and the prompt Mia used to create the image. But
               watch out! One sneaky bias is hiding inside the image description.
@@ -338,7 +342,7 @@ const ImageReadingPage = () => {
               having bias, even if the system does not confirm it. You can
               review it later.
             </p>
-            <p className="page-instructions">
+            <p className="page-instructions" tabIndex={0}>
               You can use headings to move around this game page, or select the
               <span className="kbd">Help Guide</span>button below to open the
               help guide modal to learn more keyboard shortcuts you can use.
@@ -369,7 +373,11 @@ const ImageReadingPage = () => {
               onMouseEnter={focusMiaImagePanel}
               onFocusCapture={focusMiaImagePanel}
             >
-              <h2 id="mia-image-panel-title" className="panel-title">
+              <h2
+                id="mia-image-panel-title"
+                className="panel-title"
+                tabIndex={0}
+              >
                 Mia’s Created Image
               </h2>
 
@@ -392,11 +400,16 @@ const ImageReadingPage = () => {
                 </>
               )}
 
-              <h3 id="mia-image-description-title" className="panel-title">
+              <h3
+                id="mia-image-description-title"
+                className="panel-title"
+                tabIndex={0}
+              >
                 Image Description
               </h3>
-              <p className="keyboard-instructions">
-                Press{" "}
+              <p className="keyboard-instructions" tabIndex={0}>
+                You can move through the image description paragraph by
+                paragraph. Each paragraph is a button. Press{" "}
                 <span className="kbd" aria-hidden="true">
                   [
                 </span>{" "}
@@ -418,35 +431,36 @@ const ImageReadingPage = () => {
                   const paragraphText = getParagraphText(paragraph);
 
                   return (
-                    <li
-                      key={paragraph.index}
-                      ref={(element) => {
-                        paragraphRefs.current[index] = element;
-                      }}
-                      tabIndex={index === currentParagraphIndex ? 0 : -1}
-                      className={
-                        index === currentParagraphIndex
-                          ? "story-paragraph current-focused-panel"
-                          : "story-paragraph"
-                      }
-                      aria-label={`Image description paragraph ${index + 1} of ${
-                        imageDescriptionParagraphs.length
-                      }. ${paragraphText}. Press Enter to check this paragraph.`}
-                      onFocus={() => focusImageDescriptionParagraph(index)}
-                      onClick={() => focusImageDescriptionParagraph(index)}
-                      onMouseEnter={() => focusImageDescriptionParagraph(index)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
+                    <li key={paragraph.index}>
+                      <button
+                        type="button"
+                        ref={(element) => {
+                          paragraphRefs.current[index] = element;
+                        }}
+                        tabIndex={index === currentParagraphIndex ? 0 : -1}
+                        className={
+                          index === currentParagraphIndex
+                            ? "story-paragraph current-focused-panel"
+                            : "story-paragraph"
+                        }
+                        aria-label={`Image description paragraph ${index + 1} of ${
+                          imageDescriptionParagraphs.length
+                        }. ${paragraphText}. Press Enter to check this paragraph.`}
+                        onFocus={() => focusImageDescriptionParagraph(index)}
+                        onClick={() => {
+                          focusImageDescriptionParagraph(index);
                           dispatch(
                             setSelectedCheckingImageDescriptionParagraph(
                               paragraph,
                             ),
                           );
+                        }}
+                        onMouseEnter={() =>
+                          focusImageDescriptionParagraph(index)
                         }
-                      }}
-                    >
-                      {paragraphText}
+                      >
+                        {paragraphText}
+                      </button>
                     </li>
                   );
                 })}
@@ -458,7 +472,7 @@ const ImageReadingPage = () => {
                   onClick={saveImageDescription}
                   disabled={imageDescriptionParagraphs.length === 0}
                 >
-                  Save Image Description
+                  Save Image Description as Text File
                 </button>
               </div>
             </section>
@@ -488,18 +502,22 @@ const ImageReadingPage = () => {
             onMouseEnter={focusImagePromptPanel}
             onFocusCapture={focusImagePromptPanel}
           >
-            <h2 id="mia-image-prompt-panel-title" className="panel-title">
+            <h2
+              id="mia-image-prompt-panel-title"
+              className="panel-title"
+              tabIndex={0}
+            >
               Rephrase Image Prompt Mia Used to Create New Image
             </h2>
 
             {imagePrompt.displayedPrompt && (
               <>
-                <p className="image-prompt">
+                <p className="image-prompt" tabIndex={0}>
                   <strong>Image prompt:</strong> {imagePrompt.displayedPrompt}
                 </p>
 
-                <p className="keyboard-instructions">
-                  Press the below Rephrase Image Prompt button to rewrite the
+                <p className="keyboard-instructions" tabIndex={0}>
+                  Press the below Rewrite Image Prompt button to rewrite this
                   image prompt.
                 </p>
 
@@ -515,12 +533,12 @@ const ImageReadingPage = () => {
 
                 {imagePrompt.rephrasedPrompt && (
                   <>
-                    <p className="image-prompt">
+                    <p className="image-prompt" tabIndex={0}>
                       <strong>Rewritten image prompt:</strong>{" "}
                       {imagePrompt.rephrasedPrompt}
                     </p>
 
-                    <p className="keyboard-instructions">
+                    <p className="keyboard-instructions" tabIndex={0}>
                       Press the below Generate New Image button to create new
                       image and description.
                     </p>
@@ -547,9 +565,13 @@ const ImageReadingPage = () => {
             onMouseEnter={focusImageReviewGuide}
             onFocusCapture={focusImageReviewGuide}
           >
-            <h2 id="image-review-guide-title" className="go-to-review-title">
-              Select below buttons to look back at your image bias-fixing moves
-              and get explanations.
+            <h2
+              id="image-review-guide-title"
+              className="go-to-review-title"
+              tabIndex={0}
+            >
+              Select below buttons to review your image bias-fixing moves and
+              get explanations. You can also go back to the story page.
             </h2>
 
             <div
@@ -561,7 +583,7 @@ const ImageReadingPage = () => {
                 type="button"
                 className="page-button"
                 onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/image-review-page`)
+                  navigate(`/bias-buster/${storytopic}/image-review-page`)
                 }
               >
                 Review Your Image Bias-Spotting Moves
@@ -571,7 +593,7 @@ const ImageReadingPage = () => {
                 type="button"
                 className="page-button"
                 onClick={() =>
-                  navigate(`/spot-the-bias/${storytopic}/story-reading`)
+                  navigate(`/bias-buster/${storytopic}/story-reading`)
                 }
               >
                 Back to Story Page

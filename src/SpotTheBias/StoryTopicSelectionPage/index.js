@@ -6,13 +6,6 @@ import "./index.css";
 import { setStoryTopic } from "../SpotTheBiasReducer";
 import { setImageDescriptionReading } from "../ImageBiasReducer";
 
-// const storyTopics = [
-//   "Adventure and Travel",
-//   "Science Fiction and Fantasy",
-//   "Mystery and Suspense",
-//   "Self-Discovery and Coming of Age",
-// ];
-
 const storyTopics = [
   "Adventure: Story about exploring new places",
   "Fantasy: Story with magic or imaginary worlds",
@@ -40,7 +33,7 @@ const StoryTopicSelectionPage = () => {
 
     dispatch(setImageDescriptionReading({}));
 
-    navigate(`/spot-the-bias/${storyTopicSlug}`);
+    navigate(`/bias-buster/${storyTopicSlug}`);
   };
 
   const submitCustomStoryTopic = (event) => {
@@ -60,7 +53,7 @@ const StoryTopicSelectionPage = () => {
     );
 
     dispatch(setImageDescriptionReading({}));
-    navigate("/spot-the-bias/customized-topic");
+    navigate("/bias-buster/customized-topic");
   };
 
   return (
@@ -79,24 +72,28 @@ const StoryTopicSelectionPage = () => {
             aria-hidden="true"
           />
 
-          <h1 id="story-topic-selection-page-title" className="page-title">
-            Spot the Bias
+          <h1
+            id="story-topic-selection-page-title"
+            className="page-title"
+            tabIndex={0}
+          >
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Main Menu Navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster" tabIndex={0}>
             Back to Menu
           </Link>
         </nav>
       </header>
 
       <section aria-labelledby="creator-guide-title">
-        <h2 id="creator-guide-title" className="instruction-title">
+        <h2 id="creator-guide-title" className="instruction-title" tabIndex={0}>
           Coach Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Welcome, Fairness Coach! In this game, Mia, an AI agent, will create a
           story and a story image. But watch out. Mia might sneak in biases into
           the story and image. Your task is to spot the biases, guide Mia to fix
@@ -104,8 +101,8 @@ const StoryTopicSelectionPage = () => {
         </p>
       </section>
 
-      <section aria-label="Story Topic Selection">
-        <h2 id="story-topic-title" className="story-topic-title">
+      <section aria-labelledby="story-topic-title">
+        <h2 id="story-topic-title" className="story-topic-title" tabIndex={0}>
           First Step: Choose a topic from the list below or use your own fun
           story idea to help Mia create a story.
         </h2>
@@ -127,7 +124,11 @@ const StoryTopicSelectionPage = () => {
       </section>
 
       <section aria-labelledby="custom-story-topic-title">
-        <h2 id="custom-story-topic-title" className="story-topic-title">
+        <h2
+          id="custom-story-topic-title"
+          className="story-topic-title"
+          tabIndex={0}
+        >
           Have your own story idea? Write it here.
         </h2>
 
@@ -136,7 +137,11 @@ const StoryTopicSelectionPage = () => {
           onSubmit={submitCustomStoryTopic}
           aria-labelledby="custom-story-topic-title"
         >
-          <label htmlFor="custom-story-topic" className="custom-topic-label">
+          <label
+            htmlFor="custom-story-topic"
+            className="custom-topic-label"
+            tabIndex={0}
+          >
             What kind of story do you want Mia to create today?
           </label>
 
@@ -148,7 +153,6 @@ const StoryTopicSelectionPage = () => {
             placeholder="For example, a funny story about a robot at school"
             rows={4}
           />
-
           <button type="submit" className="story-topic-button">
             Submit My Story Topic
           </button>

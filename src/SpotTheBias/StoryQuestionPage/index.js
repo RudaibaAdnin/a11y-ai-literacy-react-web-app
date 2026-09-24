@@ -75,7 +75,7 @@ const StoryQuestionPage = () => {
 
     dispatch(setStoryQuestion(storyQuestionsAndAnswers));
 
-    navigate(`/spot-the-bias/${storytopic}/story-reading`);
+    navigate(`/bias-buster/${storytopic}/story-reading`);
   };
 
   return (
@@ -94,24 +94,28 @@ const StoryQuestionPage = () => {
             aria-hidden="true"
           />
 
-          <h1 id="story-question-page-title" className="page-title">
-            Spot the Bias
+          <h1
+            id="story-question-page-title"
+            className="page-title"
+            tabIndex={0}
+          >
+            Bias Buster
           </h1>
         </div>
 
         <nav className="page-nav" aria-label="Main Menu Navigation">
-          <Link className="page-button" to="/spot-the-bias">
+          <Link className="page-button" to="/bias-buster" tabIndex={0}>
             Back to Menu
           </Link>
         </nav>
       </header>
 
       <section aria-labelledby="creator-guide-title">
-        <h2 id="creator-guide-title" className="instruction-title">
+        <h2 id="creator-guide-title" className="instruction-title" tabIndex={0}>
           Coach Guide
         </h2>
 
-        <p className="page-instructions">
+        <p className="page-instructions" tabIndex={0}>
           Now, guide Mia to create a story and an image {topicText}. Answer
           three fun questions. For each question, select one of the two
           suggestions or write your own answer.
@@ -124,11 +128,12 @@ const StoryQuestionPage = () => {
       >
         {isLoadingQuestions ? (
           <p
-            ref={loadingQuestionsRef}
-            tabIndex={-1}
+            // ref={loadingQuestionsRef}
+            // tabIndex={-1}
             className="loading-questions"
             role="status"
             aria-live="polite"
+            tabIndex={0}
           >
             Loading three fun questions and suggestions...
           </p>
@@ -136,9 +141,10 @@ const StoryQuestionPage = () => {
           <>
             <h2
               id="story-question-title"
-              ref={activityStepRef}
-              tabIndex={-1}
+              // ref={activityStepRef}
+              // tabIndex={-1}
               className="story-question-title"
+              tabIndex={0}
             >
               Second Step: Answer the following three questions. Select a
               suggestion or write your own answer.
