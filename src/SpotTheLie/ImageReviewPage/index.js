@@ -11,7 +11,7 @@ const otherLieTypes = [
   {
     type: "Missed the main point",
     definition:
-      "The answer talks about the image but does not answer the main thing you asked.",
+      "The answer talks about the image but does not answer the main topic you asked.",
     question: "What color is the student's backpack?",
     hallucinatedLine: "The student is standing next to a large tree.",
     accurateLine: "The student's backpack is red.",
@@ -459,7 +459,7 @@ const ImageReviewPage = () => {
             </>
           )}
 
-          <h2 className="panel-title" tabIndex={0}>
+          <h2 className="other-types-title" tabIndex={0}>
             Other Types of Lies
           </h2>
 
@@ -488,7 +488,9 @@ const ImageReviewPage = () => {
 
                 return (
                   <li key={item.type} className="lie-item">
-                    <p className="lie-item-title">{item.type}</p>
+                    <p className="lie-item-title" tabIndex={0}>
+                      {item.type}
+                    </p>
 
                     <p tabIndex={0}>
                       <strong>What it means:</strong> {item.definition}

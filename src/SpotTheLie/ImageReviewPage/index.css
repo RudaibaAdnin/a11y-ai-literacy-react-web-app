@@ -44,6 +44,13 @@
   text-align: center;
   margin: 0;
 }
+.other-types-title {
+  font-size: 28px;
+  line-height: 1.4;
+  font-weight: 550;
+  text-decoration: underline;
+  margin-top: 20px;
+}
 
 .page-nav {
   width: 170px;
@@ -114,6 +121,7 @@
 .lie-list {
   margin: 0;
   padding-left: 25px;
+  margin-top: 20px;
 }
 
 .lie-item {
