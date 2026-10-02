@@ -205,7 +205,12 @@ const CraftPromptRephrasePanel = () => {
         role="group"
         aria-label="Craft prompt options"
       >
-        <button type="button" className="page-button" onClick={getSuggestions}>
+        <button
+          type="button"
+          className="page-button"
+          aria-label="Get Prompt Suggestions"
+          onClick={getSuggestions}
+        >
           Get Prompt Suggestions
         </button>
         {/* 
@@ -305,6 +310,7 @@ const CraftPromptRephrasePanel = () => {
                       onClick={() =>
                         approveRephrase(turnIndex, turn.rephrasedParagraph)
                       }
+                      aria-label="Approve Rephrase"
                     >
                       Approve Rephrase
                     </button>
@@ -324,18 +330,10 @@ const CraftPromptRephrasePanel = () => {
                     type="button"
                     className="page-button"
                     onClick={getSuggestions}
+                    aria-label="Regenerate Prompt Suggestions"
                   >
                     Regenerate Prompt Suggestions
                   </button>
-
-                  {/* 
-                  <button
-                    type="button"
-                    className="page-button"
-                    onClick={closePanel}
-                  >
-                    Close
-                  </button> */}
                 </div>
               </>
             )}
@@ -365,6 +363,7 @@ const CraftPromptRephrasePanel = () => {
             className="page-button"
             onClick={() => rephraseParagraph(manualPrompt.trim())}
             disabled={!manualPrompt.trim()}
+            aria-label="Rephrase"
           >
             Rephrase
           </button>

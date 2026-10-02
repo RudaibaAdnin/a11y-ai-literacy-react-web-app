@@ -356,11 +356,21 @@ const ImageAgentAlicePanel = () => {
         role="group"
         aria-label="Alice image clue options"
       >
-        <button type="button" className="page-button" onClick={getClues}>
+        <button
+          type="button"
+          className="page-button"
+          aria-label="Get Clues"
+          onClick={getClues}
+        >
           Get Clues
         </button>
 
-        <button type="button" className="page-button" onClick={clearChat}>
+        <button
+          type="button"
+          className="page-button"
+          aria-label="Close Chat"
+          onClick={clearChat}
+        >
           Close Chat
         </button>
       </div>
@@ -421,6 +431,7 @@ const ImageAgentAlicePanel = () => {
                     <button
                       type="button"
                       className="followup-question-button"
+                      aria-label={`${option.category}: ${option.question}`}
                       onClick={() => askQuestion(turnIndex, option)}
                     >
                       <strong>{option.category}</strong>: {option.question}
@@ -482,13 +493,19 @@ const ImageAgentAlicePanel = () => {
               <button
                 type="button"
                 className="page-button"
+                aria-label="Ask Alice"
                 onClick={askManualQuestion}
                 disabled={!manualQuestion.trim()}
               >
                 Ask Alice
               </button>
             </div>
-            <button type="button" className="page-button" onClick={clearChat}>
+            <button
+              type="button"
+              className="page-button"
+              aria-label="Close Chat"
+              onClick={clearChat}
+            >
               Close Chat
             </button>
           </>

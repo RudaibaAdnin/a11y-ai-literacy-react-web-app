@@ -365,11 +365,21 @@ const AgentAlicePanel = () => {
         role="group"
         aria-label="Alice chat actions"
       >
-        <button type="button" className="page-button" onClick={getClues}>
+        <button
+          type="button"
+          className="page-button"
+          aria-label="Get Clues"
+          onClick={getClues}
+        >
           Get Clues
         </button>
 
-        <button type="button" className="page-button" onClick={clearChat}>
+        <button
+          type="button"
+          className="page-button"
+          onClick={clearChat}
+          aria-label="Close Chat"
+        >
           Close Chat
         </button>
       </div>
@@ -501,11 +511,17 @@ const AgentAlicePanel = () => {
                 className="page-button"
                 onClick={askManualQuestion}
                 disabled={!manualQuestion.trim()}
+                aria-label="Ask Alice"
               >
                 Ask Alice
               </button>
             </div>
-            <button type="button" className="page-button" onClick={clearChat}>
+            <button
+              type="button"
+              className="page-button"
+              onClick={clearChat}
+              aria-label="Close Chat"
+            >
               Close Chat
             </button>
           </>
