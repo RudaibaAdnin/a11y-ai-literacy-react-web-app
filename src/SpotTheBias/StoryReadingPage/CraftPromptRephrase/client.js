@@ -5,10 +5,13 @@ const API_URL = process.env.REACT_APP_API_URL;
 const craftPromptSuggestionsAPI = `${API_URL}/craft-prompt-suggestions`;
 const rephraseParagraphAPI = `${API_URL}/rephrase-paragraph`;
 
-export const getCraftPromptSuggestions = async ({ paragraph }) => {
+export const getCraftPromptSuggestions = async ({
+  paragraph,
+  biasCategory,
+}) => {
   const response = await axios.post(
     craftPromptSuggestionsAPI,
-    { paragraph },
+    { paragraph, biasCategory },
     { headers: { "Content-Type": "application/json" } },
   );
 

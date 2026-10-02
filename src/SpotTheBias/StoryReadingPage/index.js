@@ -26,11 +26,22 @@ const isInteractiveElement = (element) =>
   element.isContentEditable;
 
 const getRandomBiasCategories = () => {
-  const socialBiasNames = ["Gender bias", "Racial bias"];
-  const disabilityBiasNames = ["Ableism bias", "Inspiration bias"];
+  const identityAndBackgroundBiasNames = [
+    "Gender Bias",
+    "Age Bias",
+    "Cultural Bias",
+    "Racial Bias",
+  ];
+
+  const disabilityBiasNames = [
+    "Treating Disability as Something Bad",
+    "Assuming Disabled People as Helpless",
+    "Inspiration Bias",
+    "Limited View on Disability",
+  ];
 
   const selectedNames = [
-    pickRandom(socialBiasNames, 1)[0],
+    pickRandom(identityAndBackgroundBiasNames, 1)[0],
     pickRandom(disabilityBiasNames, 1)[0],
   ];
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
@@ -21,12 +22,17 @@ const CraftPromptRephrasePanel = () => {
   const [turns, setTurns] = useState([]);
   const [manualPrompt, setManualPrompt] = useState("");
 
-  const { selectedCheckingParagraph } = useSelector(
+  const { selectedCheckingParagraph, biasedParagraphPlan } = useSelector(
     (state) => state.SpotTheBiasReducer,
   );
 
   const paragraph = selectedCheckingParagraph?.originalStoryParagraph || "";
   const paragraphNumber = selectedCheckingParagraph?.index + 1;
+
+  const biasCategory =
+    biasedParagraphPlan?.find(
+      (item) => item.paragraphIndex === selectedCheckingParagraph?.index,
+    )?.biasCategory || null;
 
   useEffect(() => {
     if (nextFocusRef.current === "status") statusRef.current?.focus();
@@ -71,7 +77,10 @@ const CraftPromptRephrasePanel = () => {
     ]);
 
     try {
-      const data = await client.getCraftPromptSuggestions({ paragraph });
+      const data = await client.getCraftPromptSuggestions({
+        paragraph,
+        biasCategory,
+      });
 
       nextFocusRef.current = "status";
       updateLastTurn({
