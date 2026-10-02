@@ -433,6 +433,7 @@ const AgentAlicePanel = () => {
                     <button
                       type="button"
                       className="followup-question-button"
+                      aria-label={`${option.category}: ${option.question}`}
                       onClick={() => askQuestion(turnIndex, option)}
                     >
                       <strong>{option.category}:</strong> {option.question}
