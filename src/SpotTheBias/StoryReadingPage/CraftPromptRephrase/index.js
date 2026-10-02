@@ -254,6 +254,7 @@ const CraftPromptRephrasePanel = () => {
                     <button
                       type="button"
                       className="followup-question-button"
+                      aria-label={`${option.category}: ${option.suggestion}`}
                       onClick={() => rephraseParagraph(option)}
                     >
                       <strong>{option.category}: </strong>
