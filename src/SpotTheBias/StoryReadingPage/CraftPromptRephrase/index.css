@@ -1,3 +1,30 @@
 .manual-followup-question-pane {
   margin-bottom: 10px;
 }
+.craft-prompt-response {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin: 18px 0;
+  padding: 16px;
+
+  border: 2px solid #1d4289;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #1d4289;
+
+  font-size: 21px;
+  line-height: 1.5;
+
+  text-align: left;
+
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.craft-prompt-response:focus {
+  outline: 3px solid #1d4289;
+  outline-offset: 3px;
+}

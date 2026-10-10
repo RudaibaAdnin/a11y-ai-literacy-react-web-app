@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
+
 import CraftPromptRephrasePanel from "../CraftPromptRephrase";
+
+import * as client from "./client.js";
+
 import {
   setSelectedCheckingParagraph,
   setCurrentFocusedPanel,
@@ -16,6 +21,8 @@ const BiasCheckingPanel = () => {
   const panelRef = useRef(null);
   const confirmRef = useRef(null);
   const feedbackRef = useRef(null);
+  const optionsStatusRef = useRef(null);
+  const resultRef = useRef(null);
   const originalParagraphRef = useRef(null);
   const openedParagraphRef = useRef(null);
   const feedbackFromActionRef = useRef(false);
@@ -25,6 +32,13 @@ const BiasCheckingPanel = () => {
   const [showYesButton, setShowYesButton] = useState(true);
   const [showCraftPromptButton, setShowCraftPromptButton] = useState(false);
   const [showOriginalParagraph, setShowOriginalParagraph] = useState(false);
+
+  const [biasCheckOptions, setBiasCheckOptions] = useState([]);
+  const [selectedBiasCheckOptions, setSelectedBiasCheckOptions] = useState([]);
+  const [customBiasAnswer, setCustomBiasAnswer] = useState("");
+  const [showBiasCheckOptions, setShowBiasCheckOptions] = useState(false);
+  const [loadingBiasCheckOptions, setLoadingBiasCheckOptions] = useState(false);
+  const [checkingBiasAnswer, setCheckingBiasAnswer] = useState(false);
 
   const {
     selectedCheckingParagraph,
@@ -62,6 +76,9 @@ const BiasCheckingPanel = () => {
   const focusFeedback = () =>
     requestAnimationFrame(() => feedbackRef.current?.focus());
 
+  const focusResult = () =>
+    requestAnimationFrame(() => resultRef.current?.focus());
+
   const setFeedbackWithFocus = (message) => {
     setFeedback(message);
     focusFeedback();
@@ -69,9 +86,20 @@ const BiasCheckingPanel = () => {
 
   const setFeedbackWithCraft = (message, fromAction = false) => {
     feedbackFromActionRef.current = fromAction;
+
     setFeedback(message);
     setShowCraftPromptButton(true);
+
     focusFeedback();
+  };
+
+  const resetBiasCheckOptions = () => {
+    setBiasCheckOptions([]);
+    setSelectedBiasCheckOptions([]);
+    setCustomBiasAnswer("");
+    setShowBiasCheckOptions(false);
+    setLoadingBiasCheckOptions(false);
+    setCheckingBiasAnswer(false);
   };
 
   const toggleOriginalText = () => {
@@ -89,11 +117,15 @@ const BiasCheckingPanel = () => {
   const closePanel = () => {
     openedParagraphRef.current = null;
     feedbackFromActionRef.current = false;
+
     setFeedback("");
     setShowMarkButton(false);
     setShowYesButton(true);
     setShowCraftPromptButton(false);
     setShowOriginalParagraph(false);
+
+    resetBiasCheckOptions();
+
     dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
@@ -102,6 +134,7 @@ const BiasCheckingPanel = () => {
     if (!isPanelOpen) {
       openedParagraphRef.current = null;
       feedbackFromActionRef.current = false;
+
       return;
     }
 
@@ -110,20 +143,29 @@ const BiasCheckingPanel = () => {
     if (openedNewParagraph) {
       openedParagraphRef.current = paragraphIndex;
       feedbackFromActionRef.current = false;
+
       setFeedback("");
       setShowMarkButton(false);
       setShowYesButton(true);
       setShowCraftPromptButton(false);
       setShowOriginalParagraph(false);
+
+      resetBiasCheckOptions();
+
       dispatch(setCurrentFocusedPanel("biasCheckingPanel"));
+
       panelRef.current?.focus();
 
       if (isRephrased) {
         setShowMarkButton(false);
         setShowYesButton(false);
+
         setFeedback("This is a rephrased paragraph. You can rephrase more.");
+
         setShowCraftPromptButton(true);
+
         focusFeedback();
+
         return;
       }
     }
@@ -132,32 +174,40 @@ const BiasCheckingPanel = () => {
 
     if (detectedItem) {
       setShowYesButton(false);
+
       setFeedbackWithCraft(
         `You already detected paragraph ${paragraphNumber} as biased. This paragraph has ${getBiasName(
           detectedItem.biasCategory,
         )}.`,
       );
+
       return;
     }
 
     if (alreadyMarked) {
       setShowYesButton(false);
+
       setFeedbackWithCraft(
         `You already marked paragraph ${paragraphNumber} for later.`,
       );
+
       return;
     }
 
     if (allBiasesDetected) {
       setShowYesButton(false);
       setShowMarkButton(true);
+
       setFeedbackWithFocus(
         `You have already detected all biases. Do you want to mark paragraph ${paragraphNumber} as biased and review it later?`,
       );
+
       return;
     }
 
-    if (!isRephrased) focusConfirm();
+    if (!isRephrased) {
+      focusConfirm();
+    }
   }, [
     isPanelOpen,
     paragraphIndex,
@@ -174,6 +224,7 @@ const BiasCheckingPanel = () => {
       setFeedbackWithCraft(
         `You already marked paragraph ${paragraphNumber} for later.`,
       );
+
       return;
     }
 
@@ -186,49 +237,199 @@ const BiasCheckingPanel = () => {
 
     setShowMarkButton(false);
     setShowYesButton(false);
+
     setFeedbackWithCraft(
       `Marked paragraph ${paragraphNumber}! You can review it later.`,
       true,
     );
   };
 
-  const checkBias = () => {
-    const matchedPlan = biasedParagraphPlan.find(
-      (item) => item.paragraphIndex === paragraphIndex,
-    );
-
+  const checkBias = async () => {
     setShowYesButton(false);
     setShowMarkButton(false);
     setShowCraftPromptButton(false);
 
-    if (!matchedPlan) {
-      setShowMarkButton(true);
+    setFeedback("");
+    setBiasCheckOptions([]);
+    setSelectedBiasCheckOptions([]);
+    setCustomBiasAnswer("");
+    setShowBiasCheckOptions(true);
+    setLoadingBiasCheckOptions(true);
+
+    try {
+      const data = await client.getBiasCheckOptions({
+        paragraph: selectedCheckingParagraph.originalStoryParagraph,
+      });
+
+      const categories = data.biasCheckCategories || [];
+
+      const statements = data.biasCheckStatements || [];
+
+      const options = statements.map((statement, index) => ({
+        category: categories[index] || "",
+        statement,
+      }));
+
+      setBiasCheckOptions(options);
+      setLoadingBiasCheckOptions(false);
+
+      requestAnimationFrame(() => optionsStatusRef.current?.focus());
+    } catch (error) {
+      console.error("Could not load bias checking options:", error);
+
+      setLoadingBiasCheckOptions(false);
+      setShowBiasCheckOptions(false);
+      setShowYesButton(true);
+
       setFeedbackWithFocus(
-        `Good try! Paragraph ${paragraphNumber} might not be a biased paragraph. Do you still want to mark it as biased and review it later?`,
+        "Sorry, the bias checking options could not be loaded right now.",
       );
+    }
+  };
+
+  const removeStatementFromAnswer = (text, statement) => {
+    return text.replace(statement, "").replace(/\s+/g, " ").trim();
+  };
+
+  const toggleBiasCheckOption = (option) => {
+    const alreadySelected = selectedBiasCheckOptions.some(
+      (item) =>
+        item.category === option.category &&
+        item.statement === option.statement,
+    );
+
+    if (alreadySelected) {
+      setSelectedBiasCheckOptions((current) =>
+        current.filter(
+          (item) =>
+            !(
+              item.category === option.category &&
+              item.statement === option.statement
+            ),
+        ),
+      );
+
+      setCustomBiasAnswer((current) =>
+        removeStatementFromAnswer(current, option.statement),
+      );
+
       return;
     }
 
-    dispatch(
-      addDetectedStoryBias({
-        paragraphIndex,
+    setSelectedBiasCheckOptions((current) => [...current, option]);
+
+    setCustomBiasAnswer((current) =>
+      `${current} ${option.statement}`.replace(/\s+/g, " ").trim(),
+    );
+  };
+
+  const checkBiasAnswer = async () => {
+    if (selectedBiasCheckOptions.length === 0 && !customBiasAnswer.trim()) {
+      setFeedbackWithFocus(
+        "Select at least one statement or type your own answer before checking.",
+      );
+
+      return;
+    }
+
+    const matchedPlan = biasedParagraphPlan.find(
+      (item) => item.paragraphIndex === paragraphIndex,
+    );
+
+    setCheckingBiasAnswer(true);
+
+    try {
+      const data = await client.checkBiasAnswer({
         paragraph: selectedCheckingParagraph.originalStoryParagraph,
-        biasCategory: matchedPlan.biasCategory,
-      }),
-    );
 
-    const nextCount = detectedStoryBias.count + 1;
-    const leftCount = biasedParagraphPlan.length - nextCount;
-    const biasName = getBiasName(matchedPlan.biasCategory);
+        biasCategory: matchedPlan?.biasCategory || null,
 
-    setFeedbackWithCraft(
-      leftCount === 0
-        ? `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. You detected all ${nextCount} biases.`
-        : `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. You detected ${nextCount} bias. You need to detect ${leftCount} more ${
-            leftCount === 1 ? "bias" : "biases"
-          }.`,
-      true,
-    );
+        selectedCategories: selectedBiasCheckOptions.map(
+          (item) => item.category,
+        ),
+
+        selectedStatements: selectedBiasCheckOptions.map(
+          (item) => item.statement,
+        ),
+
+        typedAnswer: customBiasAnswer.trim(),
+      });
+
+      setCheckingBiasAnswer(false);
+
+      if (data.correct && matchedPlan) {
+        dispatch(
+          addDetectedStoryBias({
+            paragraphIndex,
+
+            paragraph: selectedCheckingParagraph.originalStoryParagraph,
+
+            biasCategory: matchedPlan.biasCategory,
+          }),
+        );
+
+        const nextCount = detectedStoryBias.count + 1;
+
+        const leftCount = biasedParagraphPlan.length - nextCount;
+
+        const biasName = getBiasName(matchedPlan.biasCategory);
+
+        setShowBiasCheckOptions(false);
+        setShowMarkButton(false);
+
+        const resultMessage =
+          leftCount === 0
+            ? `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. ${
+                data.explanation || ""
+              } You detected all ${nextCount} biases.`
+            : `Correct guess! Paragraph ${paragraphNumber} has ${biasName}. ${
+                data.explanation || ""
+              } You detected ${nextCount} bias. You need to detect ${leftCount} more ${
+                leftCount === 1 ? "bias" : "biases"
+              }.`;
+
+        feedbackFromActionRef.current = true;
+
+        setFeedback(resultMessage);
+
+        setShowCraftPromptButton(true);
+
+        focusResult();
+
+        return;
+      }
+
+      if (!matchedPlan) {
+        setShowBiasCheckOptions(false);
+        setShowMarkButton(true);
+
+        setFeedback(
+          `No, that was not correct. ${
+            data.explanation || ""
+          } Do you still want to mark paragraph ${paragraphNumber} as biased and review it later?`,
+        );
+
+        focusResult();
+
+        return;
+      }
+
+      setShowBiasCheckOptions(false);
+
+      setFeedback(`No, that was not correct. ${data.explanation || ""}`);
+
+      setShowCraftPromptButton(true);
+
+      focusResult();
+    } catch (error) {
+      console.error("Could not check bias answer:", error);
+
+      setCheckingBiasAnswer(false);
+
+      setFeedbackWithFocus(
+        "Sorry, your answer could not be checked right now.",
+      );
+    }
   };
 
   const handleCheckingPanelKeyDown = (event) => {
@@ -244,7 +445,9 @@ const BiasCheckingPanel = () => {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
+
       closePanel();
+
       return;
     }
 
@@ -252,6 +455,9 @@ const BiasCheckingPanel = () => {
       closePanel();
     }
   };
+
+  const hasBiasCheckAnswer =
+    selectedBiasCheckOptions.length > 0 || customBiasAnswer.trim().length > 0;
 
   if (!isPanelOpen) return null;
 
@@ -265,6 +471,7 @@ const BiasCheckingPanel = () => {
           : "bias-check-rephrase-sidebar-wrapper"
       }
       role="dialog"
+      aria-modal="false"
       aria-labelledby="bias-check-title"
       onMouseEnter={() => dispatch(setCurrentFocusedPanel("biasCheckingPanel"))}
       onFocusCapture={() =>
@@ -288,12 +495,12 @@ const BiasCheckingPanel = () => {
             <div
               className="bias-checking-buttons"
               role="group"
-              aria-label={`Confirm if paragraph ${paragraphNumber} has bias`}
+              aria-label={`Confirm whether paragraph ${paragraphNumber} has bias`}
             >
               <button
                 type="button"
                 className="page-button"
-                aria-label={`Yes, paragraph ${paragraphNumber} has bias`}
+                aria-label={`Yes, I think paragraph ${paragraphNumber} has bias`}
                 onClick={checkBias}
               >
                 Yes
@@ -311,15 +518,164 @@ const BiasCheckingPanel = () => {
           </>
         )}
 
-      <p
-        ref={feedbackRef}
-        tabIndex={-1}
-        className="bias-feedback"
-        role="status"
-        aria-live="polite"
-      >
-        {feedback}
-      </p>
+      {feedback && (
+        <p
+          ref={feedbackRef}
+          tabIndex={-1}
+          className="bias-feedback"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {feedback}
+        </p>
+      )}
+
+      {loadingBiasCheckOptions && (
+        <p
+          ref={optionsStatusRef}
+          tabIndex={-1}
+          className="keyboard-instructions"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          Loading bias checking choices for paragraph {paragraphNumber}...
+        </p>
+      )}
+
+      {showBiasCheckOptions &&
+        !loadingBiasCheckOptions &&
+        biasCheckOptions.length > 0 && (
+          <div
+            className="bias-check-options-section"
+            role="region"
+            aria-labelledby="bias-check-options-title"
+          >
+            <p
+              id="bias-check-options-title"
+              ref={optionsStatusRef}
+              tabIndex={-1}
+              className="keyboard-instructions"
+              role="status"
+              aria-live="polite"
+            >
+              Loaded bias checking choices for paragraph {paragraphNumber}.
+            </p>
+
+            <p className="keyboard-instructions" tabIndex={0}>
+              Select one or more statements that match what you notice. You can
+              also type or edit your answer below.
+            </p>
+
+            <ul
+              className="bias-checkbox-list"
+              aria-label={`Bias checking choices for paragraph ${paragraphNumber}`}
+            >
+              {biasCheckOptions.map((option, index) => {
+                const optionId = `bias-check-option-${paragraphIndex}-${index}`;
+
+                const checked = selectedBiasCheckOptions.some(
+                  (item) =>
+                    item.category === option.category &&
+                    item.statement === option.statement,
+                );
+
+                return (
+                  <li
+                    key={`${option.category}-${index}`}
+                    className="bias-checkbox-list-item"
+                  >
+                    <label
+                      htmlFor={optionId}
+                      className={
+                        checked
+                          ? "bias-checkbox-option bias-checkbox-option-selected"
+                          : "bias-checkbox-option"
+                      }
+                    >
+                      <input
+                        id={optionId}
+                        type="checkbox"
+                        className="bias-checkbox-input"
+                        checked={checked}
+                        onChange={() => toggleBiasCheckOption(option)}
+                      />
+
+                      <span className="bias-checkbox-text">
+                        <strong>{option.category}: </strong>
+
+                        {option.statement}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <label
+              htmlFor="custom-bias-answer"
+              className="manual-followup-question-label"
+              tabIndex={0}
+            >
+              Type or edit your answer:
+            </label>
+
+            <div className="manual-followup-question-pane">
+              <textarea
+                id="custom-bias-answer"
+                className="manual-followup-question-input"
+                value={customBiasAnswer}
+                onChange={(event) => setCustomBiasAnswer(event.target.value)}
+                placeholder="Select statements above or type your own answer..."
+                rows={5}
+                aria-label={`Type or edit your bias checking answer for paragraph ${paragraphNumber}`}
+              />
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={checkBiasAnswer}
+                disabled={!hasBiasCheckAnswer || checkingBiasAnswer}
+                aria-label={
+                  checkingBiasAnswer
+                    ? "Checking bias answer"
+                    : `Check answer for paragraph ${paragraphNumber}`
+                }
+              >
+                {checkingBiasAnswer ? "Checking Answer..." : "Check Answer"}
+              </button>
+            </div>
+
+            <div
+              className="bias-checking-buttons"
+              role="group"
+              aria-label="Bias checking modal actions"
+            >
+              <button
+                type="button"
+                className="page-button"
+                onClick={closePanel}
+                aria-label="Close bias checking modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+      {feedback && !showBiasCheckOptions && (
+        <span
+          ref={resultRef}
+          tabIndex={-1}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {feedback}
+        </span>
+      )}
 
       {isRephrased && (
         <>
@@ -374,6 +730,7 @@ const BiasCheckingPanel = () => {
           </button>
         </div>
       )}
+
       {showCraftPromptButton && (
         <>
           <CraftPromptRephrasePanel />

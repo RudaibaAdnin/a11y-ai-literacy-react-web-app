@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
+
 import {
   setCurrentFocusedPanel,
   setSelectedCheckingParagraph,
   addRephrasedParagraph,
   addRephrasedParagraphHistory,
 } from "../../SpotTheBiasReducer";
+
 import * as client from "./client.js";
 
 const CraftPromptRephrasePanel = () => {
@@ -21,6 +23,7 @@ const CraftPromptRephrasePanel = () => {
 
   const [turns, setTurns] = useState([]);
   const [manualPrompt, setManualPrompt] = useState("");
+  const [selectedSuggestions, setSelectedSuggestions] = useState([]);
 
   const { selectedCheckingParagraph, biasedParagraphPlan } = useSelector(
     (state) => state.SpotTheBiasReducer,
@@ -35,9 +38,18 @@ const CraftPromptRephrasePanel = () => {
     )?.biasCategory || null;
 
   useEffect(() => {
-    if (nextFocusRef.current === "status") statusRef.current?.focus();
-    if (nextFocusRef.current === "reply") replyRef.current?.focus();
-    if (nextFocusRef.current === "approved") approvedRef.current?.focus();
+    if (nextFocusRef.current === "status") {
+      statusRef.current?.focus();
+    }
+
+    if (nextFocusRef.current === "reply") {
+      replyRef.current?.focus();
+    }
+
+    if (nextFocusRef.current === "approved") {
+      approvedRef.current?.focus();
+    }
+
     nextFocusRef.current = null;
   }, [turns]);
 
@@ -56,6 +68,8 @@ const CraftPromptRephrasePanel = () => {
   const closePanel = () => {
     setTurns([]);
     setManualPrompt("");
+    setSelectedSuggestions([]);
+
     dispatch(setSelectedCheckingParagraph(null));
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
@@ -63,17 +77,34 @@ const CraftPromptRephrasePanel = () => {
   const updateLastTurn = (updates) => {
     setTurns((flow) => {
       const copy = [...flow];
-      copy[copy.length - 1] = { ...copy[copy.length - 1], ...updates };
+
+      copy[copy.length - 1] = {
+        ...copy[copy.length - 1],
+        ...updates,
+      };
+
       return copy;
     });
+  };
+
+  const removeSuggestionFromPrompt = (text, suggestion) => {
+    return text.replace(suggestion, "").replace(/\s+/g, " ").trim();
   };
 
   const getSuggestions = async () => {
     nextFocusRef.current = "status";
 
+    setSelectedSuggestions([]);
+
     setTurns((flow) => [
-      ...flow.map((turn) => ({ ...turn, options: [] })),
-      createTurn({ loading: "suggestions" }),
+      ...flow.map((turn) => ({
+        ...turn,
+        options: [],
+      })),
+
+      createTurn({
+        loading: "suggestions",
+      }),
     ]);
 
     try {
@@ -83,9 +114,12 @@ const CraftPromptRephrasePanel = () => {
       });
 
       nextFocusRef.current = "status";
+
       updateLastTurn({
         loading: "",
+
         loadedMessage: `Loaded prompt suggestions to rewrite story paragraph ${paragraphNumber}.`,
+
         options: (data.promptSuggestions || []).map((suggestion, index) => ({
           suggestion,
           category: data.promptSuggestionCategories?.[index] || "",
@@ -93,6 +127,7 @@ const CraftPromptRephrasePanel = () => {
       });
     } catch (error) {
       console.error("Could not get prompt suggestions:", error);
+
       updateLastTurn({
         loading: "",
         message: "Sorry, prompt suggestions could not load right now.",
@@ -100,23 +135,52 @@ const CraftPromptRephrasePanel = () => {
     }
   };
 
-  const rephraseParagraph = async (promptOption) => {
-    const prompt =
-      typeof promptOption === "string" ? promptOption : promptOption.suggestion;
+  const toggleSuggestion = (option) => {
+    const suggestion = option.suggestion;
 
-    const category =
-      typeof promptOption === "string"
-        ? "My Own Prompt"
-        : promptOption.category;
+    const alreadySelected = selectedSuggestions.some(
+      (item) => item.suggestion === suggestion,
+    );
+
+    if (alreadySelected) {
+      setSelectedSuggestions((current) =>
+        current.filter((item) => item.suggestion !== suggestion),
+      );
+
+      setManualPrompt((current) =>
+        removeSuggestionFromPrompt(current, suggestion),
+      );
+
+      return;
+    }
+
+    setSelectedSuggestions((current) => [...current, option]);
+
+    setManualPrompt((current) =>
+      `${current} ${suggestion}`.replace(/\s+/g, " ").trim(),
+    );
+  };
+
+  const rephraseParagraph = async () => {
+    const prompt = manualPrompt.trim();
 
     if (!prompt) return;
 
+    const category =
+      selectedSuggestions.length > 0
+        ? "Selected prompt suggestions"
+        : "My Own Prompt";
+
     const turnIndex = turns.length;
+
     nextFocusRef.current = "status";
-    setManualPrompt("");
 
     setTurns((flow) => [
-      ...flow.map((turn) => ({ ...turn, options: [] })),
+      ...flow.map((turn) => ({
+        ...turn,
+        options: [],
+      })),
+
       createTurn({
         selectedPrompt: prompt,
         selectedPromptCategory: category,
@@ -132,6 +196,13 @@ const CraftPromptRephrasePanel = () => {
       });
 
       const rephrasedParagraph = data.rephrasedParagraph || "";
+
+      /*
+       * Clear the editable prompt and checkbox selections
+       * after the backend reply arrives.
+       */
+      setManualPrompt("");
+      setSelectedSuggestions([]);
 
       nextFocusRef.current = "reply";
 
@@ -154,8 +225,10 @@ const CraftPromptRephrasePanel = () => {
           index === turnIndex
             ? {
                 ...turn,
+
                 rephrasedParagraph:
                   "Sorry, this paragraph could not be rephrased right now.",
+
                 loading: "",
               }
             : turn,
@@ -172,6 +245,7 @@ const CraftPromptRephrasePanel = () => {
     dispatch(
       addRephrasedParagraph({
         paragraphIndex: selectedCheckingParagraph.index,
+
         rephrasedStoryParagraph: rephrasedParagraph,
       }),
     );
@@ -179,14 +253,21 @@ const CraftPromptRephrasePanel = () => {
     dispatch(
       addRephrasedParagraphHistory({
         promptUsedForRephrase: approvedTurn.selectedPrompt,
+
         promptUsedForRephraseCategory: approvedTurn.selectedPromptCategory,
+
         rephrasedParagraph,
       }),
     );
 
     setTurns((flow) =>
       flow.map((turn, index) =>
-        index === turnIndex ? { ...turn, approved: true } : turn,
+        index === turnIndex
+          ? {
+              ...turn,
+              approved: true,
+            }
+          : turn,
       ),
     );
   };
@@ -196,8 +277,9 @@ const CraftPromptRephrasePanel = () => {
   return (
     <div>
       <p className="keyboard-instructions" tabIndex={0}>
-        Get prompt suggestions to rewrite story paragraph {paragraphNumber},
-        then choose one. You can also write your own prompt.
+        Get prompt suggestions to rewrite story paragraph {paragraphNumber}.
+        Select one or more suggestions below. You can also type or edit your own
+        prompt.
       </p>
 
       <div
@@ -213,10 +295,6 @@ const CraftPromptRephrasePanel = () => {
         >
           Get Prompt Suggestions
         </button>
-        {/* 
-        <button type="button" className="page-button" onClick={closePanel}>
-          Close
-        </button> */}
       </div>
 
       <div role="region" aria-label="Craft prompt to rewrite paragraph chat">
@@ -250,24 +328,53 @@ const CraftPromptRephrasePanel = () => {
             )}
 
             {turn.options.length > 0 && (
-              <ol
-                className="sara-generated-question-list"
-                aria-label="Prompt suggestions"
-              >
-                {turn.options.map((option, index) => (
-                  <li key={index} className="sara-generated-question">
-                    <button
-                      type="button"
-                      className="followup-question-button"
-                      aria-label={`${option.category}: ${option.suggestion}`}
-                      onClick={() => rephraseParagraph(option)}
-                    >
-                      <strong>{option.category}: </strong>
-                      {option.suggestion}
-                    </button>
-                  </li>
-                ))}
-              </ol>
+              <fieldset className="craft-prompt-suggestion-fieldset">
+                <legend className="craft-prompt-suggestion-legend">
+                  Select prompt suggestions to use
+                </legend>
+
+                <ul
+                  className="bias-checkbox-list"
+                  aria-label="Prompt suggestions"
+                >
+                  {turn.options.map((option, index) => {
+                    const optionId = `craft-prompt-option-${turnIndex}-${index}`;
+
+                    const checked = selectedSuggestions.some(
+                      (item) => item.suggestion === option.suggestion,
+                    );
+
+                    return (
+                      <li key={index} className="bias-checkbox-list-item">
+                        <label
+                          htmlFor={optionId}
+                          className={
+                            checked
+                              ? "bias-checkbox-option bias-checkbox-option-selected"
+                              : "bias-checkbox-option"
+                          }
+                        >
+                          <input
+                            id={optionId}
+                            type="checkbox"
+                            className="bias-checkbox-input"
+                            checked={checked}
+                            onChange={() => toggleSuggestion(option)}
+                          />
+
+                          <span className="bias-checkbox-text">
+                            {option.category && (
+                              <strong>{option.category}: </strong>
+                            )}
+
+                            {option.suggestion}
+                          </span>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </fieldset>
             )}
 
             {turn.selectedPrompt && (
@@ -291,7 +398,7 @@ const CraftPromptRephrasePanel = () => {
                 <p
                   ref={replyRef}
                   tabIndex={-1}
-                  className="followup-question-reply"
+                  className="followup-question-reply craft-prompt-response"
                   role="status"
                   aria-live="polite"
                 >
@@ -345,7 +452,7 @@ const CraftPromptRephrasePanel = () => {
           className="manual-followup-question-label"
           tabIndex={0}
         >
-          Type your own prompt to rewrite the paragraph:
+          Type or edit your prompt to rewrite the paragraph:
         </label>
 
         <div className="manual-followup-question-pane">
@@ -354,14 +461,14 @@ const CraftPromptRephrasePanel = () => {
             className="manual-followup-question-input"
             value={manualPrompt}
             onChange={(event) => setManualPrompt(event.target.value)}
-            placeholder="Type your own prompt..."
-            rows={3}
+            placeholder="Select suggestions above or type your own prompt..."
+            rows={5}
           />
 
           <button
             type="button"
             className="page-button"
-            onClick={() => rephraseParagraph(manualPrompt.trim())}
+            onClick={rephraseParagraph}
             disabled={!manualPrompt.trim()}
             aria-label="Rephrase"
           >

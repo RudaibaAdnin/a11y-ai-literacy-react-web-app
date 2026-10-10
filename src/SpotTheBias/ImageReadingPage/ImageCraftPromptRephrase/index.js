@@ -1,29 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import "./index.css";
+
 import {
   setCurrentFocusedImagePanel,
   updateImagePrompt,
   addRephrasedPromptHistoryImage,
 } from "../../ImageBiasReducer";
+
 import * as client from "./client.js";
-
-const createTurn = (extra = {}) => ({
-  loading: "",
-  loadedMessage: "",
-  options: [],
-  selectedSuggestions: [],
-  draftPrompt: "",
-  approved: false,
-  ...extra,
-});
-
-const removeSuggestions = (text, suggestions) =>
-  suggestions
-    .reduce((result, suggestion) => result.replace(suggestion, ""), text)
-    .replace(/\s+/g, " ")
-    .trim();
 
 const ImageCraftPromptRephrase = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -34,6 +21,9 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
   const nextFocusRef = useRef(null);
 
   const [turns, setTurns] = useState([]);
+  const [manualPrompt, setManualPrompt] = useState("");
+  const [selectedSuggestions, setSelectedSuggestions] = useState([]);
+  const [approved, setApproved] = useState(false);
 
   const {
     imagePrompt,
@@ -46,9 +36,12 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
     detectedImageDescriptionBiasParagraph.imageDescriptionBiasItems;
 
   const latestDetectedItem = detectedItems[detectedItems.length - 1];
+
   const hasDetectedBias = detectedItems.length > 0;
+
   const originalPrompt =
     imagePrompt.originalPrompt || imagePrompt.displayedPrompt;
+
   const biasedOriginalParagraph = latestDetectedItem?.paragraph || "";
 
   useEffect(() => {
@@ -56,45 +49,112 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (hasDetectedBias && turns.length === 0) setTurns([createTurn()]);
-    if (!hasDetectedBias && turns.length > 0) setTurns([]);
-  }, [hasDetectedBias, turns.length]);
+    if (!hasDetectedBias) {
+      setTurns([]);
+      setManualPrompt("");
+      setSelectedSuggestions([]);
+      setApproved(false);
+    }
+  }, [hasDetectedBias]);
 
   useEffect(() => {
-    if (nextFocusRef.current === "status") statusRef.current?.focus();
-    if (nextFocusRef.current === "approved") approvedRef.current?.focus();
+    if (nextFocusRef.current === "status") {
+      statusRef.current?.focus();
+    }
+
+    if (nextFocusRef.current === "approved") {
+      approvedRef.current?.focus();
+    }
+
     nextFocusRef.current = null;
-  }, [turns]);
+  }, [turns, approved]);
+
+  const createTurn = (extra = {}) => ({
+    loading: "",
+    loadedMessage: "",
+    options: [],
+    message: "",
+    ...extra,
+  });
 
   const closePanel = () => {
     setTurns([]);
-    onClose();
+    setManualPrompt("");
+    setSelectedSuggestions([]);
+    setApproved(false);
+
+    if (onClose) {
+      onClose();
+      return;
+    }
+
+    dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
   };
 
-  const updateTurn = (updates) => {
-    setTurns((flow) => [{ ...(flow[0] || createTurn()), ...updates }]);
+  const updateLastTurn = (updates) => {
+    setTurns((flow) => {
+      const copy = [...flow];
+
+      if (copy.length === 0) {
+        return [createTurn(updates)];
+      }
+
+      copy[copy.length - 1] = {
+        ...copy[copy.length - 1],
+        ...updates,
+      };
+
+      return copy;
+    });
   };
 
+  const removeSuggestionFromPrompt = (text, suggestion) => {
+    return text.replace(suggestion, "").replace(/\s+/g, " ").trim();
+  };
+
+  /*
+   * Backend call only for getting prompt suggestions.
+   */
   const getSuggestions = async () => {
     nextFocusRef.current = "status";
 
-    setTurns((flow) => {
-      const turn = flow[0] || createTurn();
-      return [
-        {
-          ...turn,
-          loading: "suggestions",
-          loadedMessage: "",
-          options: [],
-          selectedSuggestions: [],
-          draftPrompt: removeSuggestions(
-            turn.draftPrompt,
-            turn.selectedSuggestions,
-          ),
-          approved: false,
-        },
-      ];
+    /*
+     * Remove previously selected suggestion text
+     * from the textbox before loading fresh suggestions.
+     *
+     * Anything manually typed by the user stays.
+     */
+    setManualPrompt((current) => {
+      let updated = current;
+
+      selectedSuggestions.forEach((item) => {
+        updated = removeSuggestionFromPrompt(updated, item.suggestion);
+      });
+
+      return updated;
     });
+
+    setSelectedSuggestions([]);
+    setApproved(false);
+
+    /*
+     * Clear:
+     * - old suggestion checkboxes
+     * - old "Loaded prompt suggestions..." text
+     *
+     * Then create a fresh loading turn.
+     */
+    setTurns((flow) => [
+      ...flow.map((turn) => ({
+        ...turn,
+        options: [],
+        loadedMessage: "",
+      })),
+
+      createTurn({
+        loading: "suggestions",
+      }),
+    ]);
 
     try {
       const data = await client.getImageCraftPromptSuggestions({
@@ -104,47 +164,76 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
       });
 
       nextFocusRef.current = "status";
-      updateTurn({
+
+      updateLastTurn({
         loading: "",
-        loadedMessage:
-          "Loaded prompt suggestions. Select one or more, or write your own prompt.",
+
+        loadedMessage: "Loaded prompt suggestions to rewrite the image prompt.",
+
         options: (data.promptSuggestions || []).map((suggestion, index) => ({
           suggestion,
+
           category: data.promptSuggestionCategories?.[index] || "",
         })),
       });
     } catch (error) {
       console.error("Could not get image prompt suggestions:", error);
-      updateTurn({
+
+      updateLastTurn({
         loading: "",
-        loadedMessage:
-          "Prompt suggestions could not load. You can still write your own prompt.",
+
+        loadedMessage: "",
+
+        message:
+          "Sorry, prompt suggestions could not load right now. You can still type your own prompt.",
       });
     }
   };
 
-  const toggleSuggestion = (suggestion) => {
-    setTurns((flow) => {
-      const turn = flow[0] || createTurn();
-      const isSelected = turn.selectedSuggestions.includes(suggestion);
+  /*
+   * Selecting a suggestion adds it to the textbox.
+   * Unselecting removes it.
+   */
+  const toggleSuggestion = (option) => {
+    const suggestion = option.suggestion;
 
-      const selectedSuggestions = isSelected
-        ? turn.selectedSuggestions.filter((item) => item !== suggestion)
-        : [...turn.selectedSuggestions, suggestion];
+    const alreadySelected = selectedSuggestions.some(
+      (item) => item.suggestion === suggestion,
+    );
 
-      const draftPrompt = isSelected
-        ? removeSuggestions(turn.draftPrompt, [suggestion])
-        : `${turn.draftPrompt} ${suggestion}`.replace(/\s+/g, " ").trim();
+    if (alreadySelected) {
+      setSelectedSuggestions((current) =>
+        current.filter((item) => item.suggestion !== suggestion),
+      );
 
-      return [{ ...turn, selectedSuggestions, draftPrompt, approved: false }];
-    });
+      setManualPrompt((current) =>
+        removeSuggestionFromPrompt(current, suggestion),
+      );
+
+      setApproved(false);
+
+      return;
+    }
+
+    setSelectedSuggestions((current) => [...current, option]);
+
+    setManualPrompt((current) =>
+      `${current} ${suggestion}`.replace(/\s+/g, " ").trim(),
+    );
+
+    setApproved(false);
   };
 
-  const approvePrompt = (turn) => {
-    const rephrasedPrompt = turn.draftPrompt.trim();
-    if (!rephrasedPrompt) return;
+  /*
+   * No backend call for rephrasing.
+   *
+   * Whatever is in the textbox becomes
+   * the new image prompt.
+   */
+  const approvePrompt = () => {
+    const rephrasedPrompt = manualPrompt.trim();
 
-    nextFocusRef.current = "approved";
+    if (!rephrasedPrompt) return;
 
     dispatch(
       updateImagePrompt({
@@ -156,31 +245,64 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
     dispatch(
       addRephrasedPromptHistoryImage({
         displayedPromptImage: imagePrompt.displayedPrompt,
+
         promptUsedForRephraseImage:
-          turn.selectedSuggestions.join(" ") || rephrasedPrompt,
+          selectedSuggestions.length > 0
+            ? selectedSuggestions.map((item) => item.suggestion).join(" ")
+            : rephrasedPrompt,
+
         promptUsedForRephraseCategoryImage:
-          turn.selectedSuggestions.length > 0
+          selectedSuggestions.length > 0
             ? "Selected prompt suggestions"
             : "My Own Prompt",
+
         rephrasedPromptImage: rephrasedPrompt,
       }),
     );
 
-    updateTurn({ approved: true });
-  };
+    /*
+     * After approval:
+     * - clear textbox
+     * - clear checkbox selections
+     * - hide suggestion options
+     * - hide "Loaded prompt suggestions..." text
+     */
+    setManualPrompt("");
+    setSelectedSuggestions([]);
 
-  const turn = turns[0];
+    setTurns((flow) =>
+      flow.map((turn) => ({
+        ...turn,
+        options: [],
+        loadedMessage: "",
+      })),
+    );
+
+    nextFocusRef.current = "approved";
+
+    setApproved(true);
+  };
 
   const handlePromptPanelKeyDown = (event) => {
     const activeElement = document.activeElement;
 
     const isTyping =
       activeElement?.tagName === "TEXTAREA" ||
-      activeElement?.tagName === "INPUT" ||
+      (activeElement?.tagName === "INPUT" &&
+        !["checkbox", "radio", "button"].includes(activeElement.type)) ||
       activeElement?.tagName === "SELECT" ||
       activeElement?.isContentEditable;
 
     if (isTyping) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+
+      closePanel();
+
+      return;
+    }
 
     if (
       event.key === "[" ||
@@ -190,6 +312,7 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
     ) {
       event.preventDefault();
       event.stopPropagation();
+
       closePanel();
     }
   };
@@ -202,6 +325,7 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
           : "rephrase-sidebar-wrapper"
       }
       role="dialog"
+      aria-modal="false"
       aria-labelledby="image-craft-prompt-title"
       onMouseEnter={() =>
         dispatch(setCurrentFocusedImagePanel("imageCraftPromptRephrasePanel"))
@@ -217,147 +341,187 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
 
       <p ref={feedbackRef} tabIndex={-1} className="keyboard-instructions">
         {hasDetectedBias
-          ? "You found a biased image description paragraph. Now, get prompt suggestions to rewrite the image prompt. You can also write your own prompt."
+          ? "You found a biased image description paragraph. Get prompt suggestions to rewrite the image prompt. Select one or more suggestions below. You can also type or edit your own prompt."
           : "Find the biased image description paragraph first. Then you can rewrite the image prompt to make it better."}
       </p>
 
-      <div
-        className="sara-followupsection-buttons"
-        role="group"
-        aria-label="Image prompt rewrite actions"
-      >
-        {hasDetectedBias && (
+      {hasDetectedBias && (
+        <div
+          className="sara-followupsection-buttons"
+          role="group"
+          aria-label="Image prompt rewrite actions"
+        >
           <button
             type="button"
             className="page-button"
+            aria-label="Get Prompt Suggestions"
             onClick={getSuggestions}
-            disabled={turn?.loading === "suggestions"}
           >
-            Get Suggestions
+            Get Prompt Suggestions
           </button>
-        )}
-
-        <button type="button" className="page-button" onClick={closePanel}>
-          Close
-        </button>
-      </div>
-
-      {turn && (
-        <div role="region" aria-label="Image prompt rewrite chat">
-          {turn.loading === "suggestions" && (
-            <p
-              ref={statusRef}
-              tabIndex={-1}
-              className="keyboard-instructions"
-              role="status"
-              aria-live="polite"
-            >
-              Loading prompt suggestions to rewrite the image prompt...
-            </p>
-          )}
-
-          {turn.loadedMessage && (
-            <p
-              ref={statusRef}
-              tabIndex={-1}
-              className="keyboard-instructions"
-              role="status"
-              aria-live="polite"
-            >
-              {turn.loadedMessage}
-            </p>
-          )}
-
-          {turn.options.length > 0 && (
-            <fieldset className="prompt-suggestion-fieldset">
-              <legend className="prompt-suggestion-legend">
-                Select prompt suggestions to use
-              </legend>
-
-              {turn.options.map((option, index) => (
-                <label key={index} className="prompt-suggestion-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={turn.selectedSuggestions.includes(
-                      option.suggestion,
-                    )}
-                    onChange={() => toggleSuggestion(option.suggestion)}
-                  />
-
-                  <span>
-                    {option.category && <strong>{option.category}: </strong>}
-                    {option.suggestion}
-                  </span>
-                </label>
-              ))}
-            </fieldset>
-          )}
-
-          {hasDetectedBias && (
-            <>
-              <label
-                htmlFor="image-rephrase-prompt"
-                className="manual-followup-question-label"
-                tabIndex={0}
-              >
-                Type or edit your rewritten image prompt:
-              </label>
-
-              <div className="manual-followup-question-pane">
-                <textarea
-                  id="image-rephrase-prompt"
-                  className="manual-followup-question-input"
-                  value={turn.draftPrompt}
-                  onChange={(event) =>
-                    updateTurn({
-                      draftPrompt: event.target.value,
-                      approved: false,
-                    })
-                  }
-                  placeholder="Type your improved image prompt..."
-                  rows={6}
-                />
-
-                <button
-                  type="button"
-                  className="page-button"
-                  onClick={() => approvePrompt(turn)}
-                  disabled={!turn.draftPrompt.trim() || turn.approved}
-                >
-                  {turn.approved ? "Prompt Approved" : "Approve Rephrase"}
-                </button>
-              </div>
-
-              {turn.approved && (
-                <p
-                  ref={approvedRef}
-                  tabIndex={-1}
-                  className="keyboard-instructions"
-                  role="status"
-                  aria-live="polite"
-                >
-                  Prompt approved. The image prompt is now updated.
-                </p>
-              )}
-              <button
-                type="button"
-                className="page-button"
-                onClick={getSuggestions}
-                disabled={turn?.loading === "suggestions"}
-              >
-                Regenerate Suggestions
-              </button>
-              <button
-                type="button"
-                className="page-button"
-                onClick={closePanel}
-              >
-                Close
-              </button>
-            </>
-          )}
         </div>
       )}
+
+      <div role="region" aria-label="Craft prompt to rewrite image prompt">
+        {turns.map((turn, turnIndex) => (
+          <div key={turnIndex} className="sara-chat-history-item">
+            {turn.message && <p className="clue-text">{turn.message}</p>}
+
+            {turn.loading === "suggestions" && (
+              <p
+                ref={statusRef}
+                tabIndex={-1}
+                className="keyboard-instructions"
+                role="status"
+                aria-live="polite"
+              >
+                Loading prompt suggestions to rewrite the image prompt...
+              </p>
+            )}
+
+            {turn.loadedMessage && (
+              <p
+                ref={statusRef}
+                tabIndex={-1}
+                className="keyboard-instructions"
+                role="status"
+                aria-live="polite"
+              >
+                {turn.loadedMessage}
+              </p>
+            )}
+
+            {turn.options.length > 0 && (
+              <fieldset className="craft-prompt-suggestion-fieldset">
+                <legend className="craft-prompt-suggestion-legend">
+                  Select prompt suggestions to use
+                </legend>
+
+                <ul
+                  className="bias-checkbox-list"
+                  aria-label="Image prompt suggestions"
+                >
+                  {turn.options.map((option, index) => {
+                    const optionId = `image-craft-prompt-option-${turnIndex}-${index}`;
+
+                    const checked = selectedSuggestions.some(
+                      (item) => item.suggestion === option.suggestion,
+                    );
+
+                    return (
+                      <li
+                        key={`${option.category}-${index}`}
+                        className="bias-checkbox-list-item"
+                      >
+                        <label
+                          htmlFor={optionId}
+                          className={
+                            checked
+                              ? "bias-checkbox-option bias-checkbox-option-selected"
+                              : "bias-checkbox-option"
+                          }
+                        >
+                          <input
+                            id={optionId}
+                            type="checkbox"
+                            className="bias-checkbox-input"
+                            checked={checked}
+                            onChange={() => toggleSuggestion(option)}
+                          />
+
+                          <span className="bias-checkbox-text">
+                            {option.category && (
+                              <strong>{option.category}: </strong>
+                            )}
+
+                            {option.suggestion}
+                          </span>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </fieldset>
+            )}
+          </div>
+        ))}
+
+        {hasDetectedBias && (
+          <>
+            <label
+              htmlFor="image-rephrase-prompt"
+              className="manual-followup-question-label"
+              tabIndex={0}
+            >
+              Type or edit your prompt to rewrite the image prompt:
+            </label>
+
+            <div className="manual-followup-question-pane">
+              <textarea
+                id="image-rephrase-prompt"
+                className="manual-followup-question-input"
+                value={manualPrompt}
+                onChange={(event) => {
+                  setManualPrompt(event.target.value);
+
+                  setApproved(false);
+                }}
+                placeholder="Select suggestions above or type your own prompt..."
+                rows={5}
+                aria-label="Type or edit your image prompt"
+              />
+
+              <button
+                type="button"
+                className="page-button"
+                onClick={approvePrompt}
+                disabled={!manualPrompt.trim()}
+                aria-label="Approve Rephrase"
+              >
+                Approve Rephrase
+              </button>
+            </div>
+          </>
+        )}
+
+        {approved && (
+          <p
+            ref={approvedRef}
+            tabIndex={-1}
+            className="keyboard-instructions"
+            role="status"
+            aria-live="polite"
+          >
+            Rephrase approved. The image prompt is now updated.
+          </p>
+        )}
+
+        {hasDetectedBias && turns.length > 0 && (
+          <div
+            className="sara-followupsection-buttons"
+            role="group"
+            aria-label="Next image prompt options"
+          >
+            <button
+              type="button"
+              className="page-button"
+              onClick={getSuggestions}
+              aria-label="Regenerate Prompt Suggestions"
+            >
+              Regenerate Prompt Suggestions
+            </button>
+          </div>
+        )}
+      </div>
+
+      <button
+        type="button"
+        className="page-button"
+        onClick={closePanel}
+        aria-label="Close image prompt rewrite panel"
+      >
+        Close
+      </button>
     </section>
   );
 };

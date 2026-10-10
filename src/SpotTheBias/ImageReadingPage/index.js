@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -7,13 +9,19 @@ import {
   setSelectedCheckingImageDescriptionParagraph,
   setCurrentFocusedImagePanel,
 } from "../ImageBiasReducer";
+
 import { image_bias_categories } from "../util/ImageBiasCategories.js";
+
 import * as client from "./client.js";
+
 import "./index.css";
 
 import ImageHelpGuidePanel from "./ImageHelpGuidePanel/index.js";
+
 import ImageBiasCheckingPanel from "./ImageBiasCheckingPanel/index.js";
+
 import ImageLeaderBoardPanel from "./ImageLeaderBoardPanel/index.js";
+
 import ImageAgentAlicePanel from "./ImageAgentAlicePanel/index.js";
 
 import ImageCraftPromptRephrase from "./ImageCraftPromptRephrase/index.js";
@@ -121,6 +129,7 @@ const ImageReadingPage = () => {
             imageReading.biasedImageDescriptionParagraphPlan?.length || 0,
         }),
       );
+
       setIsLoadingImage(false);
     } catch (error) {
       console.error("Could not get image reading:", error);
@@ -340,6 +349,7 @@ const ImageReadingPage = () => {
             alt=""
             aria-hidden="true"
           />
+
           <h1 id="image-reading-title" className="page-title" tabIndex={0}>
             Bias Buster
           </h1>
@@ -397,11 +407,13 @@ const ImageReadingPage = () => {
               having bias, even if the system does not confirm it. You can
               review it later.
             </p>
+
             <p className="page-instructions" tabIndex={0}>
               You can use headings to move around this game page, or select the
               <span className="kbd">Help Guide</span>button below to open the
               help guide modal to learn more keyboard shortcuts you can use.
             </p>
+
             <div
               className="instruction-buttons"
               role="group"
@@ -443,6 +455,7 @@ const ImageReadingPage = () => {
                     alt={imagePrompt.displayedPrompt || "Mia's created image"}
                     className="story-generated-image"
                   />
+
                   <div className="rephrase-button">
                     <button
                       type="button"
@@ -462,6 +475,7 @@ const ImageReadingPage = () => {
               >
                 Image Description
               </h3>
+
               <p className="keyboard-instructions" tabIndex={0}>
                 You can move through the image description below paragraph by
                 paragraph. Each paragraph is a button. Spot a sneaky bias? Press{" "}
@@ -506,6 +520,7 @@ const ImageReadingPage = () => {
                         onFocus={() => focusImageDescriptionParagraph(index)}
                         onClick={() => {
                           focusImageDescriptionParagraph(index);
+
                           dispatch(
                             setSelectedCheckingImageDescriptionParagraph(
                               paragraph,
@@ -612,48 +627,10 @@ const ImageReadingPage = () => {
                         disabled={newImageReading.loading}
                       >
                         {newImageReading.loading
-                          ? "Generating New Image..."
+                          ? "Generating New Image. It may take a while. Please wait... "
                           : "Generate New Image"}
                       </button>
                     </div>
-
-                    {newImageReading.imageUrl && (
-                      <>
-                        <h2 className="panel-title" tabIndex={0}>
-                          Created New Image and Image Description
-                        </h2>
-                        <img
-                          src={newImageReading.imageUrl}
-                          alt={imagePrompt.rephrasedPrompt}
-                          className="story-generated-image"
-                        />
-
-                        <div className="rephrase-button">
-                          <button
-                            type="button"
-                            className="page-button"
-                            onClick={saveNewImage}
-                          >
-                            Save New Image
-                          </button>
-                        </div>
-
-                        <p className="leaderboard-item-text" tabIndex={0}>
-                          <strong>New image description:</strong>{" "}
-                          {newImageReading.description}
-                        </p>
-
-                        <div className="rephrase-button">
-                          <button
-                            type="button"
-                            className="page-button"
-                            onClick={saveNewImageDescription}
-                          >
-                            Save New Image Description as Text File
-                          </button>
-                        </div>
-                      </>
-                    )}
 
                     {!newImageReading.imageUrl &&
                       newImageReading.description &&
@@ -667,6 +644,52 @@ const ImageReadingPage = () => {
               </>
             )}
           </section>
+
+          {newImageReading.imageUrl && (
+            <section
+              className="mia-panel"
+              aria-labelledby="created-new-image-title"
+            >
+              <h2
+                id="created-new-image-title"
+                className="panel-title"
+                tabIndex={0}
+              >
+                Created New Image and Image Description
+              </h2>
+
+              <img
+                src={newImageReading.imageUrl}
+                alt={imagePrompt.rephrasedPrompt}
+                className="story-generated-image"
+              />
+
+              <div className="rephrase-button">
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={saveNewImage}
+                >
+                  Save New Image
+                </button>
+              </div>
+
+              <p className="leaderboard-item-text" tabIndex={0}>
+                <strong>New image description:</strong>{" "}
+                {newImageReading.description}
+              </p>
+
+              <div className="rephrase-button">
+                <button
+                  type="button"
+                  className="page-button"
+                  onClick={saveNewImageDescription}
+                >
+                  Save New Image Description as Text File
+                </button>
+              </div>
+            </section>
+          )}
 
           <section
             tabIndex={-1}

@@ -1,31 +1,27 @@
-/* .bias-check-rephrase-sidebar-panel {
-  position: fixed;
-  left: 600px;
-  top: 160px;
-  width: 700px;
-  max-height: 70vh;
-  overflow-y: auto;
-  padding: 25px;
-  border: 1px solid #1d4289;
-  border-radius: 10px;
-  background: #fff;
-  color: #1d4289;
-  box-shadow: 0 2px 8px #1d4289;
-} */
-
 .bias-check-rephrase-sidebar-wrapper {
   position: fixed;
   left: 400px;
   top: 160px;
+
   width: 700px;
+  max-width: calc(100vw - 80px);
   max-height: 70vh;
+
   overflow-y: auto;
+  overflow-x: hidden;
+
+  box-sizing: border-box;
+
   padding: 25px;
+
   border: 1px solid #1d4289;
   border-radius: 10px;
+
   background: #fff;
   color: #1d4289;
+
   box-shadow: 0 2px 8px #1d4289;
+
   z-index: 20;
 }
 
@@ -42,8 +38,10 @@
 .selected-line-preview {
   font-size: 21px;
   line-height: 1.4;
+
   border-left: 2px solid #1d4289;
   border-radius: 10px;
+
   padding: 10px;
 }
 
@@ -51,18 +49,274 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  flex-wrap: wrap;
+
   gap: 15px;
+
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .bias-feedback {
   font-weight: 550;
+  line-height: 1.5;
+
+  margin-top: 15px;
   margin-bottom: 20px;
+
+  overflow-wrap: anywhere;
 }
 
 .story-paragraph-text {
   font-size: 21px;
   line-height: 1.4;
+
   border-left: 2px solid #1d4289;
   border-radius: 10px;
+
   padding: 10px;
+
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------- */
+/* Bias checking generated choices  */
+/* -------------------------------- */
+
+.bias-check-options-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bias-checkbox-list {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  list-style: none;
+
+  padding: 0;
+  margin: 20px 0;
+}
+
+.bias-checkbox-list-item {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin: 0 0 14px 0;
+  padding: 0;
+}
+
+/*
+  This replaces followup-question-button for checkbox options.
+
+  The visual style stays similar to the generated Craft Prompt
+  choices, but this layout safely supports a checkbox plus
+  multiple lines of text.
+*/
+.bias-checkbox-option {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 14px 16px;
+
+  border: 2px solid #1d4289;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #1d4289;
+
+  font-family: "Raleway", sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.bias-checkbox-option:hover {
+  background: #f4f7fc;
+}
+
+.bias-checkbox-option-selected {
+  background: #eef4ff;
+}
+
+.bias-checkbox-option:focus-within {
+  outline: 3px solid #1d4289;
+  outline-offset: 3px;
+}
+
+/*
+  Critical:
+  checkbox has its own fixed area and NEVER competes
+  with the text width.
+*/
+.bias-checkbox-input {
+  flex: 0 0 auto;
+
+  width: 22px;
+  height: 22px;
+
+  margin: 3px 0 0 0;
+  padding: 0;
+
+  cursor: pointer;
+}
+
+/*
+  Critical:
+  min-width: 0 lets long flex text wrap instead
+  of overflowing or overlapping.
+*/
+.bias-checkbox-text {
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  display: block;
+
+  color: #1d4289;
+
+  white-space: normal;
+
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.bias-checkbox-text strong {
+  display: inline;
+
+  font-weight: 700;
+}
+
+/* -------------------------------- */
+/* Manual typed answer              */
+/* -------------------------------- */
+
+.manual-followup-question-label {
+  display: block;
+
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #1d4289;
+}
+
+.manual-followup-question-pane {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.manual-followup-question-input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  min-height: 90px;
+
+  padding: 12px;
+
+  border: 2px solid #1d4289;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #000;
+
+  font-family: "Raleway", sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+
+  resize: vertical;
+}
+
+.manual-followup-question-input:focus {
+  outline: 3px solid #1d4289;
+  outline-offset: 2px;
+}
+
+/* -------------------------------- */
+/* Screen-reader-only status text   */
+/* -------------------------------- */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+/* -------------------------------- */
+/* Responsive modal positioning     */
+/* -------------------------------- */
+
+@media (max-width: 1200px) {
+  .bias-check-rephrase-sidebar-wrapper {
+    left: 5%;
+    width: 90%;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 700px) {
+  .bias-check-rephrase-sidebar-wrapper {
+    left: 20px;
+    right: 20px;
+
+    top: 80px;
+
+    width: auto;
+    max-width: none;
+
+    padding: 20px;
+  }
+
+  .bias-checking-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bias-checkbox-option {
+    padding: 12px;
+
+    font-size: 17px;
+  }
+
+  .manual-followup-question-input {
+    font-size: 17px;
+  }
 }
