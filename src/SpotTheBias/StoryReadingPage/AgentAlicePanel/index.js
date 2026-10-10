@@ -88,24 +88,26 @@ const AgentAlicePanel = () => {
       (item) => item.paragraphIndex,
     );
 
-    const remainingTargets = biasedParagraphPlan
+    const allTargets = biasedParagraphPlan
       .map((item) => ({
         paragraphIndex: item.paragraphIndex,
         paragraph:
           storyParagraphs[item.paragraphIndex]?.originalStoryParagraph || "",
         biasCategory: item.biasCategory,
       }))
-      .filter(
-        (item) =>
-          !detectedIndices.includes(item.paragraphIndex) &&
-          item.paragraph &&
-          item.biasCategory,
-      );
+      .filter((item) => item.paragraph && item.biasCategory);
 
-    if (remainingTargets.length === 0) return null;
+    if (allTargets.length === 0) return null;
 
-    return remainingTargets[
-      Math.floor(Math.random() * remainingTargets.length)
+    const remainingTargets = allTargets.filter(
+      (item) => !detectedIndices.includes(item.paragraphIndex),
+    );
+
+    const targetsToChooseFrom =
+      remainingTargets.length > 0 ? remainingTargets : allTargets;
+
+    return targetsToChooseFrom[
+      Math.floor(Math.random() * targetsToChooseFrom.length)
     ];
   };
 
@@ -167,7 +169,7 @@ const AgentAlicePanel = () => {
       nextFocusRef.current = "status";
       setChatFlow([
         createTurn({
-          message: "Great job! You already found all the biased paragraphs.",
+          message: "Alice could not find a paragraph to give a clue about.",
         }),
       ]);
       return;
@@ -496,6 +498,7 @@ const AgentAlicePanel = () => {
             >
               Type your own follow-up question for Alice:
             </label>
+
             <div className="manual-followup-question-pane">
               <textarea
                 id="manual-alice-question"
@@ -516,6 +519,7 @@ const AgentAlicePanel = () => {
                 Ask Alice
               </button>
             </div>
+
             <button
               type="button"
               className="page-button"

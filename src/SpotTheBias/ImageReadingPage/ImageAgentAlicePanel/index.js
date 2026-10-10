@@ -89,7 +89,7 @@ const ImageAgentAlicePanel = () => {
         (item) => item.imageDescriptionParagraphIndex,
       );
 
-    const targets = biasedImageDescriptionParagraphPlan
+    const allTargets = biasedImageDescriptionParagraphPlan
       .map((item) => ({
         imageDescriptionParagraphIndex: item.imageDescriptionParagraphIndex,
         imageDescriptionParagraph:
@@ -98,15 +98,21 @@ const ImageAgentAlicePanel = () => {
         biasCategoryImage: item.biasCategory,
       }))
       .filter(
-        (item) =>
-          !detectedIndices.includes(item.imageDescriptionParagraphIndex) &&
-          item.imageDescriptionParagraph &&
-          item.biasCategoryImage,
+        (item) => item.imageDescriptionParagraph && item.biasCategoryImage,
       );
 
-    return targets.length
-      ? targets[Math.floor(Math.random() * targets.length)]
-      : null;
+    if (allTargets.length === 0) return null;
+
+    const remainingTargets = allTargets.filter(
+      (item) => !detectedIndices.includes(item.imageDescriptionParagraphIndex),
+    );
+
+    const targetsToChooseFrom =
+      remainingTargets.length > 0 ? remainingTargets : allTargets;
+
+    return targetsToChooseFrom[
+      Math.floor(Math.random() * targetsToChooseFrom.length)
+    ];
   };
 
   const updateLastTurn = (updates) => {
@@ -170,7 +176,7 @@ const ImageAgentAlicePanel = () => {
       setChatFlow([
         createTurn({
           message:
-            "Great job! You already found the biased image description paragraph.",
+            "Alice could not find an image description paragraph to give a clue about.",
         }),
       ]);
       return;
@@ -480,6 +486,7 @@ const ImageAgentAlicePanel = () => {
             >
               Type your own follow-up question for Alice:
             </label>
+
             <div className="manual-followup-question-pane">
               <textarea
                 id="manual-alice-question"
@@ -500,6 +507,7 @@ const ImageAgentAlicePanel = () => {
                 Ask Alice
               </button>
             </div>
+
             <button
               type="button"
               className="page-button"

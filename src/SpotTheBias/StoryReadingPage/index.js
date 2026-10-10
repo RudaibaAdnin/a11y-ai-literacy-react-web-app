@@ -7,7 +7,6 @@ import {
   setSelectedCheckingParagraph,
   setCurrentFocusedPanel,
 } from "../SpotTheBiasReducer";
-import { story_bias_categories } from "../util/StoryBiasCategoris.js";
 import BiasCheckingPanel from "./BiasCheckingPanel";
 import LeaderBoardPanel from "./LeaderBoardPanel";
 import AgentAlicePanel from "./AgentAlicePanel";
@@ -45,10 +44,13 @@ const getRandomBiasCategories = () => {
     pickRandom(disabilityBiasNames, 1)[0],
   ];
 
+  // return selectedNames.map((name) => ({
+  //   name,
+  //   meaning: story_bias_categories[name].meaning,
+  //   examples: story_bias_categories[name].examples,
+  // }));
   return selectedNames.map((name) => ({
     name,
-    meaning: story_bias_categories[name].meaning,
-    examples: story_bias_categories[name].examples,
   }));
 };
 
@@ -268,7 +270,7 @@ const StoryReadingPage = () => {
           aria-live="polite"
         >
           Loading the story. Mia is getting your story ready. This may take a
-          little time.
+          little time. Please wait.
         </p>
       ) : (
         <>
