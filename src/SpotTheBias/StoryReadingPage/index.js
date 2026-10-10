@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -7,11 +9,14 @@ import {
   setSelectedCheckingParagraph,
   setCurrentFocusedPanel,
 } from "../SpotTheBiasReducer";
+
 import BiasCheckingPanel from "./BiasCheckingPanel";
 import LeaderBoardPanel from "./LeaderBoardPanel";
 import AgentAlicePanel from "./AgentAlicePanel";
 import HelpGuidePanel from "./HelpGuidePanel";
+
 import * as client from "./client.js";
+
 import "./index.css";
 
 const pickRandom = (items, count) =>
@@ -24,6 +29,9 @@ const isInteractiveElement = (element) =>
   ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"].includes(element.tagName) ||
   element.isContentEditable;
 
+/*
+ * Existing random fallback.
+ */
 const getRandomBiasCategories = () => {
   const identityAndBackgroundBiasNames = [
     "Gender Bias",
@@ -41,31 +49,59 @@ const getRandomBiasCategories = () => {
 
   const selectedNames = [
     pickRandom(identityAndBackgroundBiasNames, 1)[0],
+
     pickRandom(disabilityBiasNames, 1)[0],
   ];
 
-  // return selectedNames.map((name) => ({
-  //   name,
-  //   meaning: story_bias_categories[name].meaning,
-  //   examples: story_bias_categories[name].examples,
-  // }));
   return selectedNames.map((name) => ({
     name,
   }));
 };
 
+/*
+ * Read teacher-selected options from Redux.
+ *
+ * Return null if both selections are not available.
+ * StoryReadingPage will then use random biases.
+ */
+const getSelectedBiasCategories = (storyBiasOptions) => {
+  const identityBias = storyBiasOptions?.identityBias?.trim();
+
+  const disabilityBias = storyBiasOptions?.disabilityBias?.trim();
+
+  if (!identityBias || !disabilityBias) {
+    return null;
+  }
+
+  return [
+    {
+      name: identityBias,
+    },
+    {
+      name: disabilityBias,
+    },
+  ];
+};
+
 const StoryReadingPage = () => {
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const { storytopic } = useParams();
 
   const [isLoadingStory, setIsLoadingStory] = useState(false);
+
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
+
   const [showHelpGuidePanel, setShowHelpGuidePanel] = useState(false);
 
   const currentParagraphIndexRef = useRef(0);
+
   const loadingStoryRef = useRef(null);
+
   const missionGuideRef = useRef(null);
+
   const storyParagraphRefs = useRef([]);
 
   const {
@@ -75,6 +111,7 @@ const StoryReadingPage = () => {
     storyParagraphs,
     selectedCheckingParagraph,
     currentFocusedPanel,
+    storyBiasOptions,
   } = useSelector((state) => state.SpotTheBiasReducer);
 
   const { imageUrl, imageDescriptionParagraphs } = useSelector(
@@ -86,15 +123,28 @@ const StoryReadingPage = () => {
 
   const moveToParagraph = useCallback((nextIndex) => {
     currentParagraphIndexRef.current = nextIndex;
+
     setCurrentParagraphIndex(nextIndex);
+
     requestAnimationFrame(() => storyParagraphRefs.current[nextIndex]?.focus());
   }, []);
 
+  /*
+   * Story generation:
+   *
+   * 1. Look for teacher-selected biases in Redux.
+   * 2. If both exist, use those exact biases.
+   * 3. Otherwise use the existing random behavior.
+   */
   const loadStory = useCallback(async () => {
-    const selectedBiasCategories = getRandomBiasCategories();
+    const savedBiasCategories = getSelectedBiasCategories(storyBiasOptions);
+
+    const selectedBiasCategories =
+      savedBiasCategories || getRandomBiasCategories();
 
     try {
       setIsLoadingStory(true);
+
       moveToParagraph(0);
 
       const response = await client.getStoryReading(
@@ -109,14 +159,19 @@ const StoryReadingPage = () => {
       dispatch(
         setStoryReading({
           storyParagraphs: response.storyParagraphs || [],
+
           biasedParagraphPlan,
+
           selectedBiasCategories,
+
           biasCount: selectedBiasCategories.length,
         }),
       );
+
       setIsLoadingStory(false);
     } catch (error) {
       console.error("Could not get story:", error);
+
       setIsLoadingStory(false);
     }
   }, [
@@ -124,16 +179,22 @@ const StoryReadingPage = () => {
     storyTopic,
     storyTopicType,
     storyQuestionsAndAnswers,
+    storyBiasOptions,
     moveToParagraph,
   ]);
 
   useEffect(() => {
-    if (storyParagraphs.length === 0) loadStory();
+    if (storyParagraphs.length === 0) {
+      loadStory();
+    }
   }, [storyParagraphs.length, loadStory]);
 
   useEffect(() => {
-    if (isLoadingStory) loadingStoryRef.current?.focus();
-    else if (storyParagraphs.length > 0) missionGuideRef.current?.focus();
+    if (isLoadingStory) {
+      loadingStoryRef.current?.focus();
+    } else if (storyParagraphs.length > 0) {
+      missionGuideRef.current?.focus();
+    }
   }, [isLoadingStory, storyParagraphs.length]);
 
   useEffect(() => {
@@ -187,10 +248,12 @@ const StoryReadingPage = () => {
       }
 
       event.preventDefault();
+
       setShowHelpGuidePanel(true);
     };
 
     window.addEventListener("keydown", openHelpGuide);
+
     return () => window.removeEventListener("keydown", openHelpGuide);
   }, []);
 
@@ -204,8 +267,9 @@ const StoryReadingPage = () => {
 
   const focusStoryParagraph = (index) => {
     currentParagraphIndexRef.current = index;
+
     setCurrentParagraphIndex(index);
-    // dispatch(setSelectedCheckingParagraph(null));
+
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
 
@@ -215,23 +279,31 @@ const StoryReadingPage = () => {
 
   const closeHelpGuidePanel = () => {
     setShowHelpGuidePanel(false);
+
     dispatch(setCurrentFocusedPanel("miaPanel"));
   };
 
   const saveStoryAsTextFile = () => {
     const storyText = storyParagraphs
-      .map((paragraph, index) => {
+      .map((paragraph) => {
         const paragraphText = getParagraphText(paragraph);
+
         return `${paragraphText}`;
       })
       .join("\n\n");
 
-    const file = new Blob([storyText], { type: "text/plain" });
+    const file = new Blob([storyText], {
+      type: "text/plain",
+    });
+
     const fileUrl = URL.createObjectURL(file);
 
     const link = document.createElement("a");
+
     link.href = fileUrl;
+
     link.download = "story.txt";
+
     link.click();
 
     URL.revokeObjectURL(fileUrl);
@@ -249,6 +321,7 @@ const StoryReadingPage = () => {
             alt=""
             aria-hidden="true"
           />
+
           <h1 id="story-reading-title" className="page-title" tabIndex={0}>
             Bias Buster
           </h1>
@@ -270,7 +343,7 @@ const StoryReadingPage = () => {
           aria-live="polite"
         >
           Loading the story. Mia is getting your story ready. This may take a
-          little time. Please wait.
+          little time. Please wait...
         </p>
       ) : (
         <>
@@ -304,10 +377,12 @@ const StoryReadingPage = () => {
               wrong, like having bias, even if the system does not confirm it.
               You can review it later. You can save the story as a text file.
             </p>
+
             <p className="page-instructions" tabIndex={0}>
-              You can use headings to move around this game page, or select the
-              <span className="kbd">Help Guide</span>button below to open the
-              help guide modal to learn more keyboard shortcuts you can use.
+              You can use headings to move around this game page, or select the{" "}
+              <span className="kbd">Help Guide</span>
+              button below to open the help guide modal to learn more keyboard
+              shortcuts you can use.
             </p>
 
             <button
@@ -374,6 +449,7 @@ const StoryReadingPage = () => {
                         onFocus={() => focusStoryParagraph(index)}
                         onClick={() => {
                           focusStoryParagraph(index);
+
                           dispatch(setSelectedCheckingParagraph(paragraph));
                         }}
                         onMouseEnter={() => focusStoryParagraph(index)}
@@ -384,6 +460,7 @@ const StoryReadingPage = () => {
                   );
                 })}
               </ol>
+
               <div className="save-story-button">
                 <button
                   type="button"
@@ -397,6 +474,7 @@ const StoryReadingPage = () => {
             </section>
 
             <LeaderBoardPanel />
+
             <BiasCheckingPanel />
           </div>
 

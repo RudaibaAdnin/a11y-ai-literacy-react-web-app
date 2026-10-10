@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { clearStoryBiasOptions } from "../SpotTheBiasReducer";
+import { clearImageBiasOption } from "../ImageBiasReducer";
+
 import "./index.css";
 
 const BiasBusterLandingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  /*
+   * Entering the Bias Buster main menu starts
+   * a fresh bias-option selection.
+   *
+   * Existing story/image cleanup can stay as it is.
+   * This only clears teacher-selected bias options.
+   */
+  useEffect(() => {
+    dispatch(clearStoryBiasOptions());
+    dispatch(clearImageBiasOption());
+  }, [dispatch]);
 
   const pages = [
     {
@@ -76,7 +94,6 @@ const BiasBusterLandingPage = () => {
                 type="button"
                 className="page-button"
                 onClick={() => navigate(path)}
-                tabIndex={0}
               >
                 {button}
               </button>

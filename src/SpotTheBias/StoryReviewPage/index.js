@@ -254,7 +254,8 @@ const StoryReviewPage = () => {
         </p>
 
         <p className="page-instructions" tabIndex={0}>
-          Press the left square bracket key{" "}
+          You can use headings to move around this Page. You can also press the
+          left square bracket key{" "}
           <span className="kbd" aria-hidden="true">
             [
           </span>{" "}

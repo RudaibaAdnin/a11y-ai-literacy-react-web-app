@@ -24,66 +24,107 @@ const makeImageDescriptionParagraphs = (paragraphs = []) =>
 
 const initialState = {
   imageUrl: "",
+
   imagePrompt: emptyImagePrompt,
+
   imageQuestionsAndAnswers: [],
+
   imageDescriptionParagraphs: [],
+
   selectedImageBiasCategories: [],
+
   biasedImageDescriptionParagraphPlan: [],
+
   biasImageDescriptionCount: 0,
+
   selectedCheckingImageDescriptionParagraph:
     emptySelectedImageDescriptionParagraph,
+
   detectedImageDescriptionBiasParagraph: {
     count: 0,
     imageDescriptionBiasItems: [],
   },
+
   flaggedImageDescriptionParagraph: {
     count: 0,
     flaggedImageDescriptionParagraphItems: [],
   },
+
   followUpsHistoryAliceImage: [],
+
   rephrasedPromptHistoryImage: [],
+
   currentFocusedImagePanel: "",
-  imageBiasOption: "Treating Disability as Something Bad",
+
+  /*
+   * Empty by default.
+   *
+   * If the teacher selects an image bias,
+   * BiasOptionSelectionPage will save it here.
+   *
+   * If empty, ImageReadingPage can keep using
+   * its random bias behavior.
+   */
+  imageBiasOption: "",
 };
 
 const ImageBiasSlice = createSlice({
   name: "imageBias",
+
   initialState,
+
   reducers: {
     setCurrentFocusedImagePanel: (state, action) => {
       state.currentFocusedImagePanel = action.payload;
     },
+
     setImageBiasOption: (state, action) => {
       state.imageBiasOption = action.payload;
+    },
+
+    clearImageBiasOption: (state) => {
+      state.imageBiasOption = "";
     },
 
     setImageDescriptionReading: (state, action) => {
       const plan = action.payload?.biasedImageDescriptionParagraphPlan || [];
 
       state.imageUrl = action.payload?.imageUrl || "";
+
       state.imagePrompt = action.payload?.imagePrompt || emptyImagePrompt;
+
       state.imageQuestionsAndAnswers =
         action.payload?.imageQuestionsAndAnswers || [];
+
       state.imageDescriptionParagraphs = makeImageDescriptionParagraphs(
         action.payload?.imageDescriptionParagraphs || [],
       );
+
       state.selectedImageBiasCategories =
         action.payload?.selectedImageBiasCategories || [];
+
       state.biasedImageDescriptionParagraphPlan = plan;
+
       state.biasImageDescriptionCount =
         action.payload?.biasImageDescriptionCount || plan.length;
+
       state.selectedCheckingImageDescriptionParagraph =
         emptySelectedImageDescriptionParagraph;
+
       state.detectedImageDescriptionBiasParagraph = {
         count: 0,
         imageDescriptionBiasItems: [],
       };
+
       state.flaggedImageDescriptionParagraph = {
         count: 0,
         flaggedImageDescriptionParagraphItems: [],
       };
+
       state.followUpsHistoryAliceImage = [];
+
       state.rephrasedPromptHistoryImage = [];
+
       state.currentFocusedImagePanel = "";
     },
 
@@ -96,6 +137,7 @@ const ImageBiasSlice = createSlice({
       state.detectedImageDescriptionBiasParagraph.imageDescriptionBiasItems.push(
         action.payload,
       );
+
       state.detectedImageDescriptionBiasParagraph.count += 1;
     },
 
@@ -103,28 +145,38 @@ const ImageBiasSlice = createSlice({
       state.flaggedImageDescriptionParagraph.flaggedImageDescriptionParagraphItems.push(
         action.payload,
       );
+
       state.flaggedImageDescriptionParagraph.count += 1;
     },
 
     addFollowUpsHistoryAliceImage: (state, action) => {
-      if (state.followUpsHistoryAliceImage.length >= 5) return;
+      if (state.followUpsHistoryAliceImage.length >= 5) {
+        return;
+      }
 
       state.followUpsHistoryAliceImage.push({
         followUpQuestionImage: action.payload.followUpQuestionImage,
+
         followUpQuestionCategoryImage:
           action.payload.followUpQuestionCategoryImage,
+
         followUpReplyImage: action.payload.followUpReplyImage,
       });
     },
 
     addRephrasedPromptHistoryImage: (state, action) => {
-      if (state.rephrasedPromptHistoryImage.length >= 3) return;
+      if (state.rephrasedPromptHistoryImage.length >= 3) {
+        return;
+      }
 
       state.rephrasedPromptHistoryImage.push({
         displayedPromptImage: action.payload.displayedPromptImage,
+
         promptUsedForRephraseImage: action.payload.promptUsedForRephraseImage,
+
         promptUsedForRephraseCategoryImage:
           action.payload.promptUsedForRephraseCategoryImage,
+
         rephrasedPromptImage: action.payload.rephrasedPromptImage,
       });
     },
@@ -137,6 +189,7 @@ const ImageBiasSlice = createSlice({
       if (!paragraph) return;
 
       paragraph.newFlag = true;
+
       paragraph.newImageDescriptionParagraph =
         action.payload.newImageDescriptionParagraph;
 
@@ -159,6 +212,7 @@ const ImageBiasSlice = createSlice({
 
 export const {
   setImageBiasOption,
+  clearImageBiasOption,
   setCurrentFocusedImagePanel,
   setImageDescriptionReading,
   setSelectedCheckingImageDescriptionParagraph,

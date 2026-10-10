@@ -17,8 +17,8 @@ const disabilityBiases = [
 const identityBiases = [
   { label: "I1", value: "Gender Bias" },
   { label: "I2", value: "Age Bias" },
-  { label: "I4", value: "Cultural Bias" },
-  { label: "H", value: "Racial Bias" },
+  { label: "I3", value: "Cultural Bias" },
+  { label: "I4", value: "Racial Bias" },
 ];
 
 const BiasOptionSelectionPage = () => {

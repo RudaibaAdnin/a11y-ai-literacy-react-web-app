@@ -32,6 +32,9 @@ const pickRandom = (items, count) =>
 const getParagraphText = (paragraph) =>
   paragraph?.newImageDescriptionParagraph || "";
 
+/*
+ * Existing random image bias behavior.
+ */
 const getRandomImageBiasCategory = () => {
   const name = pickRandom(Object.keys(image_bias_categories), 1)[0];
 
@@ -42,14 +45,42 @@ const getRandomImageBiasCategory = () => {
   };
 };
 
+/*
+ * If the teacher selected an image bias,
+ * turn it into the same object shape used by
+ * the current backend calls.
+ *
+ * If there is no saved option, return null.
+ */
+const getSavedImageBiasCategory = (imageBiasOption) => {
+  const name = imageBiasOption?.trim();
+
+  if (!name) {
+    return null;
+  }
+
+  return {
+    name,
+
+    meaning: image_bias_categories[name]?.meaning || "",
+
+    examples: image_bias_categories[name]?.examples || [],
+  };
+};
+
 const ImageReadingPage = () => {
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const { storytopic } = useParams();
 
   const [isLoadingImage, setIsLoadingImage] = useState(false);
+
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
+
   const [showHelpGuidePanel, setShowHelpGuidePanel] = useState(false);
+
   const [showImagePromptRephrasePanel, setShowImagePromptRephrasePanel] =
     useState(false);
 
@@ -60,9 +91,13 @@ const ImageReadingPage = () => {
   });
 
   const currentParagraphIndexRef = useRef(0);
+
   const loadingRef = useRef(null);
+
   const guideRef = useRef(null);
+
   const paragraphRefs = useRef([]);
+
   const imagePromptPanelRef = useRef(null);
 
   const { storyParagraphs } = useSelector((state) => state.SpotTheBiasReducer);
@@ -73,58 +108,85 @@ const ImageReadingPage = () => {
     imageDescriptionParagraphs,
     selectedCheckingImageDescriptionParagraph,
     currentFocusedImagePanel,
+    imageBiasOption,
   } = useSelector((state) => state.ImageBiasReducer);
 
   const moveToParagraph = useCallback((nextIndex) => {
     currentParagraphIndexRef.current = nextIndex;
+
     setCurrentParagraphIndex(nextIndex);
+
     requestAnimationFrame(() => paragraphRefs.current[nextIndex]?.focus());
   }, []);
 
   const focusImageDescriptionParagraph = (index) => {
     currentParagraphIndexRef.current = index;
+
     setCurrentParagraphIndex(index);
-    //dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+
+    // dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
   };
 
   const openImagePromptRephrasePanel = () => {
     dispatch(setSelectedCheckingImageDescriptionParagraph(null));
+
     setShowImagePromptRephrasePanel(true);
+
     dispatch(setCurrentFocusedImagePanel("imageCraftPromptRephrasePanel"));
   };
 
   const closeImagePromptRephrasePanel = () => {
     setShowImagePromptRephrasePanel(false);
+
     dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
   };
 
+  /*
+   * Image generation:
+   *
+   * 1. Check Redux for teacher-selected image bias.
+   * 2. If available, use that exact bias.
+   * 3. Otherwise keep the current random behavior.
+   */
   const loadImageReading = useCallback(async () => {
-    const selectedImageBiasCategory = getRandomImageBiasCategory();
+    const savedImageBiasCategory = getSavedImageBiasCategory(imageBiasOption);
+
+    const selectedImageBiasCategory =
+      savedImageBiasCategory || getRandomImageBiasCategory();
 
     try {
       setIsLoadingImage(true);
+
       moveToParagraph(0);
 
       const imagePromptResponse = await client.getImageGenerationPrompt(
         storyParagraphs.slice(0, 2).map((item) => item.originalStoryParagraph),
+
         [selectedImageBiasCategory],
       );
 
       const imageReading = await client.getImageDescription(
         imagePromptResponse.imagePrompt.originalPrompt,
+
         [selectedImageBiasCategory],
       );
 
       dispatch(
         setImageDescriptionReading({
           imageUrl: imageReading.imageBase64 || "",
+
           imagePrompt: imagePromptResponse.imagePrompt || {},
+
           imageDescriptionParagraphs:
             imageReading.imageDescriptionParagraphs || [],
+
           selectedImageBiasCategories: [selectedImageBiasCategory],
+
           biasedImageDescriptionParagraphPlan:
             imageReading.biasedImageDescriptionParagraphPlan || [],
+
           biasImageDescriptionCount:
             imageReading.biasedImageDescriptionParagraphPlan?.length || 0,
         }),
@@ -133,9 +195,10 @@ const ImageReadingPage = () => {
       setIsLoadingImage(false);
     } catch (error) {
       console.error("Could not get image reading:", error);
+
       setIsLoadingImage(false);
     }
-  }, [dispatch, storyParagraphs, moveToParagraph]);
+  }, [dispatch, storyParagraphs, imageBiasOption, moveToParagraph]);
 
   useEffect(() => {
     if (storyParagraphs.length > 0 && imageDescriptionParagraphs.length === 0) {
@@ -148,8 +211,11 @@ const ImageReadingPage = () => {
   ]);
 
   useEffect(() => {
-    if (isLoadingImage) loadingRef.current?.focus();
-    else if (imageDescriptionParagraphs.length > 0) guideRef.current?.focus();
+    if (isLoadingImage) {
+      loadingRef.current?.focus();
+    } else if (imageDescriptionParagraphs.length > 0) {
+      guideRef.current?.focus();
+    }
   }, [isLoadingImage, imageDescriptionParagraphs.length]);
 
   useEffect(() => {
@@ -205,10 +271,12 @@ const ImageReadingPage = () => {
       }
 
       event.preventDefault();
+
       setShowHelpGuidePanel(true);
     };
 
     window.addEventListener("keydown", openHelpGuide);
+
     return () => window.removeEventListener("keydown", openHelpGuide);
   }, []);
 
@@ -222,10 +290,14 @@ const ImageReadingPage = () => {
         activeElement?.tagName === "SELECT" ||
         activeElement?.isContentEditable;
 
-      if (isTyping || event.key !== "/") return;
+      if (isTyping || event.key !== "/") {
+        return;
+      }
 
       event.preventDefault();
+
       dispatch(setCurrentFocusedImagePanel("miaImagePromptPanel"));
+
       imagePromptPanelRef.current?.focus();
     };
 
@@ -252,13 +324,17 @@ const ImageReadingPage = () => {
 
   const closeHelpGuidePanel = useCallback(() => {
     setShowHelpGuidePanel(false);
+
     dispatch(setCurrentFocusedImagePanel("miaImagePanel"));
   }, [dispatch]);
 
   const downloadFile = (fileName, url) => {
     const link = document.createElement("a");
+
     link.href = url;
+
     link.download = fileName;
+
     link.click();
   };
 
@@ -285,7 +361,9 @@ const ImageReadingPage = () => {
     });
 
     const url = URL.createObjectURL(blob);
+
     downloadFile("image-description.txt", url);
+
     URL.revokeObjectURL(url);
   };
 
@@ -296,19 +374,25 @@ const ImageReadingPage = () => {
   };
 
   const saveNewImageDescription = () => {
-    if (!newImageReading.description) return;
+    if (!newImageReading.description) {
+      return;
+    }
 
     const blob = new Blob([newImageReading.description], {
       type: "text/plain;charset=utf-8",
     });
 
     const url = URL.createObjectURL(blob);
+
     downloadFile("new-image-description.txt", url);
+
     URL.revokeObjectURL(url);
   };
 
   const generateNewImage = async () => {
-    if (!imagePrompt.rephrasedPrompt) return;
+    if (!imagePrompt.rephrasedPrompt) {
+      return;
+    }
 
     setNewImageReading({
       imageUrl: "",
@@ -323,7 +407,9 @@ const ImageReadingPage = () => {
 
       setNewImageReading({
         imageUrl: response.imageBase64 || "",
+
         description: (response.imageDescriptionParagraphs || []).join(" "),
+
         loading: false,
       });
     } catch (error) {
@@ -331,7 +417,9 @@ const ImageReadingPage = () => {
 
       setNewImageReading({
         imageUrl: "",
+
         description: "Sorry, the new image could not be generated.",
+
         loading: false,
       });
     }
@@ -371,7 +459,7 @@ const ImageReadingPage = () => {
           aria-live="polite"
         >
           Loading the image. Mia is creating the story image. This may take a
-          little time. Please wait.
+          little time. Please wait...
         </p>
       ) : (
         <>
@@ -409,9 +497,10 @@ const ImageReadingPage = () => {
             </p>
 
             <p className="page-instructions" tabIndex={0}>
-              You can use headings to move around this game page, or select the
-              <span className="kbd">Help Guide</span>button below to open the
-              help guide modal to learn more keyboard shortcuts you can use.
+              You can use headings to move around this game page, or select the{" "}
+              <span className="kbd">Help Guide</span>
+              button below to open the help guide modal to learn more keyboard
+              shortcuts you can use.
             </p>
 
             <div
@@ -514,7 +603,9 @@ const ImageReadingPage = () => {
                             ? "story-paragraph current-focused-panel"
                             : "story-paragraph"
                         }
-                        aria-label={`Image description paragraph ${index + 1} of ${
+                        aria-label={`Image description paragraph ${
+                          index + 1
+                        } of ${
                           imageDescriptionParagraphs.length
                         }. ${paragraphText}. Press Enter to check this paragraph.`}
                         onFocus={() => focusImageDescriptionParagraph(index)}
@@ -551,6 +642,7 @@ const ImageReadingPage = () => {
             </section>
 
             <ImageLeaderBoardPanel />
+
             <ImageBiasCheckingPanel />
 
             {showImagePromptRephrasePanel && (
@@ -625,9 +717,14 @@ const ImageReadingPage = () => {
                         className="page-button"
                         onClick={generateNewImage}
                         disabled={newImageReading.loading}
+                        aria-label={
+                          newImageReading.loading
+                            ? "Generating new image. It may take a while. Please wait."
+                            : "Generate New Image"
+                        }
                       >
                         {newImageReading.loading
-                          ? "Generating New Image. It may take a while. Please wait... "
+                          ? "Generating New Image. It may take a while. Please wait."
                           : "Generate New Image"}
                       </button>
                     </div>
