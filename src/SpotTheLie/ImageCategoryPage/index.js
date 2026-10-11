@@ -71,7 +71,9 @@ const ImageCategoryPage = () => {
           className="image-category-title"
           tabIndex={0}
         >
-          Game Step: Select an image category to start your detective mission.
+          <span className="blue-parallelogram">
+            Game Step: Select an image category to start your detective mission.
+          </span>
         </h2>
 
         <ul className="image-category-list" aria-label="Image category choices">

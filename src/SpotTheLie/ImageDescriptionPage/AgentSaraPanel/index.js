@@ -448,7 +448,9 @@ const AgentSaraPanel = () => {
       onFocusCapture={focusSaraFollowupSectionPanel}
     >
       <h2 className="panel-title" tabIndex={0}>
-        Ask Detective Follow-up Questions
+        <span className="purple-parallelogram">
+          Ask Detective Follow-up Questions
+        </span>
       </h2>
 
       <p className="keyboard-instructions" tabIndex={0}>
@@ -461,7 +463,7 @@ const AgentSaraPanel = () => {
       >
         <button
           type="button"
-          className="page-button-ask-current-line"
+          className="page-button"
           onClick={handleGetFollowupQuestionsForCurrentLine}
           aria-label={`Ask Sara detective follow-up questions about the current line: ${currentImageDescriptionLine}`}
         >
@@ -470,7 +472,7 @@ const AgentSaraPanel = () => {
 
         <button
           type="button"
-          className="page-button-ask-entire-description"
+          className="page-button"
           onClick={handleGetFollowupQuestionsForEntireDescription}
           aria-label="Ask Sara detective follow-up questions about entire image description"
         >
@@ -479,7 +481,7 @@ const AgentSaraPanel = () => {
 
         <button
           type="button"
-          className="page-button-get-clues"
+          className="page-button"
           onClick={handleGetFollowupQuestionsForClue}
           aria-label="Get clues and ask Sara detective follow-up questions"
         >

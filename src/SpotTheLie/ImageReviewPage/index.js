@@ -216,7 +216,7 @@ const ImageReviewPage = () => {
           onFocusCapture={focusDetectedLiesPanel}
         >
           <h2 id="detected-lies-title" className="panel-title" tabIndex={0}>
-            List of Detected Lies
+            <span className="blue-parallelogram">List of Detected Lies</span>
           </h2>
 
           <p className="lie-count-details" tabIndex={0}>
@@ -259,7 +259,18 @@ const ImageReviewPage = () => {
                       </p>
 
                       <p>
-                        <strong>Type of lie:</strong> {item.type}
+                        <strong>Type of lie:</strong>
+                        <span
+                          className={
+                            [
+                              "purple-parallelogram",
+                              "green-parallelogram",
+                              "yellow-parallelogram",
+                            ][index % 3]
+                          }
+                        >
+                          {item.type}
+                        </span>
                       </p>
 
                       <button
@@ -383,7 +394,18 @@ const ImageReviewPage = () => {
                       </p>
 
                       <p>
-                        <strong>Type of lie:</strong> {item.type}
+                        <strong>Type of lie:</strong>{" "}
+                        <span
+                          className={
+                            [
+                              "green-parallelogram",
+                              "pink-parallelogram",
+                              "yellow-parallelogram",
+                            ][index % 3]
+                          }
+                        >
+                          {item.type}
+                        </span>
                       </p>
 
                       <button
@@ -460,7 +482,7 @@ const ImageReviewPage = () => {
           )}
 
           <h2 className="other-types-title" tabIndex={0}>
-            Other Types of Lies
+            Other Two Types of Lies
           </h2>
 
           <button
@@ -480,7 +502,7 @@ const ImageReviewPage = () => {
               aria-label="Other types of lies"
               tabIndex={0}
             >
-              {otherLieTypes.map((item) => {
+              {otherLieTypes.map((item, index) => {
                 const explanation = lieTypeExplanations[item.hallucinatedLine];
 
                 const isActive =
@@ -489,7 +511,18 @@ const ImageReviewPage = () => {
                 return (
                   <li key={item.type} className="lie-item">
                     <p className="lie-item-title" tabIndex={0}>
-                      {item.type}
+                      <span
+                        className={
+                          [
+                            "purple-parallelogram",
+                            "orange-parallelogram",
+                            "blue-parallelogram",
+                          ][index % 3]
+                        }
+                      >
+                        {" "}
+                        {item.type}{" "}
+                      </span>
                     </p>
 
                     <p tabIndex={0}>
@@ -497,7 +530,8 @@ const ImageReviewPage = () => {
                     </p>
 
                     <p tabIndex={0}>
-                      <strong>Follow-up question:</strong> {item.question}
+                      <strong>Example follow-up question:</strong>{" "}
+                      {item.question}
                     </p>
 
                     <p tabIndex={0}>

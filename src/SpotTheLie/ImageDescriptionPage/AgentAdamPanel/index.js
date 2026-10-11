@@ -151,7 +151,9 @@ const AgentAdamPanel = () => {
       onFocusCapture={focusAdamPanel}
     >
       <h2 id="adam-description-title" className="panel-title" tabIndex={0}>
-        Adam: Generate New AI Image Description
+        <span className="green-parallelogram">
+          Adam: Generate New AI Image Description{" "}
+        </span>
       </h2>
 
       <p className="keyboard-instructions" tabIndex={0}>
@@ -206,7 +208,7 @@ const AgentAdamPanel = () => {
           <div className="adam-description-buttons">
             <button
               type="button"
-              className="page-button-summary"
+              className="page-button"
               onClick={generateSummaryOfDifferences}
             >
               Generate Summary of Differences
@@ -214,7 +216,7 @@ const AgentAdamPanel = () => {
 
             <button
               type="button"
-              className="page-button-line-by-line"
+              className="page-button"
               onClick={() => setShowLineDifferences(true)}
               aria-expanded={showLineDifferences}
             >

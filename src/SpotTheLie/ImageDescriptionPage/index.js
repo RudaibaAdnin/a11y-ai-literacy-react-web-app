@@ -231,7 +231,9 @@ const ImageDescriptionPage = () => {
             onFocusCapture={focusSaraImageDescriptionPanel}
           >
             <h2 className="panel-title" tabIndex={0}>
-              Sara: AI Image Description
+              <span className="purple-parallelogram">
+                Sara: AI Image Description{" "}
+              </span>
             </h2>
 
             {selectedImageDescription.length === 0 ? (

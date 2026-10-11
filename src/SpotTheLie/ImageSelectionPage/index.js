@@ -74,8 +74,10 @@ const ImageSelectionPage = () => {
           className="image-selection-title"
           tabIndex={0}
         >
-          Game Step: Select an image from the {selectedImageCategory} category
-          to begin.
+          <span className="blue-parallelogram">
+            Game Step: Select an image from the {selectedImageCategory} category
+            to begin.
+          </span>
         </h2>
 
         {selectedImagePaths.length === 0 ? (

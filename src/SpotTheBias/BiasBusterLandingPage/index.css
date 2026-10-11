@@ -65,7 +65,8 @@
 .purple-parallelogram,
 .pink-parallelogram,
 .yellow-parallelogram,
-.orange-parallelogram {
+.orange-parallelogram,
+.white-parallelogram {
   display: inline;
   padding: 8px 8px;
 
@@ -98,13 +99,17 @@
 }
 
 .pink-parallelogram {
-  --parallelogram-color: #f8eaeb;
+  --parallelogram-color: #faedee;
 }
 
 .yellow-parallelogram {
-  --parallelogram-color: #faf4bb;
+  --parallelogram-color: #fffad5;
 }
 
 .orange-parallelogram {
   --parallelogram-color: #fdf0dc;
+}
+
+.white-parallelogram {
+  --parallelogram-color: white;
 }

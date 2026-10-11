@@ -36,10 +36,23 @@ const LandingPage = () => {
       </header>
 
       <ul className="cards-container" aria-label="Available games">
-        {games.map((game) => (
+        {games.map((game, index) => (
           <li key={game.link} className="game-card-item">
             <Link to={game.link} className="game-card">
-              <h2 className="game-card-title">{game.name}</h2>
+              <h2 className="game-card-title">
+                {" "}
+                <span
+                  className={
+                    [
+                      "purple-parallelogram",
+                      "green-parallelogram",
+                      "blue-parallelogram",
+                    ][index % 3]
+                  }
+                >
+                  {game.name}
+                </span>
+              </h2>
               <p className="game-card-description">{game.description}</p>
             </Link>
           </li>
