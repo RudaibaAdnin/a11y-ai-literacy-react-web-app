@@ -364,7 +364,20 @@ const CraftPromptRephrasePanel = () => {
 
                           <span className="bias-checkbox-text">
                             {option.category && (
-                              <strong>{option.category}: </strong>
+                              <strong>
+                                {" "}
+                                <span
+                                  className={
+                                    [
+                                      "purple-parallelogram",
+                                      "green-parallelogram",
+                                      "blue-parallelogram",
+                                    ][index % 3]
+                                  }
+                                >
+                                  {option.category}:
+                                </span>{" "}
+                              </strong>
                             )}
 
                             {option.suggestion}

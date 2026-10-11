@@ -349,7 +349,7 @@ const AgentAlicePanel = () => {
       onFocusCapture={focusPanel}
     >
       <h2 id="alice-panel-title" className="panel-title" tabIndex={0}>
-        Ask Alice for Clues
+        <span className="blue-parallelogram">Ask Alice for Clues</span>
       </h2>
 
       <p className="keyboard-instructions" tabIndex={0}>

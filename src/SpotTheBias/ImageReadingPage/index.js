@@ -534,7 +534,9 @@ const ImageReadingPage = () => {
                 className="panel-title"
                 tabIndex={0}
               >
-                Mia’s Created Image
+                <span className="purple-parallelogram">
+                  Mia's Created Image{" "}
+                </span>
               </h2>
 
               {imageUrl && (
@@ -675,7 +677,9 @@ const ImageReadingPage = () => {
               className="panel-title"
               tabIndex={0}
             >
-              Rephrase Image Prompt Mia Used to Create New Image
+              <span className="purple-parallelogram">
+                Rephrase Image Prompt Mia Used to Create New Image
+              </span>
             </h2>
 
             {imagePrompt.displayedPrompt && (
@@ -752,7 +756,9 @@ const ImageReadingPage = () => {
                 className="panel-title"
                 tabIndex={0}
               >
-                Created New Image and Image Description
+                <span className="purple-parallelogram">
+                  Created New Image and Image Description
+                </span>
               </h2>
 
               <img

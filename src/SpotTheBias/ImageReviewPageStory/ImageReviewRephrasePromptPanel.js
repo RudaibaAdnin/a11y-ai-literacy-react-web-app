@@ -106,7 +106,8 @@ const ImageReviewRephrasePromptPanel = () => {
         className="panel-title"
         tabIndex={0}
       >
-        List of image prompts you approved to fix the image
+        <span className="purple-parallelogram">List of image prompts</span> you
+        approved to fix the image
       </h2>
 
       {rephrasedPromptHistoryImage.length === 0 ? (

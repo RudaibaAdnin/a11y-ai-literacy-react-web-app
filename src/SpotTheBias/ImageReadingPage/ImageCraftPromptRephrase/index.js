@@ -431,7 +431,20 @@ const ImageCraftPromptRephrase = ({ onClose }) => {
 
                           <span className="bias-checkbox-text">
                             {option.category && (
-                              <strong>{option.category}: </strong>
+                              <strong>
+                                {" "}
+                                <span
+                                  className={
+                                    [
+                                      "blue-parallelogram",
+                                      "green-parallelogram",
+                                      "purple-parallelogram",
+                                    ][index % 3]
+                                  }
+                                >
+                                  {option.category}:
+                                </span>{" "}
+                              </strong>
                             )}
 
                             {option.suggestion}

@@ -144,11 +144,11 @@
 }
 
 .bias-checkbox-option:hover {
-  background: #f4f7fc;
+  background: white;
 }
 
 .bias-checkbox-option-selected {
-  background: #eef4ff;
+  background: white;
 }
 
 .bias-checkbox-option:focus-within {

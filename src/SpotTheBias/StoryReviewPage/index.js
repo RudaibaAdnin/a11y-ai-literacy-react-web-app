@@ -296,7 +296,8 @@ const StoryReviewPage = () => {
           onFocusCapture={focusDetectedBiasPanel}
         >
           <h2 id="detected-bias-title" className="panel-title" tabIndex={0}>
-            List of detected bias in the story paragraphs made by AI
+            <span className="blue-parallelogram">List of detected bias</span> in
+            the story paragraphs made by AI
           </h2>
 
           {/* <p className="bias-count-details">
@@ -327,8 +328,18 @@ const StoryReviewPage = () => {
                       {item.biasCategory && (
                         <p tabIndex={0}>
                           <strong>Bias type:</strong>{" "}
-                          {getBiasCategoryName(item.biasCategory)} in paragraph{" "}
-                          {getIndex(item) + 1}.
+                          <span
+                            className={
+                              [
+                                "purple-parallelogram",
+                                "green-parallelogram",
+                                "yellow-parallelogram",
+                              ][index % 3]
+                            }
+                          >
+                            {getBiasCategoryName(item.biasCategory)} in
+                            paragraph {getIndex(item) + 1}.{" "}
+                          </span>
                         </p>
                       )}
 

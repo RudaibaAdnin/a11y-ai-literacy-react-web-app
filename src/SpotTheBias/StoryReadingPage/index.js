@@ -406,7 +406,7 @@ const StoryReadingPage = () => {
               onFocusCapture={focusMiaPanel}
             >
               <h2 id="mia-panel-title" className="panel-title" tabIndex={0}>
-                Mia’s Created Story
+                <span className="blue-parallelogram">Mia's Created Story</span>
               </h2>
 
               <p className="keyboard-instructions">

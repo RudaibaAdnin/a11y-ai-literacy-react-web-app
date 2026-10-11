@@ -147,7 +147,7 @@ const StoryQuestionPage = () => {
               tabIndex={0}
             >
               Second Step: Answer the following three questions. Select a
-              suggestion or write your own answer.
+              suggestion or write your own answer.{" "}
             </h2>
 
             <ol className="story-question-list">
@@ -163,7 +163,18 @@ const StoryQuestionPage = () => {
                   <li key={questionIndex} className="story-question-item">
                     <fieldset className="story-question-fieldset">
                       <legend id={questionId} className="story-question">
-                        {storyQuestionItem.storyQuestion}
+                        <span
+                          className={
+                            questionIndex === 0
+                              ? "pink-parallelogram"
+                              : questionIndex === 1
+                                ? "green-parallelogram"
+                                : "purple-parallelogram"
+                          }
+                        >
+                          {" "}
+                          {storyQuestionItem.storyQuestion}
+                        </span>
                       </legend>
 
                       <div className="story-question-suggestion-list">

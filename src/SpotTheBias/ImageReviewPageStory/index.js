@@ -298,7 +298,10 @@ const ImageReviewPageStory = () => {
             className="panel-title"
             tabIndex={0}
           >
-            List of detected image bias in the image description made by AI
+            <span className="purple-parallelogram">
+              List of detected image bias
+            </span>{" "}
+            in the image description made by AI
           </h2>
 
           {detectedItems.length === 0 ? (
@@ -321,11 +324,19 @@ const ImageReviewPageStory = () => {
                     <li key={`detected-image-${index}`} className="bias-item">
                       {item.biasCategory && (
                         <p tabIndex={0}>
-                          <strong>Bias type:</strong> Paragraph{" "}
-                          {getIndex(item) + 1}{" "}
-                          {getBiasCategoryName(
-                            item.biasCategory,
-                          ).toLowerCase()}{" "}
+                          <strong>Bias type: </strong>
+                          <span
+                            className={
+                              [
+                                "green-parallelogram",
+                                "blue-parallelogram",
+                                "purple-parallelogram",
+                              ][index % 3]
+                            }
+                          >
+                            {getBiasCategoryName(item.biasCategory)} in
+                            paragraph {getIndex(item) + 1}
+                          </span>
                         </p>
                       )}
 

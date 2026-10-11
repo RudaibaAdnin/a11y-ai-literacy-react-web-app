@@ -103,8 +103,9 @@ const StoryTopicSelectionPage = () => {
 
       <section aria-labelledby="story-topic-title">
         <h2 id="story-topic-title" className="story-topic-title" tabIndex={0}>
-          First Step: Choose a topic from the list below or use your own fun
-          story idea to help Mia create a story.
+          First Step: <span className="blue-parallelogram">Choose a topic</span>{" "}
+          from the list below or use your own fun story idea to help Mia create
+          a story.
         </h2>
 
         <ul className="story-topic-list" aria-label="Suggested story topics">
@@ -129,7 +130,9 @@ const StoryTopicSelectionPage = () => {
           className="story-topic-title"
           tabIndex={0}
         >
-          Have your own story idea? Write it here.
+          Have your{" "}
+          <span className="purple-parallelogram">own story idea?</span> Write it
+          here.
         </h2>
 
         <form

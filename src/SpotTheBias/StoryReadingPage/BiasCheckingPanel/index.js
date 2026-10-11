@@ -603,7 +603,20 @@ const BiasCheckingPanel = () => {
                       />
 
                       <span className="bias-checkbox-text">
-                        <strong>{option.category}: </strong>
+                        <strong>
+                          {" "}
+                          <span
+                            className={
+                              [
+                                "purple-parallelogram",
+                                "green-parallelogram",
+                                "blue-parallelogram",
+                              ][index % 3]
+                            }
+                          >
+                            {option.category}:
+                          </span>{" "}
+                        </strong>
 
                         {option.statement}
                       </span>

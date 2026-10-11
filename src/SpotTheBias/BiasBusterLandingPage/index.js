@@ -83,7 +83,15 @@ const BiasBusterLandingPage = () => {
               aria-labelledby={id}
             >
               <h2 id={id} className="panel-title" tabIndex={0}>
-                {title}
+                <span
+                  className={
+                    title === "Teacher Guide Page"
+                      ? "green-parallelogram"
+                      : "blue-parallelogram"
+                  }
+                >
+                  {title}
+                </span>
               </h2>
 
               <p className="landing-panel-instructions" tabIndex={0}>

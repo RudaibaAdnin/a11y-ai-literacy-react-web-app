@@ -612,7 +612,20 @@ const ImageBiasCheckingPanel = () => {
                       />
 
                       <span className="bias-checkbox-text">
-                        <strong>{option.category}: </strong>
+                        <strong>
+                          {" "}
+                          <span
+                            className={
+                              [
+                                "blue-parallelogram",
+                                "green-parallelogram",
+                                "purple-parallelogram",
+                              ][index % 3]
+                            }
+                          >
+                            {option.category}:
+                          </span>{" "}
+                        </strong>
 
                         {option.statement}
                       </span>

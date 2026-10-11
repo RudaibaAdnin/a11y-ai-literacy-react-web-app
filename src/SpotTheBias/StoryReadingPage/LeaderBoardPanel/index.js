@@ -33,7 +33,7 @@ const LeaderBoardPanel = () => {
       onFocusCapture={focusPanel}
     >
       <h2 id="bias-scoreboard-title" className="panel-title" tabIndex={0}>
-        Score Board
+        <span className="blue-parallelogram">Score Board</span>
       </h2>
 
       <p className="leaderboard-count-details" tabIndex={0}>
@@ -68,7 +68,17 @@ const LeaderBoardPanel = () => {
                   tabIndex={0}
                 >
                   Paragraph {item.paragraphIndex + 1} shows{" "}
-                  {item.biasCategory.name}.
+                  <span
+                    className={
+                      [
+                        "purple-parallelogram",
+                        "green-parallelogram",
+                        "blue-parallelogram",
+                      ][index % 3]
+                    }
+                  >
+                    {item.biasCategory.name}.{" "}
+                  </span>
                 </p>
 
                 <p className="leaderboard-item-text" tabIndex={0}>

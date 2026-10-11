@@ -350,7 +350,7 @@ const ImageAgentAlicePanel = () => {
       onFocusCapture={focusPanel}
     >
       <h2 id="image-alice-panel-title" className="panel-title" tabIndex={0}>
-        Ask Alice for Image Clues
+        <span className="purple-parallelogram">Ask Alice for Image Clues</span>
       </h2>
 
       <p className="keyboard-instructions" tabIndex={0}>

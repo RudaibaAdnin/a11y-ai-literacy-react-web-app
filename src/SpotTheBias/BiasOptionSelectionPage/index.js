@@ -119,7 +119,7 @@ const BiasOptionSelectionPage = () => {
       <form className="bias-form" onSubmit={handleSubmit}>
         <section aria-labelledby="story-options-title">
           <h2 id="story-options-title" className="bias-section-title">
-            Story Options
+            <span className="blue-parallelogram"> Story Options </span>
           </h2>
 
           <p className="bias-instructions">
@@ -153,7 +153,7 @@ const BiasOptionSelectionPage = () => {
 
         <section aria-labelledby="image-options-title">
           <h2 id="image-options-title" className="bias-section-title">
-            Image Options
+            <span className="purple-parallelogram">Image Options</span>
           </h2>
 
           <p className="bias-instructions">
