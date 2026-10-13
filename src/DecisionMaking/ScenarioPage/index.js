@@ -24,7 +24,12 @@ const ScenarioPage = () => {
     );
   }
 
-  const { scenarioBuildingInitialPart, AIResponse, WouldYouRather } = scenario;
+  const {
+    scenarioBuildingInitialPart,
+    AIResponse,
+    settings_ai_after,
+    WouldYouRather,
+  } = scenario;
 
   return (
     <main
@@ -69,21 +74,24 @@ const ScenarioPage = () => {
           {scenarioBuildingInitialPart.title}
         </h2>
 
-        <p className="scenario-setting-text" tabIndex={0}>
+        <p className="scenario-after-ai-text" tabIndex={0}>
           {scenarioBuildingInitialPart.settings}
         </p>
 
-        <p className="scenario-task-text" tabIndex={0}>
-          {scenarioBuildingInitialPart.task}
-        </p>
+        {scenarioBuildingInitialPart.settings_ai_before && (
+          <p className="scenario-after-ai-text" tabIndex={0}>
+            {scenarioBuildingInitialPart.settings_ai_before}
+          </p>
+        )}
       </section>
+
       <section
         className="scenario-ai-section"
         aria-labelledby="scenario-ai-title"
       >
         <h2
           id="scenario-ai-title"
-          className="scenario-section-title"
+          className="decision-guide-title"
           tabIndex={0}
         >
           AI Says:
@@ -103,15 +111,24 @@ const ScenarioPage = () => {
             </p>
           </div>
         </div>
+
+        {settings_ai_after && (
+          <p className="scenario-after-ai-text" tabIndex={0}>
+            {settings_ai_after}
+          </p>
+        )}
       </section>
 
       <section
         className="scenario-wyr-section"
         aria-labelledby="scenario-wyr-title"
       >
-        <h2 id="scenario-wyr-title" className="scenario-wyr-title" tabIndex={0}>
-          Would You Rather...
+        <h2 className="decision-guide-title" tabIndex={0}>
+          {scenarioBuildingInitialPart.task}
         </h2>
+        <p className="scenario-wyr-title" tabIndex={0}>
+          Would You Rather...
+        </p>
 
         <div className="scenario-wyr-options">
           <button
