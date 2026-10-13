@@ -1,0 +1,117 @@
+.your-turn-grid {
+  width: 100%;
+}
+
+.your-turn-grid > .puzzle-grid {
+  width: max-content;
+  margin: 0 auto;
+}
+
+.your-turn-controls {
+  max-width: 1200px;
+  margin: 30px auto 30px;
+  text-align: left;
+}
+
+.your-turn-controls .puzzle-guide-text {
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+.your-turn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.your-turn-actions button {
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 20px;
+  color: #003b49;
+  background: #fff;
+  border: 1px solid #003b49;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.your-turn-actions button:hover,
+.your-turn-actions button:focus-visible {
+  color: #fff;
+  background: #003b49;
+  outline: 2px solid #003b49;
+  outline-offset: 3px;
+}
+
+.solution-feedback {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Modal */
+
+.shape-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgb(0 0 0 / 45%);
+}
+
+.shape-modal {
+  width: min(500px, 90vw);
+  padding: 30px;
+
+  text-align: left;
+
+  background: #fff;
+  border: 2px solid #003b49;
+  border-radius: 10px;
+}
+
+.shape-modal h2 {
+  margin-top: 0;
+}
+
+.shape-modal p {
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.shape-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.shape-modal-options button {
+  min-height: 55px;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  font: inherit;
+  color: #003b49;
+
+  background: #fff;
+  border: 1px solid #003b49;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.shape-modal-options button:hover,
+.shape-modal-options button:focus-visible {
+  background: #f4f8f9;
+  outline: 2px solid #003b49;
+  outline-offset: 2px;
+}

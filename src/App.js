@@ -10,16 +10,17 @@ import ImageSelectionPage from "./SpotTheLie/ImageSelectionPage";
 import ImageDescriptionPage from "./SpotTheLie/ImageDescriptionPage";
 import ImageReviewPage from "./SpotTheLie/ImageReviewPage";
 
+import BiasBusterLandingPage from "./SpotTheBias/BiasBusterLandingPage";
+import BiasOptionSelectionPage from "./SpotTheBias/BiasOptionSelectionPage";
 import StoryTopicSelectionPage from "./SpotTheBias/StoryTopicSelectionPage";
 import StoryQuestionPage from "./SpotTheBias/StoryQuestionPage";
 import StoryReadingPage from "./SpotTheBias/StoryReadingPage";
 import StoryReviewPage from "./SpotTheBias/StoryReviewPage";
-
 import ImageReadingPage from "./SpotTheBias/ImageReadingPage";
 import ImageReviewPageStory from "./SpotTheBias/ImageReviewPageStory";
 
-import BiasOptionSelectionPage from "./SpotTheBias/BiasOptionSelectionPage";
-import BiasBusterLandingPage from "./SpotTheBias/BiasBusterLandingPage";
+import PuzzleLandingPage from "./ARCPuzzle/PuzzleLandingPage";
+import PuzzleGamePage from "./ARCPuzzle/PuzzleGamePage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <div>
             <Routes>
               <Route path="/" element={<LandingPage />} />
+
               <Route path="/spot-the-lie" element={<ImageCategoryPage />} />
               <Route
                 path="/spot-the-lie/:imagecategory"
@@ -47,9 +49,7 @@ function App() {
                 path="/bias-buster/teacher-guide"
                 element={<BiasOptionSelectionPage />}
               />
-
               <Route path="/bias-buster" element={<BiasBusterLandingPage />} />
-
               <Route
                 path="/bias-buster/story-topic-selection"
                 element={<StoryTopicSelectionPage />}
@@ -74,6 +74,12 @@ function App() {
               <Route
                 path="/bias-buster/:storytopic/image-review-page"
                 element={<ImageReviewPageStory />}
+              />
+
+              <Route path="/secret-pattern" element={<PuzzleLandingPage />} />
+              <Route
+                path="/secret-pattern/:puzzleId"
+                element={<PuzzleGamePage />}
               />
             </Routes>
           </div>

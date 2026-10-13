@@ -15,12 +15,16 @@ const games = [
       "Work as a fairness coach to find and fix sneaky biases in stories and images made by AI.",
     link: "/bias-buster",
   },
-  // {
-  //   name: "Choose your Path",
-  //   description:
-  //     "A maze game on making decisions in different scenarios with AI tools.",
-  //   link: "/choose-your-path",
-  // },
+  {
+    name: "What's the Catch",
+    description: "A would you rather game.",
+    link: "/whats-the-catch",
+  },
+  {
+    name: "Secret Pattern",
+    description: "A Puzzle game",
+    link: "/secret-pattern",
+  },
 ];
 
 const LandingPage = () => {
@@ -44,10 +48,11 @@ const LandingPage = () => {
                 <span
                   className={
                     [
-                      "purple-parallelogram",
-                      "green-parallelogram",
                       "blue-parallelogram",
-                    ][index % 3]
+                      "purple-parallelogram",
+                      "pink-parallelogram",
+                      "green-parallelogram",
+                    ][index % 4]
                   }
                 >
                   {game.name}

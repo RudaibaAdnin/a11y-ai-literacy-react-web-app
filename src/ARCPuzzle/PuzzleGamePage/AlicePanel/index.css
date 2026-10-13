@@ -1,0 +1,121 @@
+.alice-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgb(0 0 0 / 45%);
+}
+
+.alice-panel {
+  width: min(700px, 90vw);
+  max-height: 85vh;
+  padding: 30px;
+  overflow-y: auto;
+
+  color: #003b49;
+  background: #fff;
+  border: 2px solid #003b49;
+  border-radius: 10px;
+}
+
+.alice-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alice-panel-header h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.alice-panel p {
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.alice-close-button {
+  font-size: 28px;
+}
+
+.alice-question-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.alice-panel button {
+  padding: 10px 16px;
+
+  font: inherit;
+  font-size: 18px;
+
+  color: #003b49;
+  background: #fff;
+
+  border: 1px solid #003b49;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.alice-panel button:hover,
+.alice-panel button:focus-visible {
+  color: #fff;
+  background: #003b49;
+  outline: 2px solid #003b49;
+  outline-offset: 2px;
+}
+
+.alice-conversation {
+  min-height: 100px;
+  max-height: 250px;
+  margin: 20px 0;
+  padding: 15px;
+
+  overflow-y: auto;
+
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.alice-message {
+  margin-bottom: 14px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.alice-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.alice-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.alice-input-row input {
+  flex: 1;
+
+  padding: 10px;
+
+  font: inherit;
+  font-size: 18px;
+
+  border: 1px solid #003b49;
+  border-radius: 8px;
+}
+
+.alice-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
