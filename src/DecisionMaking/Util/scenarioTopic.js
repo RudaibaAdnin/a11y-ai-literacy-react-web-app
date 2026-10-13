@@ -10,7 +10,7 @@ export const scenarioTopic = {
       },
       {
         id: "restaurant-menu",
-        name: "The Menu Mystery",
+        name: "What's on the Menu?",
         description:
           "You are ordering food at a restaurant. Look closely at the menu clues and decide what you want to choose.",
       },

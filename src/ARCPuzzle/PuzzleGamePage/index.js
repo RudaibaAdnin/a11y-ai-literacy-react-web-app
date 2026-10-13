@@ -407,7 +407,7 @@ const PuzzleGamePage = () => {
 
           <div className="puzzle-grid-block">
             <h3 className="after-title" tabIndex={0}>
-              Your Answer Grid
+              After Grid of Your Turn: Your Answer Grid
             </h3>
 
             <YourTurnGrid
