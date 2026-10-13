@@ -22,6 +22,10 @@ import ImageReviewPageStory from "./SpotTheBias/ImageReviewPageStory";
 import PuzzleLandingPage from "./ARCPuzzle/PuzzleLandingPage";
 import PuzzleGamePage from "./ARCPuzzle/PuzzleGamePage";
 
+import DecisionMakingLandingPage from "./DecisionMaking/DecisionMakingLandingPage";
+import ScenarioSelectionPage from "./DecisionMaking/ScenarioSelectionPage";
+import ScenarioPage from "./DecisionMaking/ScenarioPage";
+
 function App() {
   return (
     <div>
@@ -80,6 +84,19 @@ function App() {
               <Route
                 path="/secret-pattern/:puzzleId"
                 element={<PuzzleGamePage />}
+              />
+
+              <Route
+                path="/whats-the-catch"
+                element={<DecisionMakingLandingPage />}
+              />
+              <Route
+                path="/whats-the-catch/:scenariotopic"
+                element={<ScenarioSelectionPage />}
+              />
+              <Route
+                path="/whats-the-catch/:scenariotopic/:scenarioid"
+                element={<ScenarioPage />}
               />
             </Routes>
           </div>

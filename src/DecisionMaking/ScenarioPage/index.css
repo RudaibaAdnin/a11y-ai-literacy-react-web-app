@@ -1,0 +1,375 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap");
+
+:root {
+  --decision-text-color: #003b49;
+  --decision-accent-color: #1b365d;
+  --decision-bg-color: #fff;
+  --scenario-brown: #8b4513;
+  --scenario-ai-bg: #e8f3f9;
+}
+
+/* ---------------- Scenario Introduction ---------------- */
+
+.scenario-intro-section {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.scenario-main-title {
+  margin: 0 0 25px;
+
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+
+  color: var(--decision-text-color);
+}
+
+.scenario-setting-text {
+  position: relative;
+
+  margin: 20px 0;
+  padding: 16px 20px;
+
+  font-size: 22px;
+  line-height: 1.6;
+  font-weight: 500;
+
+  color: #333;
+  background: #fffdf8;
+
+  border: 2px solid #222;
+  border-radius: 18px 10px 16px 12px;
+}
+
+.scenario-setting-text::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  bottom: -12px;
+
+  width: 20px;
+  height: 20px;
+
+  background: #fffdf8;
+
+  border-left: 2px solid #222;
+  border-bottom: 2px solid #222;
+
+  transform: rotate(-35deg);
+}
+
+.scenario-task-text {
+  margin: 0 0 25px;
+
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 600;
+
+  color: var(--decision-text-color);
+}
+
+.scenario-main-image {
+  display: block;
+
+  width: 100%;
+  max-width: 500px;
+
+  margin: 25px auto 0;
+  border-radius: 10px;
+}
+
+/* ---------------- AI Response ---------------- */
+
+.scenario-ai-section {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto 20px;
+}
+
+.scenario-section-title {
+  margin: 0 0 20px;
+
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+
+  color: var(--decision-text-color);
+}
+
+.scenario-ai-response-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.scenario-ai-avatar {
+  width: 120px;
+  height: 120px;
+
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.scenario-ai-response-box {
+  position: relative;
+
+  width: 100%;
+  max-width: 600px;
+
+  padding: 18px 22px;
+
+  background: var(--scenario-ai-bg);
+
+  border: 2px solid #222;
+  border-radius: 18px 10px 16px 12px;
+}
+
+/* Speech tail pointing toward AI */
+
+.scenario-ai-response-box::before {
+  content: "";
+
+  position: absolute;
+  left: -11px;
+  top: 30px;
+
+  width: 20px;
+  height: 20px;
+
+  background: var(--scenario-ai-bg);
+
+  border-left: 2px solid #222;
+  border-bottom: 2px solid #222;
+
+  transform: rotate(45deg);
+}
+
+.scenario-ai-response-text {
+  position: relative;
+  z-index: 1;
+
+  margin: 0;
+
+  font-size: 21px;
+  line-height: 1.6;
+
+  color: #000;
+}
+
+@media (max-width: 700px) {
+  .scenario-ai-response-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .scenario-ai-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .scenario-ai-response-box {
+    padding: 18px;
+  }
+
+  .scenario-ai-response-text {
+    font-size: 19px;
+  }
+}
+
+/* ---------------- Would You Rather ---------------- */
+
+.scenario-wyr-section {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 20px auto 60px;
+
+  text-align: center;
+}
+
+.scenario-wyr-title {
+  margin: 0 0 28px;
+
+  font-size: 27px;
+  font-weight: 700;
+
+  color: var(--decision-text-color);
+}
+
+.scenario-wyr-options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.scenario-wyr-option {
+  width: 100%;
+  max-width: 370px;
+  min-height: 120px;
+
+  padding: 20px 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  font-family: inherit;
+  font-size: 21px;
+  line-height: 1.45;
+  font-weight: 600;
+
+  color: #fff;
+
+  border: 3px solid transparent;
+  border-radius: 12px;
+
+  cursor: pointer;
+}
+
+.scenario-wyr-option::hover {
+  outline: 1px solid var(--decision-text-color);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.scenario-wyr-option-a {
+  background: var(--scenario-brown);
+}
+
+.scenario-wyr-option-b {
+  background: var(--decision-text-color);
+}
+
+.scenario-wyr-option:hover {
+  transform: translateY(-2px);
+}
+
+.scenario-wyr-option:focus-visible {
+  outline: 3px solid var(--decision-accent-color);
+  outline-offset: 4px;
+}
+
+.scenario-wyr-option-label {
+  margin-bottom: 8px;
+
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.scenario-wyr-or {
+  flex-shrink: 0;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  color: var(--decision-text-color);
+}
+
+/* ---------------- Tablet ---------------- */
+
+@media (max-width: 900px) {
+  .decision-landing-page {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+
+  .decision-header {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .decision-header-space {
+    display: none;
+  }
+
+  .decision-header-title-group {
+    flex-basis: 100%;
+  }
+
+  .decision-page-nav {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media (max-width: 700px) {
+  .decision-landing-page {
+    margin: 0;
+    padding: 18px;
+    gap: 25px;
+  }
+
+  .decision-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .decision-header-title-group {
+    width: 100%;
+  }
+
+  .decision-title-image {
+    width: 75px;
+    height: 75px;
+  }
+
+  .decision-page-title {
+    font-size: 26px;
+  }
+
+  .scenario-main-title {
+    font-size: 27px;
+  }
+
+  .scenario-setting-text,
+  .scenario-task-text {
+    font-size: 20px;
+  }
+
+  .scenario-ai-response-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .scenario-ai-avatar-placeholder {
+    width: 55px;
+    height: 55px;
+  }
+
+  .scenario-ai-response-box {
+    padding: 18px;
+  }
+
+  .scenario-ai-response-box::before {
+    top: 20px;
+    left: -14px;
+
+    border-top-width: 11px;
+    border-bottom-width: 11px;
+    border-right-width: 16px;
+  }
+
+  .scenario-ai-response-text {
+    font-size: 19px;
+  }
+
+  .scenario-wyr-options {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .scenario-wyr-option {
+    max-width: 100%;
+  }
+
+  .scenario-wyr-or {
+    font-size: 20px;
+  }
+}

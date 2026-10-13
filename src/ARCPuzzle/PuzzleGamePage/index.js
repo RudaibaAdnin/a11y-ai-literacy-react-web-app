@@ -51,10 +51,10 @@ export const shapes = {
 
 const puzzleColors = {
   puzzle1: "#1d4289",
-  puzzle2: "#dc582a",
+  puzzle2: "#8b4513",
   puzzle3: "#5d3754",
   puzzle4: "#8b4513",
-  puzzle5: "#dc582a",
+  puzzle5: "#1d4289",
 };
 
 let currentAudio;
@@ -123,9 +123,9 @@ const PuzzleGrid = ({ grid, label }) => {
             tabIndex={activeCell === index ? 0 : -1}
             aria-label={
               shape
-                ? `Cell ${index + 1}, row ${row}, column ${column}, ${
+                ? `Row ${row}, Column ${column}, ${
                     shape.name
-                  }. Press Enter to hear ${shape.instrument} ${shape.note}.`
+                  }, Cell ${index + 1}. Press Enter to hear ${shape.instrument} ${shape.note}.`
                 : `Cell ${index + 1}, row ${row}, column ${column}, empty cell`
             }
             onFocus={() => setActiveCell(index)}
@@ -347,8 +347,12 @@ const PuzzleGamePage = () => {
 
             <div className="puzzle-grid-pair">
               <div className="puzzle-grid-block">
-                <h3 className="before-title" tabIndex={0}>
-                  Before
+                <h3
+                  className="before-title"
+                  tabIndex={0}
+                  aria-label={`Before Grid of Example ${index + 1}`}
+                >
+                  Before Grid of Example {index + 1}
                 </h3>
 
                 <PuzzleGrid
@@ -358,8 +362,12 @@ const PuzzleGamePage = () => {
               </div>
 
               <div className="puzzle-grid-block">
-                <h3 className="after-title" tabIndex={0}>
-                  After
+                <h3
+                  className="after-title"
+                  tabIndex={0}
+                  aria-label={`After Grid of Example ${index + 1}`}
+                >
+                  After Grid of Example {index + 1}
                 </h3>
 
                 <PuzzleGrid
@@ -381,14 +389,14 @@ const PuzzleGamePage = () => {
 
         <p className="puzzle-guide-text" tabIndex={0}>
           Think you found the secret pattern? Now put it to the test! Explore
-          the Before grid, then build your answer in the Your Turn grid. Press
+          the Before grid, then build your answer in the your Answer grid. Press
           Enter on a cell to add, change, or delete a shape.
         </p>
 
         <div className="puzzle-your-turn-stack">
           <div className="puzzle-grid-block">
             <h3 className="before-title" tabIndex={0}>
-              Before
+              Before Grid of Your Turn
             </h3>
 
             <PuzzleGrid
@@ -399,7 +407,7 @@ const PuzzleGamePage = () => {
 
           <div className="puzzle-grid-block">
             <h3 className="after-title" tabIndex={0}>
-              Your Turn
+              Your Answer Grid
             </h3>
 
             <YourTurnGrid

@@ -1,0 +1,224 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap");
+
+:root {
+  --decision-text-color: #003b49;
+  --decision-accent-color: #1b365d;
+  --decision-bg-color: #fff;
+}
+
+.decision-landing-page {
+  margin-left: 150px;
+  margin-right: 150px;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--decision-bg-color);
+  color: var(--decision-text-color);
+}
+
+.decision-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.decision-header-space {
+  width: 170px;
+}
+
+.decision-header-title-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.decision-title-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.decision-page-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--decision-text-color);
+}
+
+.decision-page-nav {
+  width: 170px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.decision-nav-button {
+  padding: 10px 14px;
+  font-size: 20px;
+  color: var(--decision-text-color);
+  background: var(--decision-bg-color);
+  border: 1px solid var(--decision-text-color);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.decision-nav-button:hover,
+.decision-nav-button:focus-visible {
+  color: var(--decision-bg-color);
+  background: var(--decision-text-color);
+  outline: 2px solid var(--decision-accent-color);
+  outline-offset: 3px;
+}
+
+.decision-guide-section {
+  width: 100%;
+}
+
+.decision-guide-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--decision-text-color);
+}
+
+.decision-guide-text {
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--decision-text-color);
+}
+
+.decision-selection-section {
+  width: 100%;
+  text-align: center;
+}
+
+.decision-selection-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--decision-text-color);
+}
+
+.decision-choice-list {
+  list-style: none;
+  padding: 0;
+  margin: 50px 0 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.decision-choice-button {
+  width: 350px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--decision-text-color);
+  background: var(--decision-bg-color);
+  border: 1px solid var(--decision-text-color);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.decision-choice-button:hover,
+.decision-choice-button:focus-visible {
+  color: var(--decision-bg-color);
+  background: var(--decision-text-color);
+  outline: 2px solid var(--decision-accent-color);
+  outline-offset: 3px;
+}
+
+.decision-current-focused-panel {
+  outline: 1px solid var(--decision-accent-color);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+  .decision-landing-page {
+    margin: 0;
+    padding: 20px;
+  }
+
+  .decision-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .decision-header-space {
+    display: none;
+  }
+
+  .decision-header-title-group {
+    width: 100%;
+  }
+
+  .decision-page-nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .decision-choice-button {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .decision-choice-item {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.blue-parallelogram,
+.green-parallelogram,
+.purple-parallelogram,
+.pink-parallelogram,
+.yellow-parallelogram,
+.orange-parallelogram {
+  display: inline;
+  padding: 8px 8px;
+
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  white-space: pre-line;
+  line-height: 2;
+
+  background: var(--parallelogram-color);
+
+  /* background: linear-gradient(
+    105deg,
+    transparent 0 10px,
+    var(--parallelogram-color) 10px calc(100% - 10px),
+    transparent calc(100% - 10px) 100%
+  ); */
+}
+
+.blue-parallelogram {
+  --parallelogram-color: #e2ecfd;
+}
+
+.green-parallelogram {
+  --parallelogram-color: #dff5df;
+}
+
+.purple-parallelogram {
+  --parallelogram-color: #efe3fa;
+}
+
+.pink-parallelogram {
+  --parallelogram-color: #faedee;
+}
+
+.yellow-parallelogram {
+  --parallelogram-color: #faf4bb;
+}

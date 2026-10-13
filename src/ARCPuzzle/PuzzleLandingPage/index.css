@@ -37,7 +37,7 @@
 
 .puzzle-page-title {
   margin: 0;
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--puzzle-text-color);
 }
@@ -50,7 +50,7 @@
 
 .puzzle-nav-button {
   padding: 10px 14px;
-  font-size: 21px;
+  font-size: 18px;
   color: var(--puzzle-text-color);
   background: var(--puzzle-bg-color);
   border: 1px solid var(--puzzle-text-color);
@@ -72,7 +72,7 @@
 
 .puzzle-guide-title {
   margin: 0;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--puzzle-text-color);
 }
@@ -149,4 +149,49 @@
   outline: 1px solid #1d4289;
   outline-offset: 3px;
   border-radius: 10px;
+}
+
+.blue-parallelogram,
+.green-parallelogram,
+.purple-parallelogram,
+.pink-parallelogram,
+.yellow-parallelogram,
+.orange-parallelogram {
+  display: inline;
+  padding: 5px 5px;
+
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  white-space: pre-line;
+  line-height: 2;
+
+  background: var(--parallelogram-color);
+
+  /* background: linear-gradient(
+    105deg,
+    transparent 0 10px,
+    var(--parallelogram-color) 10px calc(100% - 10px),
+    transparent calc(100% - 10px) 100%
+  ); */
+}
+
+.blue-parallelogram {
+  --parallelogram-color: #e2ecfd;
+}
+
+.green-parallelogram {
+  --parallelogram-color: #e4f7e4;
+}
+
+.purple-parallelogram {
+  --parallelogram-color: #efe3fa;
+}
+
+.pink-parallelogram {
+  --parallelogram-color: #faedee;
+}
+
+.yellow-parallelogram {
+  --parallelogram-color: #faf4bb;
 }

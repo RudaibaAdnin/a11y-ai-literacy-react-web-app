@@ -115,6 +115,23 @@ const YourTurnGrid = ({ shapeValues, shapes, playShapeSound }) => {
 
   return (
     <>
+      <div className="your-turn-controls">
+        <p className="puzzle-guide-text" tabIndex={0}>
+          Use the buttons below to manage your answer as you solve the puzzle.
+          You can copy the shapes from the Before grid into your answer grid,
+          clear everything and start again.
+        </p>
+
+        <div className="your-turn-actions">
+          <button type="button" onClick={copyBefore}>
+            Copy Before Grid to Your Answer Grid
+          </button>
+
+          <button type="button" onClick={resetGrid}>
+            Clear Your Answer Grid
+          </button>
+        </div>
+      </div>
       <div className="your-turn-grid">
         <div
           className="puzzle-grid"
@@ -162,23 +179,13 @@ const YourTurnGrid = ({ shapeValues, shapes, playShapeSound }) => {
 
         <div className="your-turn-controls">
           <p className="puzzle-guide-text" tabIndex={0}>
-            Use the buttons below to manage your answer as you solve the puzzle.
-            You can copy the shapes from the Before grid into your answer grid,
-            clear everything and start again, or submit your grid when you think
-            you have found the secret pattern.
+            Submit your answer grid when you think you have found the secret
+            pattern and added the needed shapes.
           </p>
 
           <div className="your-turn-actions">
-            <button type="button" onClick={copyBefore}>
-              Copy Before Grid
-            </button>
-
-            <button type="button" onClick={resetGrid}>
-              Clear Grid
-            </button>
-
             <button type="button" onClick={submitSolution}>
-              Submit Solution
+              Submit Your Solution
             </button>
           </div>
 

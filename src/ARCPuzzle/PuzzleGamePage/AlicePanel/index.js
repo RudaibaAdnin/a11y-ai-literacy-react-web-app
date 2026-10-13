@@ -97,21 +97,7 @@ const AlicePanel = ({ onClose }) => {
             Give Me an Overview
           </button>
 
-          <button
-            type="button"
-            onClick={() =>
-              askAlice("Tell me where the shapes are in the grids.")
-            }
-          >
-            Tell Me Where the Shapes Are
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              askAlice("Give me a clue without telling me the answer.")
-            }
-          >
+          <button type="button" onClick={() => askAlice("Give me a clue.")}>
             Give Me a Clue
           </button>
         </div>
