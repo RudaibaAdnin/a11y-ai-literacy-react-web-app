@@ -25,6 +25,7 @@ import PuzzleGamePage from "./ARCPuzzle/PuzzleGamePage";
 import DecisionMakingLandingPage from "./DecisionMaking/DecisionMakingLandingPage";
 import ScenarioSelectionPage from "./DecisionMaking/ScenarioSelectionPage";
 import ScenarioPage from "./DecisionMaking/ScenarioPage";
+import WhatstheCatchPage from "./DecisionMaking/WhatstheCatch";
 
 function App() {
   return (
@@ -97,6 +98,10 @@ function App() {
               <Route
                 path="/whats-the-catch/:scenariotopic/:scenarioid"
                 element={<ScenarioPage />}
+              />
+              <Route
+                path="/whats-the-catch/:scenariotopic/:scenarioid/catch"
+                element={<WhatstheCatchPage />}
               />
             </Routes>
           </div>

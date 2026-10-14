@@ -13,19 +13,19 @@ export const scenarioDetails = {
 
       task: "Now, decide what you might want to order.",
 
-      imagePath: "/images/scenarios/restaurant-menu.jpg",
+      imagePath: "/images/decisionScenarios/restuarant_menu.jpeg",
     },
 
     AIResponse: {
       AIResponseText:
-        "Here are the dishes on the menu: Pho Ga — $14, Lemongrass Chicken — $16, Crispy Spring Rolls — $8, and Garlic Chicken Noodles — $13.",
+        "The menu is titled “Chef’s Special” and lists four dishes. Thai Steamed Dumplings cost $9.95, Sweet & Sour with Crispy Chicken costs $18.95, Pho ga, described as a Northern Thai coconut curry noodle soup, costs $19.95, and Lemongrass chichen costs $17.95.",
 
       AvailableInitialDataToAI:
-        "The image clearly shows Pho Ga — $14 and Crispy Spring Rolls — $8. Some other parts of the menu are blurry and difficult to read. The AI does not have enough clear visual information to confidently identify all of the other dishes.",
+        "The menu is titled “Chef’s Special” and lists four dishes. Thai Steamed Dumplings cost $9.95, Sweet & Sour with Crispy Chicken costs $18.95, Khao Soi, described as a Northern Thai coconut curry noodle soup, costs $19.95, and Mango Curry costs $17.95.",
     },
 
     settings_ai_after:
-      "A moment later, you hear one of your friends say, “Ooh, I think I’m getting the Garlic Chicken Noodles!” Noodles are her absolute favorite, so she sounds pretty excited. She starts talking about how hungry she is and how good the noodles sound. Now you are even more curious about the dishes the AI listed, and you have to decide what you want to order too.",
+      "A moment later, you hear one of your friends say, “Ooh, I think I’m getting the Sweet & Sour with Crispy Chicken!” Sweet & Sour Chickens are her absolute favorite, so she sounds pretty excited. She starts talking about how hungry she is and how good the noodles sound. Now you are even more curious about the dishes the AI listed, and you have to decide what you want to order too.",
 
     WouldYouRather: {
       optionA: {

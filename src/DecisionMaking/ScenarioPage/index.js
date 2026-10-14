@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { scenarioDetails } from "../Util/scenarioDetails.js";
 
@@ -7,6 +7,10 @@ import "./index.css";
 
 const ScenarioPage = () => {
   const { scenariotopic, scenarioid } = useParams();
+  const navigate = useNavigate();
+
+  const [showAIResponse, setShowAIResponse] = useState(false);
+
   const scenario = scenarioDetails[scenarioid];
 
   if (!scenario) {
@@ -18,7 +22,7 @@ const ScenarioPage = () => {
           className="decision-nav-button"
           to={`/whats-the-catch/${scenariotopic}`}
         >
-          Back
+          Back to Topics
         </Link>
       </main>
     );
@@ -30,6 +34,12 @@ const ScenarioPage = () => {
     settings_ai_after,
     WouldYouRather,
   } = scenario;
+
+  const handleDecision = (option) => {
+    sessionStorage.setItem(`wyr-${scenarioid}`, option);
+
+    navigate(`/whats-the-catch/${scenariotopic}/${scenarioid}/catch`);
+  };
 
   return (
     <main
@@ -83,73 +93,104 @@ const ScenarioPage = () => {
             {scenarioBuildingInitialPart.settings_ai_before}
           </p>
         )}
-      </section>
 
-      <section
-        className="scenario-ai-section"
-        aria-labelledby="scenario-ai-title"
-      >
-        <h2
-          id="scenario-ai-title"
-          className="decision-guide-title"
-          tabIndex={0}
-        >
-          AI Says:
-        </h2>
-
-        <div className="scenario-ai-response-row">
+        {scenarioBuildingInitialPart.imagePath && (
           <img
-            src="/images/ai-avatar.png"
-            className="scenario-ai-avatar"
-            alt=""
-            aria-hidden="true"
+            src={scenarioBuildingInitialPart.imagePath}
+            className="scenario-image"
+            alt="Vietnamese restaurant menu"
           />
+        )}
 
-          <div className="scenario-ai-response-box" tabIndex={0}>
-            <p className="scenario-ai-response-text">
-              {AIResponse.AIResponseText}
-            </p>
-          </div>
-        </div>
-
-        {settings_ai_after && (
-          <p className="scenario-after-ai-text" tabIndex={0}>
-            {settings_ai_after}
-          </p>
+        {!showAIResponse && (
+          <button
+            type="button"
+            className="scenario-ask-ai-button"
+            onClick={() => setShowAIResponse(true)}
+            aria-expanded={showAIResponse}
+            aria-controls="scenario-ai-content"
+          >
+            Ask AI to read the menu
+          </button>
         )}
       </section>
 
-      <section
-        className="scenario-wyr-section"
-        aria-labelledby="scenario-wyr-title"
-      >
-        <h2 className="decision-guide-title" tabIndex={0}>
-          {scenarioBuildingInitialPart.task}
-        </h2>
-        <p className="scenario-wyr-title" tabIndex={0}>
-          Would You Rather...
-        </p>
-
-        <div className="scenario-wyr-options">
-          <button
-            type="button"
-            className="scenario-wyr-option scenario-wyr-option-a"
+      {showAIResponse && (
+        <div id="scenario-ai-content" aria-live="polite">
+          <section
+            className="scenario-ai-section"
+            aria-labelledby="scenario-ai-title"
           >
-            <span className="scenario-wyr-option-label">A</span>
-            {WouldYouRather.optionA.text}
-          </button>
+            <h2
+              id="scenario-ai-title"
+              className="decision-guide-title"
+              tabIndex={0}
+            >
+              AI Says:
+            </h2>
 
-          <span className="scenario-wyr-or">OR</span>
+            <div className="scenario-ai-response-row">
+              <img
+                src="/images/ai-avatar.png"
+                className="scenario-ai-avatar"
+                alt=""
+                aria-hidden="true"
+              />
 
-          <button
-            type="button"
-            className="scenario-wyr-option scenario-wyr-option-b"
+              <div className="scenario-ai-response-box" tabIndex={0}>
+                <p className="scenario-ai-response-text">
+                  {AIResponse.AIResponseText}
+                </p>
+              </div>
+            </div>
+
+            {settings_ai_after && (
+              <p className="scenario-after-ai-text" tabIndex={0}>
+                {settings_ai_after}
+              </p>
+            )}
+          </section>
+
+          <section
+            className="scenario-wyr-section"
+            aria-labelledby="scenario-wyr-title"
           >
-            <span className="scenario-wyr-option-label">B</span>
-            {WouldYouRather.optionB.text}
-          </button>
+            <h2
+              id="scenario-wyr-title"
+              className="decision-guide-title"
+              tabIndex={0}
+            >
+              {scenarioBuildingInitialPart.task}
+            </h2>
+
+            <p className="scenario-wyr-title" tabIndex={0}>
+              Would You Rather...
+            </p>
+
+            <div className="scenario-wyr-options">
+              <button
+                type="button"
+                className="scenario-wyr-option scenario-wyr-option-a"
+                onClick={() => handleDecision("optionA")}
+              >
+                <span className="scenario-wyr-option-label">A</span>
+                {WouldYouRather.optionA.text}
+              </button>
+
+              <span className="scenario-wyr-or">OR</span>
+
+              <button
+                type="button"
+                className="scenario-wyr-option scenario-wyr-option-b"
+                onClick={() => handleDecision("optionB")}
+              >
+                <span className="scenario-wyr-option-label">B</span>
+                {WouldYouRather.optionB.text}
+              </button>
+            </div>
+          </section>
         </div>
-      </section>
+      )}
     </main>
   );
 };
