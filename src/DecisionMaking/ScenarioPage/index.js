@@ -110,7 +110,7 @@ const ScenarioPage = () => {
             aria-expanded={showAIResponse}
             aria-controls="scenario-ai-content"
           >
-            Ask AI to read the menu
+            Ask Alice to read the menu
           </button>
         )}
       </section>

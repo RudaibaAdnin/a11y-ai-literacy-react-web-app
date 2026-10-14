@@ -9,7 +9,7 @@ export const scenarioDetails = {
         "You are out at a Vietnamese restaurant with your friends after a fun day together. Everyone is looking at the menu and talking about what they might order. The restaurant smells amazing, and you are getting hungry! The printed menu is not accessible to you, so you take a picture of it and ask an AI image-description tool to help you read what is there.",
 
       settings_ai_before:
-        "Your friends are still deciding what they want, so you listen while the AI reads the menu aloud. You are hoping something delicious catches your attention.",
+        "Your friends are still deciding what they want, so you listen while the AI agent, Alice reads the menu aloud. You are hoping something delicious catches your attention.",
 
       task: "Now, decide what you might want to order.",
 
