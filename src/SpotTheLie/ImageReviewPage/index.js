@@ -11,10 +11,11 @@ const otherLieTypes = [
   {
     type: "Missed the main point",
     definition:
-      "The answer talks about the image but does not answer the main topic you asked.",
-    question: "What color is the student's backpack?",
+      "The answer responds to the question but misses the most important detail and focuses on a less important detail instead.",
+    question: "Describe the student.",
     hallucinatedLine: "The student is standing next to a large tree.",
-    accurateLine: "The student's backpack is red.",
+    accurateLine:
+      "The student has a red backpack, and a broken bicycle is near them.",
   },
   {
     type: "Off-topic answer",

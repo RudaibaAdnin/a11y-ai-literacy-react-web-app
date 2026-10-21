@@ -9,6 +9,7 @@ const ImageCategoryPage = () => {
     "Travel and Nature",
     "People and Their Jobs",
     "Activities and Actions",
+    "Academic Diagrams",
   ];
 
   const navigate = useNavigate();

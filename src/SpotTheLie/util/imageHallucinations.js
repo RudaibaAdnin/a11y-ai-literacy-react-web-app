@@ -214,4 +214,33 @@ export const imageHallucinations = {
       type: "Mixed-up facts",
     },
   ],
+  "snack-vs-drink": [
+    {
+      hallucinatedLine:
+        "For muffins, 15% prefer coffee, 55% prefer tea, and 30% prefer neither.",
+      accurateLine:
+        "For muffins, 20% prefer coffee, 50% prefer tea, and 30% prefer neither.",
+      cause:
+        "The coffee and tea percentages for muffins are mixed-up. The graph shows 20% coffee and 50% tea.",
+      type: "Mixed-up facts",
+    },
+    {
+      hallucinatedLine:
+        "The vertical axis is labeled “Number of Customers” and ranges from 0% to 100%.",
+      accurateLine:
+        "The vertical axis is labeled “Relative Frequency” and ranges from 0% to 100%.",
+      cause:
+        "The graph does not use the label “Number of Customers.” The vertical axis is labeled “Relative Frequency.”",
+      type: "Made-up details",
+    },
+    {
+      hallucinatedLine:
+        "Muffins are the most popular snack because tea is the most common drink choice with them.",
+      accurateLine:
+        "Tea is the most common drink choice with muffins without showing which snack is most popular.",
+      cause:
+        "The graph shows drink preferences within each snack group, not the total number of muffins, donuts, or bagels sold. So, we cannot decide which snack is the  most popular.",
+      type: "Wrong guess",
+    },
+  ],
 };

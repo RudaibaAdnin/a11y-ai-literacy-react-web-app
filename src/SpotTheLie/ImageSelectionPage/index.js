@@ -13,6 +13,7 @@ const ImageSelectionPage = () => {
     "travel-and-nature": "Travel and Nature",
     "people-and-their-jobs": "People and Their Jobs",
     "activities-and-actions": "Activities and Actions",
+    "academic-diagrams": "Academic Diagrams",
   };
 
   const categoryToImagePathsMap = {
@@ -21,6 +22,7 @@ const ImageSelectionPage = () => {
     "travel-and-nature": imagePaths.travelAndNatureImagePaths,
     "people-and-their-jobs": imagePaths.peopleAndSocialRolesImagePaths,
     "activities-and-actions": imagePaths.activitiesAndInteractionsImagePaths,
+    "academic-diagrams": imagePaths.academicdiagramsImagePaths,
   };
 
   const selectedImageCategory = categoryDisplayNames[imagecategory] || "";

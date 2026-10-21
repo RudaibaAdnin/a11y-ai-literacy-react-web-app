@@ -119,4 +119,18 @@ export const accurateImageDescriptions = {
     "In the background, thick evergreen trees stand in front of a rocky mountain slope with patches of snow.",
     "The whole scene looks like a guided tour or learning talk in a national park or similar nature area.",
   ],
+  "snack-vs-drink": [
+    "A coffee shop serves two drinks, coffee and tea, and three snacks: muffins, donuts, and bagels.",
+    "The owner wants to know which drink customers prefer to have with each snack being offered.",
+    "She keeps track of all customers who purchase a single snack for a full day.",
+    "The segmented bar graph shows the results of the survey.",
+    "The legend includes Coffee, Tea, and Neither.",
+    "The vertical axis is labeled “Relative Frequency” and ranges from 0% to 100%.",
+    "For muffins, 20% prefer coffee, 50% prefer tea, and 30% prefer neither.",
+    "For donuts, 80% prefer coffee, 10% prefer tea, and 10% prefer neither.",
+    "For bagels, 50% prefer coffee, 40% prefer tea, and 10% prefer neither.",
+    "Tea is the most common drink choice with muffins.",
+    "The graph does not show which snack is the most popular overall.",
+    "Coffee is most popular with donuts.",
+  ],
 };

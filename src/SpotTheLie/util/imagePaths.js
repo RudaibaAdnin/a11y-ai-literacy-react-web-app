@@ -31,3 +31,7 @@ export const activitiesAndInteractionsImagePaths = [
   "activities-and-interactions/man-woman-give-food-deer.png",
   "activities-and-interactions/two-women-shopping-logo.png",
 ];
+
+export const academicdiagramsImagePaths = [
+  "academic-diagrams/snack-vs-drink.png",
+];
